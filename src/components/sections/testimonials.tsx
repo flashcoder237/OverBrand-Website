@@ -38,10 +38,20 @@ export function TestimonialsSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="badge mb-4">Témoignages</span>
-          <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-4" style={{ color: 'var(--text)' }}>
-            Ce que disent{' '}
-            <span className="text-gradient">nos clients</span>
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
+            <span className="badge">Témoignages</span>
+            <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
+          </div>
+          <h2
+            className="font-display leading-none mb-4"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(3rem, 7vw, 6rem)',
+              color: 'var(--text)',
+            }}
+          >
+            ILS NOUS <span style={{ color: 'var(--primary)' }}>FONT CONFIANCE</span>
           </h2>
         </motion.div>
 

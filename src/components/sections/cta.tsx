@@ -35,8 +35,14 @@ export function CTASection() {
               Consultation gratuite
             </span>
 
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-white mb-4">
-              Prêt à transformer<br />votre présence digitale?
+            <h2
+              className="font-display leading-none text-white mb-4"
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(3.5rem, 8vw, 7rem)',
+              }}
+            >
+              PRÊT À<br />TRANSFORMER?
             </h2>
 
             <p className="text-white/80 text-lg mb-10 max-w-xl mx-auto">

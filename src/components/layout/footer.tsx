@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { Zap, Mail, Phone, MapPin, Globe, AtSign, ExternalLink, Share2 } from 'lucide-react'
+import Image from 'next/image'
+import { Mail, Phone, MapPin, Globe, AtSign, ExternalLink, Share2 } from 'lucide-react'
 
 const LINKS = {
   services: [
@@ -30,13 +31,12 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'var(--primary)' }}>
-                <Zap size={20} className="text-white" fill="white" />
+            <Link href="/" className="flex items-center gap-3 mb-4 group">
+              <div className="relative w-9 h-9 transition-transform group-hover:scale-105">
+                <Image src="/logo.png" alt="OverBrand" fill className="object-contain" />
               </div>
-              <span className="text-xl font-bold">
-                <span style={{ color: 'var(--text)' }}>Over</span>
-                <span className="text-gradient">Brand</span>
+              <span className="text-xl font-black" style={{ fontFamily: 'var(--font-sans)', color: 'var(--text)' }}>
+                Over<span style={{ color: 'var(--primary)' }}>Brand</span>
               </span>
             </Link>
             <p className="text-sm leading-relaxed mb-6 max-w-xs" style={{ color: 'var(--text-muted)' }}>

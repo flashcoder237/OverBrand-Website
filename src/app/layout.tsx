@@ -1,16 +1,18 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Bebas_Neue, Montserrat } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme/theme-provider'
 
-const geistSans = Geist({
-  variable: '--font-sans',
+const bebasNeue = Bebas_Neue({
+  variable: '--font-display',
   subsets: ['latin'],
+  weight: '400',
 })
 
-const geistMono = Geist_Mono({
-  variable: '--font-mono',
+const montserrat = Montserrat({
+  variable: '--font-sans',
   subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
 })
 
 export const metadata: Metadata = {
@@ -32,7 +34,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${bebasNeue.variable} ${montserrat.variable} antialiased`}>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

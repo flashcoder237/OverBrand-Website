@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Menu, X, Zap } from 'lucide-react'
+import Image from 'next/image'
+import { Menu, X } from 'lucide-react'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
-import { ColorPicker } from '@/components/theme/color-picker'
+import { useTheme } from 'next-themes'
 
 const NAV_LINKS = [
   { label: 'Services', href: '#services' },
+  { label: 'Projets', href: '#projects' },
   { label: 'À propos', href: '#about' },
   { label: 'Processus', href: '#process' },
   { label: 'Contact', href: '#contact' },
@@ -16,12 +18,17 @@ const NAV_LINKS = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const { resolvedTheme } = useTheme()
 
   useEffect(() => {
+    setMounted(true)
     const onScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  const logoSrc = mounted && resolvedTheme === 'dark' ? '/logo-bg.png' : '/logo.png'
 
   return (
     <nav
@@ -35,16 +42,21 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
-              style={{ background: 'var(--primary)' }}
-            >
-              <Zap size={20} className="text-white" fill="white" />
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative w-9 h-9 transition-transform group-hover:scale-105">
+              <Image
+                src={logoSrc}
+                alt="OverBrand Logo"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
-            <span className="text-xl font-bold tracking-tight">
-              <span style={{ color: 'var(--text)' }}>Over</span>
-              <span className="text-gradient">Brand</span>
+            <span
+              className="text-xl font-black tracking-tight hidden sm:block"
+              style={{ fontFamily: 'var(--font-sans)', color: 'var(--text)' }}
+            >
+              Over<span style={{ color: 'var(--primary)' }}>Brand</span>
             </span>
           </Link>
 
@@ -54,8 +66,8 @@ export function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium transition-colors hover:opacity-80"
-                style={{ color: 'var(--text-muted)' }}
+                className="text-xs font-bold uppercase tracking-widest transition-colors hover:opacity-100"
+                style={{ color: 'var(--text-muted)', letterSpacing: '0.1em' }}
               >
                 {link.label}
               </a>
@@ -65,26 +77,25 @@ export function Navbar() {
           {/* Actions */}
           <div className="flex items-center gap-2">
             <div className="hidden sm:flex items-center gap-2">
-              <ColorPicker />
               <ThemeToggle />
             </div>
             <Link href="/auth/login">
               <button
-                className="hidden md:block text-sm font-medium px-4 py-2 rounded-full transition-all hover:opacity-80"
-                style={{ color: 'var(--text-muted)', border: '1px solid var(--border)' }}
+                className="hidden md:block text-xs font-bold uppercase tracking-widest px-4 py-2 transition-all hover:opacity-80"
+                style={{ color: 'var(--text-muted)', border: '1px solid var(--border)', letterSpacing: '0.1em' }}
               >
                 Connexion
               </button>
             </Link>
-            <Link href="#contact">
-              <button className="btn-primary text-sm px-5 py-2.5 rounded-full hidden md:block" style={{}}>
+            <a href="#contact">
+              <button className="btn-primary text-xs px-5 py-2.5 hidden md:flex items-center gap-2">
                 Devis gratuit
               </button>
-            </Link>
+            </a>
 
             {/* Mobile menu button */}
             <button
-              className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl"
+              className="md:hidden w-10 h-10 flex items-center justify-center"
               style={{ background: 'var(--surface)', color: 'var(--text)' }}
               onClick={() => setMobileOpen(!mobileOpen)}
             >
@@ -97,26 +108,25 @@ export function Navbar() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div
-          className="md:hidden px-4 pb-4 pt-2 space-y-2"
-          style={{ background: 'var(--nav-bg)', backdropFilter: 'blur(20px)' }}
+          className="md:hidden px-4 pb-6 pt-2 space-y-1"
+          style={{ background: 'var(--nav-bg)', backdropFilter: 'blur(20px)', borderTop: '1px solid var(--border)' }}
         >
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="block py-2.5 px-4 rounded-xl text-sm font-medium"
-              style={{ color: 'var(--text)', background: 'var(--surface)' }}
+              className="block py-3 px-4 text-xs font-bold uppercase tracking-widest"
+              style={{ color: 'var(--text)', background: 'var(--surface)', letterSpacing: '0.1em' }}
               onClick={() => setMobileOpen(false)}
             >
               {link.label}
             </a>
           ))}
-          <div className="flex items-center gap-2 pt-2">
-            <ColorPicker />
+          <div className="flex items-center gap-2 pt-3">
             <ThemeToggle />
             <Link href="/auth/login" className="flex-1">
               <button
-                className="w-full py-2.5 rounded-xl text-sm font-medium"
+                className="w-full py-2.5 text-xs font-bold uppercase tracking-widest"
                 style={{ background: 'var(--surface)', color: 'var(--text)' }}
               >
                 Connexion
@@ -124,7 +134,7 @@ export function Navbar() {
             </Link>
           </div>
           <a href="#contact">
-            <button className="btn-primary w-full text-sm py-3 rounded-xl">
+            <button className="btn-primary w-full text-xs py-3 mt-2">
               Devis gratuit
             </button>
           </a>

@@ -33,10 +33,20 @@ export function AboutSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            <span className="badge mb-6">Qui sommes-nous</span>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-6" style={{ color: 'var(--text)' }}>
-              L&apos;agence qui fait<br />
-              <span className="text-gradient">vraiment la différence</span>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
+              <span className="badge">Qui sommes-nous</span>
+            </div>
+            <h2
+              className="font-display leading-none mb-6"
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(3rem, 6vw, 5rem)',
+                color: 'var(--text)',
+              }}
+            >
+              L&apos;AGENCE QUI<br />
+              <span style={{ color: 'var(--primary)' }}>FAIT LA DIFFÉRENCE</span>
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--text-muted)' }}>
               OverBrand est une agence digitale créative spécialisée dans la transformation numérique
