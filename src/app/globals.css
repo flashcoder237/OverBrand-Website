@@ -171,6 +171,42 @@ body {
   to { transform: translateX(-50%); }
 }
 
+@property --logo-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes logo-spin-light {
+  from { --logo-angle: 0deg; }
+  to   { --logo-angle: 360deg; }
+}
+
+.logo-infinity-light {
+  animation: logo-spin-light 3s linear infinite;
+  background: conic-gradient(
+    from var(--logo-angle) at 50% 50%,
+    transparent 0deg,
+    transparent 300deg,
+    rgba(255, 255, 255, 0.12) 330deg,
+    rgba(255, 255, 255, 0.92) 355deg,
+    transparent 360deg
+  );
+}
+
+.logo-infinity-light-b {
+  animation: logo-spin-light 3s linear infinite;
+  animation-delay: -1.5s;
+  background: conic-gradient(
+    from var(--logo-angle) at 50% 50%,
+    transparent 0deg,
+    transparent 300deg,
+    rgba(180, 210, 255, 0.1) 330deg,
+    rgba(180, 210, 255, 0.65) 355deg,
+    transparent 360deg
+  );
+}
+
 @keyframes scanline {
   0% { transform: translateY(-100%); }
   100% { transform: translateY(100vh); }

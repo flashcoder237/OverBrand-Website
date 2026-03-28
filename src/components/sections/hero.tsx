@@ -243,6 +243,8 @@ export function HeroSection() {
 
   const logoSrc = mounted && resolvedTheme === 'dark' ? '/logo-bg.png' : '/logo.png'
   const isDark = mounted && resolvedTheme === 'dark'
+  // Hero always uses logo-bg regardless of theme
+  const heroLogoSrc = '/logo-bg.png'
 
   return (
     <>
@@ -424,6 +426,7 @@ export function HeroSection() {
                   className="relative w-56 h-56 cursor-none z-10"
                   data-cursor-label="OverBrand"
                   style={{
+                    marginTop: '-60px',
                     rotateX: logoRotateX,
                     rotateY: logoRotateY,
                     transformStyle: 'preserve-3d',
@@ -433,41 +436,69 @@ export function HeroSection() {
                   whileHover={{ scale: 1.07 }}
                   transition={{ type: 'spring', stiffness: 220, damping: 22 }}
                 >
-                  {/* Entrance animation */}
+                  {/* ── SVG ∞ qui se dessine, puis le logo fade in par-dessus ── */}
+
+                  {/* 1. Le tracé ∞ se dessine */}
+                  <motion.svg
+                    viewBox="0 0 220 110"
+                    className="absolute inset-0 w-full h-full pointer-events-none"
+                    style={{ overflow: 'visible' }}
+                  >
+                    <motion.path
+                      d="M110,55 C110,28 90,10 65,10 C40,10 20,28 20,55 C20,82 40,100 65,100 C90,100 110,82 110,55 C110,28 130,10 155,10 C180,10 200,28 200,55 C200,82 180,100 155,100 C130,100 110,82 110,55 Z"
+                      fill="none"
+                      stroke="rgba(255,255,255,0.95)"
+                      strokeWidth="14"
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0, opacity: 1 }}
+                      animate={{ pathLength: [0, 1, 1], opacity: [1, 1, 0] }}
+                      transition={{
+                        pathLength: { duration: 1.6, delay: 0.2, ease: 'easeInOut' },
+                        opacity: { duration: 0.5, delay: 1.9, ease: 'easeOut' },
+                      }}
+                    />
+                    {/* Point lumineux qui court le long du tracé */}
+                    <motion.circle
+                      r="5"
+                      fill="white"
+                      filter="url(#glow)"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: [0, 1, 1, 0] }}
+                      transition={{ duration: 1.6, delay: 0.2, ease: 'easeInOut' }}
+                    >
+                      <animateMotion
+                        dur="1.6s"
+                        begin="0.2s"
+                        fill="freeze"
+                        path="M110,55 C110,28 90,10 65,10 C40,10 20,28 20,55 C20,82 40,100 65,100 C90,100 110,82 110,55 C110,28 130,10 155,10 C180,10 200,28 200,55 C200,82 180,100 155,100 C130,100 110,82 110,55 Z"
+                      />
+                    </motion.circle>
+                    <defs>
+                      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="4" result="blur" />
+                        <feMerge>
+                          <feMergeNode in="blur" />
+                          <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                      </filter>
+                    </defs>
+                  </motion.svg>
+
+                  {/* 2. Logo fade-in après le tracé */}
                   <motion.div
                     className="w-full h-full relative"
-                    initial={{ scale: 0.4, opacity: 0, rotateY: -45 }}
-                    animate={{ scale: 1, opacity: 1, rotateY: 0 }}
-                    transition={{ duration: 1.1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    initial={{ opacity: 0, scale: 0.92 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.7, delay: 1.7, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    {/* Logo image */}
                     <Image
-                      src={logoSrc}
+                      src={heroLogoSrc}
                       alt="OverBrand"
                       fill
                       className="object-contain select-none"
-                      style={{ filter: isDark ? 'brightness(0) invert(1)' : 'none', userSelect: 'none' }}
+                      style={{ userSelect: 'none' }}
                       draggable={false}
                       priority
-                    />
-
-                    {/* Shimmer — masqué par la forme exacte du logo via mask-image */}
-                    <motion.div
-                      className="absolute inset-0 pointer-events-none"
-                      style={{
-                        maskImage: `url(${logoSrc})`,
-                        maskSize: 'contain',
-                        maskRepeat: 'no-repeat',
-                        maskPosition: 'center',
-                        WebkitMaskImage: `url(${logoSrc})`,
-                        WebkitMaskSize: 'contain',
-                        WebkitMaskRepeat: 'no-repeat',
-                        WebkitMaskPosition: 'center',
-                        background: 'linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.95) 50%, transparent 80%)',
-                        backgroundSize: '300% 100%',
-                      }}
-                      animate={{ backgroundPosition: ['-300% 0%', '300% 0%'] }}
-                      transition={{ duration: 2.4, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' }}
                     />
                   </motion.div>
 

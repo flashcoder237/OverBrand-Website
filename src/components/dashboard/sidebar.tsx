@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
   LayoutDashboard, FileText, FolderOpen,
-  LogOut, Menu, X, User, ChevronRight,
+  LogOut, Menu, X, User, ChevronRight, Shield,
 } from 'lucide-react'
 import Image from 'next/image'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
@@ -20,7 +20,7 @@ const NAV_ITEMS = [
   { label: 'Mon profil', href: '/dashboard/profil', icon: User },
 ]
 
-export function DashboardSidebar({ user }: { user: SupabaseUser }) {
+export function DashboardSidebar({ user, isAdmin }: { user: SupabaseUser; isAdmin?: boolean }) {
   const pathname = usePathname()
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -95,6 +95,17 @@ export function DashboardSidebar({ user }: { user: SupabaseUser }) {
 
       {/* Bottom */}
       <div className="px-3 py-4 space-y-2" style={{ borderTop: '1px solid var(--border)' }}>
+        {isAdmin && (
+          <Link
+            href="/admin"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-100"
+            style={{ color: '#f59e0b', background: '#f59e0b12' }}
+          >
+            <Shield size={18} />
+            Panneau Admin
+          </Link>
+        )}
         <div className="flex items-center gap-2 px-3">
           <ThemeToggle />
           <span className="text-xs ml-1" style={{ color: 'var(--text-subtle)' }}>Thème</span>
