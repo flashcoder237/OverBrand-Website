@@ -2,9 +2,13 @@
 
 import { motion } from 'framer-motion'
 import { ArrowRight, MessageCircle } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
 import Link from 'next/link'
 
 export function CTASection() {
+  const t = useTranslations('cta')
+  const locale = useLocale()
+
   return (
     <section id="contact" className="section" style={{ background: 'var(--bg-secondary)' }}>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -32,7 +36,7 @@ export function CTASection() {
           <div className="relative">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-6 bg-white/20 text-white">
               <MessageCircle size={14} />
-              Consultation gratuite
+              {t('badge')}
             </span>
 
             <h2
@@ -42,23 +46,23 @@ export function CTASection() {
                 fontSize: 'clamp(3.5rem, 8vw, 7rem)',
               }}
             >
-              PRÊT À<br />TRANSFORMER?
+              {t('title_1')}<br />{t('title_2')}
             </h2>
 
             <p className="text-white/80 text-lg mb-10 max-w-xl mx-auto">
-              Obtenez un devis gratuit en 24h. Sans engagement, sans frais cachés.
+              {t('subtitle')}
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/auth/register">
-                <button className="flex items-center gap-2 bg-white font-bold px-8 py-4 rounded-full transition-all hover:shadow-2xl hover:-translate-y-1" style={{ color: 'var(--primary)' }}>
-                  Demander un devis
+              <Link href={`/${locale}/auth/register`}>
+                <button data-magnetic data-magnetic-strength="0.3" className="flex items-center gap-2 bg-white font-bold px-8 py-4 rounded-full transition-all hover:shadow-2xl hover:-translate-y-1" style={{ color: 'var(--primary)' }}>
+                  {t('button_primary')}
                   <ArrowRight size={18} />
                 </button>
               </Link>
               <a href="mailto:contact@overbrand.com">
-                <button className="flex items-center gap-2 border-2 border-white/50 text-white font-semibold px-8 py-4 rounded-full transition-all hover:bg-white/10 hover:-translate-y-1">
-                  Nous contacter
+                <button data-magnetic data-magnetic-strength="0.25" className="flex items-center gap-2 border-2 border-white/50 text-white font-semibold px-8 py-4 rounded-full transition-all hover:bg-white/10 hover:-translate-y-1">
+                  {t('button_secondary')}
                 </button>
               </a>
             </div>

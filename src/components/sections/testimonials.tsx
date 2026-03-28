@@ -2,32 +2,14 @@
 
 import { motion } from 'framer-motion'
 import { Star, Quote } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
-const TESTIMONIALS = [
-  {
-    name: 'Sophie Mbeki',
-    role: 'CEO, TechStart',
-    text: 'OverBrand a transformé notre présence en ligne. Notre site génère maintenant 3x plus de leads qu\'avant. L\'équipe est réactive, professionnelle et créative.',
-    rating: 5,
-    avatar: 'SM',
-  },
-  {
-    name: 'Jean-Paul Kofi',
-    role: 'Directeur Commercial, InnoGroup',
-    text: 'Application mobile livrée dans les délais, exactement comme nous l\'avions imaginé. Le suivi en temps réel du projet est un vrai plus. Je recommande à 100%.',
-    rating: 5,
-    avatar: 'JK',
-  },
-  {
-    name: 'Marie Nguyen',
-    role: 'Fondatrice, BioShop',
-    text: 'Logo, site web et stratégie SEO — tout en un seul endroit. Résultats visibles dès le premier mois avec une hausse de 40% du trafic organique.',
-    rating: 5,
-    avatar: 'MN',
-  },
-]
+const AVATARS = ['SM', 'JK', 'MN']
 
 export function TestimonialsSection() {
+  const t = useTranslations('testimonials')
+  const items = t.raw('items') as { name: string; role: string; text: string }[]
+
   return (
     <section className="section">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,7 +22,7 @@ export function TestimonialsSection() {
         >
           <div className="flex items-center justify-center gap-3 mb-6">
             <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
-            <span className="badge">Témoignages</span>
+            <span className="badge">{t('eyebrow')}</span>
             <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
           </div>
           <h2
@@ -51,19 +33,19 @@ export function TestimonialsSection() {
               color: 'var(--text)',
             }}
           >
-            ILS NOUS <span style={{ color: 'var(--primary)' }}>FONT CONFIANCE</span>
+            {t('title_1')} <span style={{ color: 'var(--primary)' }}>{t('title_2')}</span>
           </h2>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {TESTIMONIALS.map((t, i) => (
+          {items.map((item, i) => (
             <motion.div
-              key={t.name}
+              key={item.name}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="card p-7 relative"
+              className="card card-glass p-7 relative"
             >
               <Quote
                 size={32}
@@ -73,14 +55,14 @@ export function TestimonialsSection() {
 
               {/* Stars */}
               <div className="flex gap-1 mb-4">
-                {Array.from({ length: t.rating }).map((_, j) => (
+                {Array.from({ length: 5 }).map((_, j) => (
                   <Star key={j} size={14} fill="currentColor" style={{ color: '#f59e0b' }} />
                 ))}
               </div>
 
               {/* Text */}
               <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-muted)' }}>
-                &ldquo;{t.text}&rdquo;
+                &ldquo;{item.text}&rdquo;
               </p>
 
               {/* Author */}
@@ -89,11 +71,11 @@ export function TestimonialsSection() {
                   className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white"
                   style={{ background: 'var(--primary)' }}
                 >
-                  {t.avatar}
+                  {AVATARS[i]}
                 </div>
                 <div>
-                  <div className="font-semibold text-sm" style={{ color: 'var(--text)' }}>{t.name}</div>
-                  <div className="text-xs" style={{ color: 'var(--text-subtle)' }}>{t.role}</div>
+                  <div className="font-semibold text-sm" style={{ color: 'var(--text)' }}>{item.name}</div>
+                  <div className="text-xs" style={{ color: 'var(--text-subtle)' }}>{item.role}</div>
                 </div>
               </div>
             </motion.div>

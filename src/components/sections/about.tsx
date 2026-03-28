@@ -2,26 +2,31 @@
 
 import { motion } from 'framer-motion'
 import { CheckCircle, TrendingUp, Shield, Zap } from 'lucide-react'
-
-const VALUES = [
-  {
-    icon: Zap,
-    title: 'Réactivité',
-    description: 'Des délais respectés, une communication transparente à chaque étape.',
-  },
-  {
-    icon: Shield,
-    title: 'Fiabilité',
-    description: 'Solutions robustes, sécurisées et maintenables sur le long terme.',
-  },
-  {
-    icon: TrendingUp,
-    title: 'Performance',
-    description: 'Des résultats mesurables et un retour sur investissement optimal.',
-  },
-]
+import { useTranslations } from 'next-intl'
 
 export function AboutSection() {
+  const t = useTranslations('about')
+
+  const VALUES = [
+    {
+      icon: Zap,
+      title: t('value_reactivity_title'),
+      description: t('value_reactivity_desc'),
+    },
+    {
+      icon: Shield,
+      title: t('value_reliability_title'),
+      description: t('value_reliability_desc'),
+    },
+    {
+      icon: TrendingUp,
+      title: t('value_performance_title'),
+      description: t('value_performance_desc'),
+    },
+  ]
+
+  const checklist: string[] = t.raw('checklist') as string[]
+
   return (
     <section id="about" className="section">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,7 +40,7 @@ export function AboutSection() {
           >
             <div className="flex items-center gap-3 mb-6">
               <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
-              <span className="badge">Qui sommes-nous</span>
+              <span className="badge">{t('eyebrow')}</span>
             </div>
             <h2
               className="font-display leading-none mb-6"
@@ -45,28 +50,19 @@ export function AboutSection() {
                 color: 'var(--text)',
               }}
             >
-              L&apos;AGENCE QUI<br />
-              <span style={{ color: 'var(--primary)' }}>FAIT LA DIFFÉRENCE</span>
+              {t('title_1')}<br />
+              <span style={{ color: 'var(--primary)' }}>{t('title_2')}</span>
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--text-muted)' }}>
-              OverBrand est une agence digitale créative spécialisée dans la transformation numérique
-              des entreprises. Nous combinons créativité, technologie et stratégie pour propulser
-              votre marque vers de nouveaux sommets.
+              {t('description_1')}
             </p>
             <p className="text-base leading-relaxed mb-8" style={{ color: 'var(--text-muted)' }}>
-              Notre équipe passionnée accompagne les startups, PME et grandes entreprises dans
-              la création de leur identité digitale et le développement de solutions sur mesure.
+              {t('description_2')}
             </p>
 
             {/* Checklist */}
             <ul className="space-y-3">
-              {[
-                'Équipe expérimentée et passionnée',
-                'Solutions sur mesure et adaptées',
-                'Accompagnement de A à Z',
-                'Suivi en temps réel de vos projets',
-                'Support technique disponible',
-              ].map((item) => (
+              {checklist.map((item) => (
                 <li key={item} className="flex items-center gap-3 text-sm" style={{ color: 'var(--text-muted)' }}>
                   <CheckCircle size={16} style={{ color: 'var(--primary)', flexShrink: 0 }} />
                   {item}
@@ -93,8 +89,8 @@ export function AboutSection() {
               <div className="absolute inset-0 dot-bg opacity-20" />
               <div className="relative">
                 <div className="text-6xl font-black text-white mb-2">5+</div>
-                <div className="text-white/80 text-lg font-medium">années d&apos;expérience</div>
-                <div className="text-white/60 text-sm mt-1">dans le digital</div>
+                <div className="text-white/80 text-lg font-medium">{t('stat_years')}</div>
+                <div className="text-white/60 text-sm mt-1">{t('stat_years_sub')}</div>
               </div>
             </div>
 
@@ -107,7 +103,7 @@ export function AboutSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="card p-5 flex items-start gap-4"
+                  className="card card-glass p-5 flex items-start gap-4"
                 >
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"

@@ -22,11 +22,11 @@ export async function getProfile(): Promise<Profile | null> {
   return data ?? null
 }
 
-/** Redirige vers /dashboard si l'utilisateur n'est pas admin */
-export async function requireAdmin() {
+/** Redirige vers /${locale}/dashboard si l'utilisateur n'est pas admin */
+export async function requireAdmin(locale = 'fr') {
   const profile = await getProfile()
   if (!profile || profile.role !== 'admin') {
-    redirect('/dashboard')
+    redirect(`/${locale}/dashboard`)
   }
   return profile
 }

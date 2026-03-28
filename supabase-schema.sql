@@ -2,6 +2,7 @@
 -- OVERBRAND - Supabase Database Schema
 -- ====================================
 -- Run this in your Supabase SQL Editor
+-- Ce fichier est idempotent : peut être relancé plusieurs fois sans erreur
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -17,20 +18,15 @@ CREATE TABLE IF NOT EXISTS profiles (
 
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
--- Chaque utilisateur peut lire son propre profil
+DROP POLICY IF EXISTS "Users can view own profile" ON profiles;
 CREATE POLICY "Users can view own profile" ON profiles
   FOR SELECT USING (auth.uid() = id);
 
--- Admins peuvent tout voir
+DROP POLICY IF EXISTS "Admins can view all profiles" ON profiles;
 CREATE POLICY "Admins can view all profiles" ON profiles
   FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM profiles p WHERE p.id = auth.uid() AND p.role = 'admin'
-    )
+    EXISTS (SELECT 1 FROM profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
   );
-
--- Personne ne peut modifier son rôle via le client (seul service_role peut)
--- Pas de policy UPDATE/INSERT publique = bloqué par défaut
 
 -- Trigger: crée automatiquement un profil 'client' à chaque inscription
 CREATE OR REPLACE FUNCTION handle_new_user()
@@ -95,55 +91,82 @@ CREATE TABLE IF NOT EXISTS project_updates (
 );
 
 -- ====================================
+-- TABLE: showcase_projects (Projets vitrine homepage)
+-- ====================================
+CREATE TABLE IF NOT EXISTS showcase_projects (
+  id            UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  title         TEXT NOT NULL,
+  category      TEXT NOT NULL,
+  description   TEXT,
+  gradient      TEXT NOT NULL DEFAULT 'linear-gradient(135deg, #0d2240 0%, #3a6fd8 100%)',
+  accent        TEXT NOT NULL DEFAULT '#3a6fd8',
+  size          TEXT NOT NULL DEFAULT 'medium' CHECK (size IN ('large', 'medium', 'small')),
+  display_order INTEGER NOT NULL DEFAULT 0,
+  visible       BOOLEAN NOT NULL DEFAULT true,
+  created_at    TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
+-- ====================================
 -- ROW LEVEL SECURITY (RLS)
 -- ====================================
 
 ALTER TABLE quotes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE project_updates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE showcase_projects ENABLE ROW LEVEL SECURITY;
 
--- Quotes: users see own, admins see all
+-- Quotes
+DROP POLICY IF EXISTS "Users can view own quotes" ON quotes;
 CREATE POLICY "Users can view own quotes" ON quotes
   FOR SELECT USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Admins can view all quotes" ON quotes;
 CREATE POLICY "Admins can view all quotes" ON quotes
   FOR SELECT USING (
     EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
   );
 
+DROP POLICY IF EXISTS "Users can insert own quotes" ON quotes;
 CREATE POLICY "Users can insert own quotes" ON quotes
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Admins can update quotes" ON quotes;
 CREATE POLICY "Admins can update quotes" ON quotes
   FOR UPDATE USING (
     EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
   );
 
--- Projects: users see own, admins see all
+-- Projects
+DROP POLICY IF EXISTS "Users can view own projects" ON projects;
 CREATE POLICY "Users can view own projects" ON projects
   FOR SELECT USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Admins can view all projects" ON projects;
 CREATE POLICY "Admins can view all projects" ON projects
   FOR SELECT USING (
     EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
   );
 
+DROP POLICY IF EXISTS "Admins can insert projects" ON projects;
 CREATE POLICY "Admins can insert projects" ON projects
   FOR INSERT WITH CHECK (
     EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
   );
 
+DROP POLICY IF EXISTS "Admins can update projects" ON projects;
 CREATE POLICY "Admins can update projects" ON projects
   FOR UPDATE USING (
     EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
   );
 
+DROP POLICY IF EXISTS "Admins can delete projects" ON projects;
 CREATE POLICY "Admins can delete projects" ON projects
   FOR DELETE USING (
     EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
   );
 
--- Project updates: users see own projects' updates, admins see all
+-- Project updates
+DROP POLICY IF EXISTS "Users can view updates for own projects" ON project_updates;
 CREATE POLICY "Users can view updates for own projects" ON project_updates
   FOR SELECT USING (
     EXISTS (
@@ -153,13 +176,32 @@ CREATE POLICY "Users can view updates for own projects" ON project_updates
     )
   );
 
+DROP POLICY IF EXISTS "Admins can view all project updates" ON project_updates;
 CREATE POLICY "Admins can view all project updates" ON project_updates
   FOR SELECT USING (
     EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
   );
 
+DROP POLICY IF EXISTS "Admins can insert project updates" ON project_updates;
 CREATE POLICY "Admins can insert project updates" ON project_updates
   FOR INSERT WITH CHECK (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+  );
+
+DROP POLICY IF EXISTS "Admins can delete project updates" ON project_updates;
+CREATE POLICY "Admins can delete project updates" ON project_updates
+  FOR DELETE USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+  );
+
+-- Showcase projects
+DROP POLICY IF EXISTS "Anyone can view visible showcase projects" ON showcase_projects;
+CREATE POLICY "Anyone can view visible showcase projects" ON showcase_projects
+  FOR SELECT USING (visible = true);
+
+DROP POLICY IF EXISTS "Admins can manage showcase projects" ON showcase_projects;
+CREATE POLICY "Admins can manage showcase projects" ON showcase_projects
+  FOR ALL USING (
     EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
   );
 
@@ -187,6 +229,25 @@ CREATE TRIGGER projects_updated_at
 -- ====================================
 -- SE DÉFINIR COMME ADMIN
 -- ====================================
--- Remplace 'VOTRE-UUID' par votre UUID visible dans Authentication > Users
+-- Remplace 'VOTRE-UUID' par votre UUID (Authentication > Users dans Supabase)
 -- INSERT INTO profiles (id, role) VALUES ('VOTRE-UUID', 'admin')
 -- ON CONFLICT (id) DO UPDATE SET role = 'admin';
+
+-- ====================================
+-- CRÉER UN PROFIL POUR LES UTILISATEURS EXISTANTS
+-- ====================================
+-- Si tu avais déjà des comptes avant ce schéma, exécute ceci :
+-- INSERT INTO profiles (id, role)
+-- SELECT id, 'client' FROM auth.users
+-- ON CONFLICT (id) DO NOTHING;
+
+-- ====================================
+-- PROJETS VITRINE INITIAUX (exemples)
+-- ====================================
+-- Décommentez pour pré-remplir :
+-- INSERT INTO showcase_projects (title, category, description, gradient, accent, size, display_order) VALUES
+--   ('Identité Marque Luxe', 'Branding', 'Refonte complète de l''identité visuelle pour une maison de mode.', 'linear-gradient(135deg, #0d2240 0%, #2855a0 50%, #3a6fd8 100%)', '#3a6fd8', 'large', 1),
+--   ('Plateforme E-Commerce', 'Site Web', 'Boutique en ligne avec tunnel de vente optimisé.', 'linear-gradient(135deg, #1a3a6b 0%, #6b9fd4 100%)', '#6b9fd4', 'small', 2),
+--   ('App Mobile Fintech', 'Application', 'Interface utilisateur pour une startup de paiement mobile.', 'linear-gradient(160deg, #2855a0 0%, #0d2240 100%)', '#2855a0', 'small', 3),
+--   ('Campagne SEO & Ads', 'Marketing', 'Stratégie 360° qui a triplé le trafic organique en 3 mois.', 'linear-gradient(135deg, #3a6fd8 0%, #1a3a6b 100%)', '#3a6fd8', 'medium', 4),
+--   ('Motion Design Brand', 'Contenu', 'Série de vidéos animées pour lancement de produit.', 'linear-gradient(135deg, #6b9fd4 0%, #0d2240 100%)', '#6b9fd4', 'medium', 5);

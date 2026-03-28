@@ -6,7 +6,7 @@ import {
   Search, Palette, Clapperboard, ArrowUpRight,
   type LucideIcon,
 } from 'lucide-react'
-import { SERVICES } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Globe,
@@ -18,7 +18,19 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Clapperboard,
 }
 
+const SERVICE_IDS = [
+  { id: 'website', icon: 'Globe' },
+  { id: 'software', icon: 'Smartphone' },
+  { id: 'hosting', icon: 'Cloud' },
+  { id: 'ads', icon: 'Megaphone' },
+  { id: 'seo', icon: 'Search' },
+  { id: 'branding', icon: 'Palette' },
+  { id: 'content', icon: 'Clapperboard' },
+]
+
 export function ServicesSection() {
+  const t = useTranslations('services')
+
   return (
     <section id="services" className="section" style={{ background: 'var(--bg-secondary)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,7 +45,7 @@ export function ServicesSection() {
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
-            <span className="badge">Ce qu&apos;on fait</span>
+            <span className="badge">{t('eyebrow')}</span>
           </div>
 
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
@@ -45,18 +57,18 @@ export function ServicesSection() {
                 color: 'var(--text)',
               }}
             >
-              NOS<br />
-              <span style={{ color: 'var(--primary)' }}>SERVICES</span>
+              {t('title_1')}<br />
+              <span style={{ color: 'var(--primary)' }}>{t('title_2')}</span>
             </h2>
             <p className="text-sm leading-relaxed max-w-xs lg:max-w-sm lg:text-right pb-2" style={{ color: 'var(--text-muted)' }}>
-              De la conception à la mise en ligne — chaque aspect de votre transformation digitale.
+              {t('subtitle')}
             </p>
           </div>
         </motion.div>
 
         {/* Services list — numbered editorial style */}
         <div className="divide-y" style={{ borderTop: '1px solid var(--border)', borderColor: 'var(--border)' }}>
-          {SERVICES.map((service, i) => {
+          {SERVICE_IDS.map((service, i) => {
             const Icon = ICON_MAP[service.icon] ?? Globe
             return (
               <motion.div
@@ -103,10 +115,10 @@ export function ServicesSection() {
                       className="font-bold text-base lg:text-lg mb-1 group-hover:text-primary transition-colors duration-300"
                       style={{ color: 'var(--text)' }}
                     >
-                      {service.title}
+                      {t(`items.${service.id}.title`)}
                     </h3>
                     <p className="text-xs lg:text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-                      {service.description}
+                      {t(`items.${service.id}.description`)}
                     </p>
                   </div>
 
@@ -131,11 +143,11 @@ export function ServicesSection() {
           className="mt-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
         >
           <p className="text-sm" style={{ color: 'var(--text-subtle)' }}>
-            Vous avez un projet spécifique ? Parlons-en.
+            {t('cta_text')}
           </p>
           <a href="#contact">
             <button className="btn-primary text-xs px-6 py-3 flex items-center gap-2">
-              Demander un devis <ArrowUpRight size={14} />
+              {t('cta_button')} <ArrowUpRight size={14} />
             </button>
           </a>
         </motion.div>

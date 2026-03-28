@@ -3,23 +3,67 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, LayoutDashboard } from 'lucide-react'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { useTheme } from 'next-themes'
+import { useTranslations, useLocale } from 'next-intl'
+import { usePathname, useRouter } from 'next/navigation'
 
-const NAV_LINKS = [
-  { label: 'Services', href: '#services' },
-  { label: 'Projets', href: '#projects' },
-  { label: 'À propos', href: '#about' },
-  { label: 'Processus', href: '#process' },
-  { label: 'Contact', href: '#contact' },
-]
+function LanguageSwitcher() {
+  const locale = useLocale()
+  const router = useRouter()
+  const pathname = usePathname()
 
-export function Navbar() {
+  function switchLocale(newLocale: string) {
+    // Replace /fr/ or /en/ at start of path
+    const newPath = pathname.replace(/^\/(fr|en)/, `/${newLocale}`)
+    router.push(newPath)
+  }
+
+  return (
+    <div className="flex items-center gap-1 text-xs font-bold uppercase tracking-widest">
+      <button
+        onClick={() => switchLocale('fr')}
+        className="px-2 py-1 transition-opacity"
+        style={{
+          color: locale === 'fr' ? 'var(--primary)' : 'var(--text-subtle)',
+          opacity: locale === 'fr' ? 1 : 0.5,
+          borderBottom: locale === 'fr' ? '1.5px solid var(--primary)' : '1.5px solid transparent',
+        }}
+      >
+        FR
+      </button>
+      <span style={{ color: 'var(--border)' }}>|</span>
+      <button
+        onClick={() => switchLocale('en')}
+        className="px-2 py-1 transition-opacity"
+        style={{
+          color: locale === 'en' ? 'var(--primary)' : 'var(--text-subtle)',
+          opacity: locale === 'en' ? 1 : 0.5,
+          borderBottom: locale === 'en' ? '1.5px solid var(--primary)' : '1.5px solid transparent',
+        }}
+      >
+        EN
+      </button>
+    </div>
+  )
+}
+
+export function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
+  const t = useTranslations('nav')
+  const locale = useLocale()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const { resolvedTheme } = useTheme()
+
+  const NAV_LINKS = [
+    { label: t('services'), href: '#services' },
+    { label: t('projects'), href: '#projects' },
+    { label: t('about'), href: '#about' },
+    { label: t('process'), href: '#process' },
+    { label: t('contact'), href: '#contact' },
+  ]
 
   useEffect(() => {
     setMounted(true)
@@ -42,7 +86,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
+          <Link href={`/${locale}`} className="flex items-center gap-3 group">
             <div className="relative w-9 h-9 transition-transform group-hover:scale-105">
               <Image
                 src={logoSrc}
@@ -77,19 +121,32 @@ export function Navbar() {
           {/* Actions */}
           <div className="flex items-center gap-2">
             <div className="hidden sm:flex items-center gap-2">
+              <LanguageSwitcher />
               <ThemeToggle />
             </div>
-            <Link href="/auth/login">
-              <button
-                className="hidden md:block text-xs font-bold uppercase tracking-widest px-4 py-2 transition-all hover:opacity-80"
-                style={{ color: 'var(--text-muted)', border: '1px solid var(--border)', letterSpacing: '0.1em' }}
-              >
-                Connexion
-              </button>
-            </Link>
-            <a href="#contact">
+            {isLoggedIn ? (
+              <Link href={`/${locale}/dashboard`}>
+                <button
+                  className="hidden md:flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-4 py-2 transition-all hover:opacity-80"
+                  style={{ color: 'var(--primary)', border: '1px solid var(--primary)', letterSpacing: '0.1em' }}
+                >
+                  <LayoutDashboard size={14} />
+                  {t('dashboard')}
+                </button>
+              </Link>
+            ) : (
+              <Link href={`/${locale}/auth/login`}>
+                <button
+                  className="hidden md:block text-xs font-bold uppercase tracking-widest px-4 py-2 transition-all hover:opacity-80"
+                  style={{ color: 'var(--text-muted)', border: '1px solid var(--border)', letterSpacing: '0.1em' }}
+                >
+                  {t('login')}
+                </button>
+              </Link>
+            )}
+            <a href="#contact" data-magnetic data-magnetic-strength="0.3">
               <button className="btn-primary text-xs px-5 py-2.5 hidden md:flex items-center gap-2">
-                Devis gratuit
+                {t('quote')}
               </button>
             </a>
 
@@ -123,19 +180,32 @@ export function Navbar() {
             </a>
           ))}
           <div className="flex items-center gap-2 pt-3">
+            <LanguageSwitcher />
             <ThemeToggle />
-            <Link href="/auth/login" className="flex-1">
-              <button
-                className="w-full py-2.5 text-xs font-bold uppercase tracking-widest"
-                style={{ background: 'var(--surface)', color: 'var(--text)' }}
-              >
-                Connexion
-              </button>
-            </Link>
+            {isLoggedIn ? (
+              <Link href={`/${locale}/dashboard`} className="flex-1">
+                <button
+                  className="w-full py-2.5 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2"
+                  style={{ background: 'var(--primary-glow)', color: 'var(--primary)', border: '1px solid var(--primary)' }}
+                >
+                  <LayoutDashboard size={13} />
+                  {t('dashboard')}
+                </button>
+              </Link>
+            ) : (
+              <Link href={`/${locale}/auth/login`} className="flex-1">
+                <button
+                  className="w-full py-2.5 text-xs font-bold uppercase tracking-widest"
+                  style={{ background: 'var(--surface)', color: 'var(--text)' }}
+                >
+                  {t('login')}
+                </button>
+              </Link>
+            )}
           </div>
           <a href="#contact">
             <button className="btn-primary w-full text-xs py-3 mt-2">
-              Devis gratuit
+              {t('quote')}
             </button>
           </a>
         </div>

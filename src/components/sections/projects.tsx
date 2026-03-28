@@ -1,15 +1,27 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
 import { ArrowUpRight, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import { useTranslations, useLocale } from 'next-intl'
 
-const PROJECTS = [
+type ShowcaseProject = {
+  id: string | number
+  title: string
+  category: string
+  description: string | null
+  gradient: string
+  accent: string
+  size: string
+}
+
+const FALLBACK_PROJECTS: ShowcaseProject[] = [
   {
     id: 1,
     title: 'Identité Marque Luxe',
     category: 'Branding',
-    description: 'Refonte complète de l\'identité visuelle pour une maison de mode parisienne.',
+    description: "Refonte complète de l'identité visuelle pour une maison de mode parisienne.",
     gradient: 'linear-gradient(135deg, #0d2240 0%, #2855a0 50%, #3a6fd8 100%)',
     accent: '#3a6fd8',
     size: 'large',
@@ -18,19 +30,19 @@ const PROJECTS = [
     id: 2,
     title: 'Plateforme E-Commerce',
     category: 'Site Web',
-    description: 'Boutique en ligne avec tunnel de vente optimisé.',
+    description: 'Boutique en ligne avec tunnel de vente optimisé et +180% de conversion.',
     gradient: 'linear-gradient(135deg, #1a3a6b 0%, #6b9fd4 100%)',
     accent: '#6b9fd4',
-    size: 'small',
+    size: 'medium',
   },
   {
     id: 3,
     title: 'App Mobile Fintech',
     category: 'Application',
-    description: 'Interface utilisateur pour une startup de paiement mobile.',
+    description: 'Interface utilisateur pour une startup de paiement mobile primée.',
     gradient: 'linear-gradient(160deg, #2855a0 0%, #0d2240 100%)',
     accent: '#2855a0',
-    size: 'small',
+    size: 'medium',
   },
   {
     id: 4,
@@ -45,208 +57,261 @@ const PROJECTS = [
     id: 5,
     title: 'Motion Design Brand',
     category: 'Contenu',
-    description: 'Série de vidéos animées pour lancement de produit.',
+    description: 'Série de vidéos animées pour lancement de produit viral.',
     gradient: 'linear-gradient(135deg, #6b9fd4 0%, #2855a0 60%, #0d2240 100%)',
     accent: '#6b9fd4',
     size: 'medium',
   },
 ]
 
-function ProjectCard({ project, index }: { project: typeof PROJECTS[0]; index: number }) {
+// Card width + gap in px used for the translate calculation
+const CARD_W = 420
+const CARD_GAP = 20
+
+function ProjectCard({ project, index }: { project: ShowcaseProject; index: number }) {
+  const t = useTranslations('projects')
+  const locale = useLocale()
+  const [hovered, setHovered] = useState(false)
+
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  const lightX = useSpring(mouseX, { stiffness: 120, damping: 18 })
+  const lightY = useSpring(mouseY, { stiffness: 120, damping: 18 })
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    mouseX.set(e.clientX - rect.left)
+    mouseY.set(e.clientY - rect.top)
+  }
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.08 }}
-      className="group relative overflow-hidden cursor-pointer"
+      initial={{ opacity: 0, y: 32 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.55, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+      className="relative flex-shrink-0 group overflow-hidden"
       style={{
+        width: `${CARD_W}px`,
         background: 'var(--card-bg)',
         border: '1px solid var(--card-border)',
       }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onMouseMove={handleMouseMove}
+      data-cursor="drag"
+      data-cursor-label={t('view_project')}
     >
-      {/* Gradient visual */}
+      {/* Light shader */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none z-10"
+        animate={{
+          background: hovered
+            ? `radial-gradient(300px circle at ${lightX.get()}px ${lightY.get()}px, rgba(255,255,255,0.07), transparent 70%)`
+            : 'none',
+          opacity: hovered ? 1 : 0,
+        }}
+        transition={{ opacity: { duration: 0.3 } }}
+      />
+
+      {/* Gradient image area */}
       <div
         className="relative overflow-hidden"
-        style={{
-          height: project.size === 'large' ? '280px' : project.size === 'medium' ? '200px' : '160px',
-          background: project.gradient,
-        }}
+        style={{ height: '260px', background: project.gradient }}
       >
-        {/* Dot pattern overlay */}
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: 'radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px)',
-            backgroundSize: '18px 18px',
-          }}
+        <div className="absolute inset-0 opacity-20"
+          style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px)', backgroundSize: '18px 18px' }} />
+        <div className="absolute bottom-0 right-0 w-40 h-40 opacity-10"
+          style={{ background: 'white', clipPath: 'polygon(100% 0%, 0% 100%, 100% 100%)' }} />
+        <motion.div className="absolute top-6 left-6 w-20 h-20 rounded-full opacity-10"
+          style={{ border: '2px solid white' }}
+          animate={{ scale: hovered ? 1.15 : 1 }}
+          transition={{ duration: 0.4 }}
         />
 
-        {/* Decorative geometric */}
-        <div
-          className="absolute bottom-0 right-0 w-32 h-32 opacity-10"
-          style={{
-            background: 'white',
-            clipPath: 'polygon(100% 0%, 0% 100%, 100% 100%)',
-          }}
-        />
-        <div
-          className="absolute top-4 left-4 w-16 h-16 rounded-full opacity-10"
-          style={{ border: '2px solid white' }}
-        />
+        {/* Index watermark */}
+        <div className="absolute bottom-2 right-4 select-none pointer-events-none"
+          style={{ fontFamily: 'var(--font-display)', fontSize: '6rem', lineHeight: 1, color: 'rgba(255,255,255,0.07)', fontWeight: 900 }}
+        >
+          {String(index + 1).padStart(2, '0')}
+        </div>
 
         {/* Category pill */}
-        <div className="absolute top-4 left-4">
-          <span
-            className="text-xs font-bold uppercase tracking-widest px-3 py-1"
-            style={{
-              background: 'rgba(255,255,255,0.15)',
-              color: 'white',
-              backdropFilter: 'blur(8px)',
-              clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
-            }}
+        <div className="absolute top-4 left-4 z-20">
+          <span className="text-xs font-bold uppercase tracking-widest px-3 py-1 text-white"
+            style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)' }}
           >
             {project.category}
           </span>
         </div>
 
         {/* Hover overlay */}
-        <div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-          style={{ background: 'rgba(13, 34, 64, 0.5)', backdropFilter: 'blur(4px)' }}
+        <motion.div
+          className="absolute inset-0 z-10 flex items-end p-6"
+          animate={{ opacity: hovered ? 1 : 0 }}
+          transition={{ duration: 0.25 }}
+          style={{ background: 'linear-gradient(to top, rgba(13,34,64,0.88) 0%, transparent 60%)' }}
         >
-          <Link href="/dashboard/projets">
-            <button
-              className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-5 py-3 text-white transition-transform hover:scale-105"
-              style={{
-                background: 'var(--primary)',
-                clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)',
-              }}
+          <Link href={`/${locale}/dashboard/projets`}>
+            <button className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-5 py-3 text-white"
+              style={{ background: 'var(--primary)', clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)' }}
             >
-              Voir le projet <ArrowUpRight size={14} />
+              {t('view_project')} <ArrowUpRight size={14} />
             </button>
           </Link>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Card content */}
-      <div className="p-5">
-        <h3
-          className="font-bold text-base mb-1 group-hover:text-primary transition-colors duration-300"
-          style={{ color: 'var(--text)' }}
+      {/* Text area */}
+      <div className="p-6">
+        <motion.h3
+          className="font-bold text-base mb-2"
+          animate={{ color: hovered ? 'var(--primary)' : 'var(--text)' }}
+          transition={{ duration: 0.2 }}
         >
           {project.title}
-        </h3>
+        </motion.h3>
         <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
           {project.description}
         </p>
+        <motion.div
+          className="mt-4 h-[2px]"
+          animate={{ width: hovered ? '100%' : '0%' }}
+          transition={{ duration: 0.4 }}
+          style={{ background: `linear-gradient(90deg, ${project.accent}, transparent)` }}
+        />
       </div>
     </motion.div>
   )
 }
 
-export function ProjectsSection() {
+// End-of-track CTA card
+function CTACard() {
+  const t = useTranslations('projects')
   return (
-    <section id="projects" className="section" style={{ background: 'var(--bg)' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div
+      className="flex-shrink-0 flex flex-col items-center justify-center"
+      style={{
+        width: `${CARD_W * 0.65}px`,
+        minHeight: '100%',
+        border: '1px dashed var(--border)',
+        background: 'var(--surface)',
+      }}
+    >
+      <div className="text-center p-8">
+        <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4"
+          style={{ background: 'var(--primary-glow)', border: '1px solid var(--primary)' }}
+        >
+          <ArrowRight size={20} style={{ color: 'var(--primary)' }} />
+        </div>
+        <p className="text-sm font-semibold mb-5" style={{ color: 'var(--text-muted)' }}>
+          {t('cta_text')}
+        </p>
+        <a href="#contact">
+          <button className="btn-primary text-xs px-6 py-3" data-magnetic>
+            {t('cta_button')}
+          </button>
+        </a>
+      </div>
+    </div>
+  )
+}
+
+export function ProjectsSection({ projects: dbProjects }: { projects: ShowcaseProject[] }) {
+  const t = useTranslations('projects')
+  const locale = useLocale()
+  const projects = dbProjects.length > 0 ? dbProjects.slice(0, 5) : FALLBACK_PROJECTS
+
+  // Total items = projects + 1 CTA card
+  const totalCards = projects.length + 1
+  const totalTrackWidth = totalCards * (CARD_W + CARD_GAP)
+
+  // The sticky container — give it enough scroll height
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end end'],
+  })
+
+  // Translate the track from 0 to -(totalWidth - viewport)
+  // We use a percentage of total track width so it works at any viewport
+  const xTranslate = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0, -(totalTrackWidth - (typeof window !== 'undefined' ? window.innerWidth - 64 : 1200))]
+  )
+
+  // Scroll height = enough room to scroll all cards (each card needs ~600px of scroll)
+  const scrollHeight = projects.length * 600 + 400
+
+  return (
+    <section id="projects" ref={sectionRef} style={{ background: 'var(--bg)', height: `${scrollHeight}px` }}>
+
+      {/* Sticky wrapper — holds header + track */}
+      <div className="sticky top-0 h-screen flex flex-col overflow-hidden" style={{ background: 'var(--bg)' }}>
 
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-16"
-        >
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
-            <span className="badge">Notre travail</span>
-          </div>
-
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-            <h2
-              className="font-display leading-none tracking-wide"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(3.5rem, 8vw, 7rem)',
-                color: 'var(--text)',
-              }}
+        <div className="pt-24 pb-8 px-4 sm:px-6 lg:px-8 flex-shrink-0">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
             >
-              PROJETS<br />
-              <span
-                style={{
-                  WebkitTextStroke: '2px var(--primary)',
-                  color: 'transparent',
-                }}
-              >
-                RÉCENTS
-              </span>
-            </h2>
-            <div className="flex flex-col items-start lg:items-end gap-3 pb-2">
-              <p className="text-sm leading-relaxed max-w-xs lg:text-right" style={{ color: 'var(--text-muted)' }}>
-                Quelques-unes de nos réalisations récentes — chaque projet est unique.
-              </p>
-              <Link href="/dashboard/projets">
-                <button className="btn-outline text-xs px-6 py-3 flex items-center gap-2">
-                  Voir tous les projets <ArrowRight size={14} />
-                </button>
-              </Link>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Asymmetric grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {/* Large card spanning 2 cols */}
-          <div className="lg:col-span-2">
-            <ProjectCard project={PROJECTS[0]} index={0} />
-          </div>
-
-          {/* Small card */}
-          <div>
-            <ProjectCard project={PROJECTS[1]} index={1} />
-          </div>
-
-          {/* Small card */}
-          <div>
-            <ProjectCard project={PROJECTS[2]} index={2} />
-          </div>
-
-          {/* Medium card */}
-          <div>
-            <ProjectCard project={PROJECTS[3]} index={3} />
-          </div>
-
-          {/* Medium card */}
-          <div>
-            <ProjectCard project={PROJECTS[4]} index={4} />
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
+                <span className="badge">{t('eyebrow')}</span>
+              </div>
+              <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+                <h2
+                  className="font-display leading-none tracking-wide"
+                  style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(3rem, 7vw, 6rem)', color: 'var(--text)' }}
+                >
+                  {t('title_1')}<br />
+                  <span style={{ WebkitTextStroke: '2px var(--primary)', color: 'transparent' }}>
+                    {t('title_2')}
+                  </span>
+                </h2>
+                <div className="flex items-center gap-4 pb-2">
+                  <p className="text-sm max-w-xs" style={{ color: 'var(--text-muted)' }}>
+                    {t('subtitle')}
+                  </p>
+                  <Link href={`/${locale}/dashboard/projets`}>
+                    <button className="btn-outline text-xs px-6 py-3 flex items-center gap-2 whitespace-nowrap" data-magnetic>
+                      {t('view_all')} <ArrowRight size={14} />
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
 
-        {/* Bottom CTA strip */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 py-8"
-          style={{ borderTop: '1px solid var(--border)' }}
+        {/* Horizontal track — desktop only */}
+        <div className="hidden lg:flex flex-1 items-center overflow-hidden px-8">
+          <motion.div
+            className="flex gap-5 items-stretch h-[calc(100vh-260px)]"
+            style={{ x: xTranslate }}
+          >
+            {projects.map((project, i) => (
+              <ProjectCard key={project.id} project={project} index={i} />
+            ))}
+            <CTACard />
+          </motion.div>
+        </div>
+
+        {/* Mobile — standard drag scroll */}
+        <div
+          className="lg:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory px-4 pb-8 flex-1 items-center scrollbar-none"
+          style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
         >
-          <div className="flex items-center gap-4">
-            <div
-              className="w-2 h-2 rounded-full animate-pulse"
-              style={{ background: 'var(--primary)' }}
-            />
-            <span className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>
-              Prêt à lancer votre prochain projet ?
-            </span>
-          </div>
-          <a href="#contact">
-            <button className="btn-primary text-xs px-8 py-3.5 flex items-center gap-2">
-              Démarrer maintenant <ArrowRight size={14} />
-            </button>
-          </a>
-        </motion.div>
+          {projects.map((project, i) => (
+            <div key={project.id} className="snap-center flex-shrink-0" style={{ width: '85vw', maxWidth: '380px' }}>
+              <ProjectCard project={project} index={i} />
+            </div>
+          ))}
+        </div>
+
       </div>
     </section>
   )

@@ -1,0 +1,268 @@
+{
+  "nav": {
+    "services": "Services",
+    "projects": "Projets",
+    "about": "À propos",
+    "process": "Processus",
+    "contact": "Contact",
+    "login": "Connexion",
+    "dashboard": "Mon espace",
+    "quote": "Devis gratuit"
+  },
+  "hero": {
+    "badge": "Agence Digitale Créative",
+    "line1": "VOTRE",
+    "line2": "VISION",
+    "line3": "RÉALISÉE.",
+    "description": "Sites web, branding, applications, SEO — OverBrand transforme votre présence digitale en avantage concurrentiel durable.",
+    "cta_primary": "Démarrer un projet",
+    "cta_secondary": "Voir nos projets",
+    "cursor_label_start": "Commencer",
+    "cursor_label_projects": "Projets",
+    "stat_projects": "Projets livrés",
+    "stat_years": "Ans d'exp.",
+    "stat_services": "Services",
+    "badge_premium": "Design Premium",
+    "badge_custom": "100% Sur Mesure"
+  },
+  "services": {
+    "eyebrow": "Ce qu'on fait",
+    "title_1": "NOS",
+    "title_2": "SERVICES",
+    "subtitle": "De la conception à la mise en ligne — chaque aspect de votre transformation digitale.",
+    "cta_text": "Vous avez un projet spécifique ? Parlons-en.",
+    "cta_button": "Demander un devis",
+    "items": {
+      "website": {
+        "title": "Création de Sites Web",
+        "description": "Sites vitrines, e-commerce, portfolios — des designs modernes qui convertissent."
+      },
+      "software": {
+        "title": "Logiciels & Applications",
+        "description": "Développement sur mesure d'applications web et mobiles performantes."
+      },
+      "hosting": {
+        "title": "Hébergement & Gestion",
+        "description": "Hébergement sécurisé, maintenance et support technique continu."
+      },
+      "ads": {
+        "title": "Publicité en Ligne",
+        "description": "Campagnes Google Ads, Meta Ads ciblées pour maximiser votre ROI."
+      },
+      "seo": {
+        "title": "Visibilité Google",
+        "description": "Stratégie SEO complète pour dominer les résultats de recherche."
+      },
+      "branding": {
+        "title": "Logo & Identité de Marque",
+        "description": "Création d'identités visuelles mémorables qui démarquent votre entreprise."
+      },
+      "content": {
+        "title": "Création de Contenus",
+        "description": "Visuels, graphismes, motion design pour une communication impactante."
+      }
+    }
+  },
+  "projects": {
+    "eyebrow": "Notre travail",
+    "title_1": "PROJETS",
+    "title_2": "RÉCENTS",
+    "subtitle": "Quelques-unes de nos réalisations récentes — chaque projet est unique.",
+    "view_all": "Voir tous les projets",
+    "view_project": "Voir le projet",
+    "cta_text": "Prêt à lancer votre prochain projet ?",
+    "cta_button": "Démarrer maintenant"
+  },
+  "about": {
+    "eyebrow": "Qui sommes-nous",
+    "title_1": "L'AGENCE QUI",
+    "title_2": "FAIT LA DIFFÉRENCE",
+    "description_1": "OverBrand est une agence digitale créative spécialisée dans la transformation numérique des entreprises. Nous combinons créativité, technologie et stratégie pour propulser votre marque vers de nouveaux sommets.",
+    "description_2": "Notre équipe passionnée accompagne les startups, PME et grandes entreprises dans la création de leur identité digitale et le développement de solutions sur mesure.",
+    "checklist": [
+      "Équipe expérimentée et passionnée",
+      "Solutions sur mesure et adaptées",
+      "Accompagnement de A à Z",
+      "Suivi en temps réel de vos projets",
+      "Support technique disponible"
+    ],
+    "stat_years": "années d'expérience",
+    "stat_years_sub": "dans le digital",
+    "value_reactivity_title": "Réactivité",
+    "value_reactivity_desc": "Des délais respectés, une communication transparente à chaque étape.",
+    "value_reliability_title": "Fiabilité",
+    "value_reliability_desc": "Solutions robustes, sécurisées et maintenables sur le long terme.",
+    "value_performance_title": "Performance",
+    "value_performance_desc": "Des résultats mesurables et un retour sur investissement optimal."
+  },
+  "stats": {
+    "eyebrow": "En chiffres",
+    "projects_value": "50+",
+    "projects_label": "Projets livrés",
+    "clients_value": "40+",
+    "clients_label": "Clients satisfaits",
+    "years_value": "5+",
+    "years_label": "Années d'expérience",
+    "services_value": "7",
+    "services_label": "Expertises"
+  },
+  "process": {
+    "eyebrow": "Comment ça marche",
+    "title_1": "PROCESSUS",
+    "title_2": "CLAIR",
+    "subtitle": "6 étapes pour transformer votre idée en réalité digitale, en toute transparence.",
+    "steps": [
+      {
+        "title": "Consultation gratuite",
+        "description": "On écoute vos besoins, vos objectifs et votre budget pour définir la stratégie idéale."
+      },
+      {
+        "title": "Proposition & Devis",
+        "description": "Vous recevez un devis détaillé avec le périmètre, les délais et le prix transparent."
+      },
+      {
+        "title": "Conception & Design",
+        "description": "Notre équipe crée les maquettes et le design sur mesure pour votre validation."
+      },
+      {
+        "title": "Développement",
+        "description": "Développement de la solution avec des points d'avancement réguliers en toute transparence."
+      },
+      {
+        "title": "Tests & Validation",
+        "description": "Tests rigoureux, corrections et validation finale avant la mise en production."
+      },
+      {
+        "title": "Livraison & Support",
+        "description": "Mise en ligne, formation et support continu pour assurer votre succès."
+      }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "Témoignages",
+    "title_1": "ILS NOUS",
+    "title_2": "FONT CONFIANCE",
+    "items": [
+      {
+        "name": "Sophie Mbeki",
+        "role": "CEO, TechStart",
+        "text": "OverBrand a transformé notre présence en ligne. Notre site génère maintenant 3x plus de leads qu'avant. L'équipe est réactive, professionnelle et créative."
+      },
+      {
+        "name": "Jean-Paul Kofi",
+        "role": "Directeur Commercial, InnoGroup",
+        "text": "Application mobile livrée dans les délais, exactement comme nous l'avions imaginé. Le suivi en temps réel du projet est un vrai plus. Je recommande à 100%."
+      },
+      {
+        "name": "Marie Nguyen",
+        "role": "Fondatrice, BioShop",
+        "text": "Logo, site web et stratégie SEO — tout en un seul endroit. Résultats visibles dès le premier mois avec une hausse de 40% du trafic organique."
+      }
+    ]
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title_1": "VOS",
+    "title_2": "QUESTIONS",
+    "subtitle": "Tout ce que vous devez savoir avant de démarrer votre projet.",
+    "items": [
+      {
+        "q": "Combien coûte un site web ?",
+        "a": "Le prix dépend de la complexité du projet. Un site vitrine démarre à partir de 800€, un e-commerce à partir de 2000€. Nous fournissons un devis gratuit et détaillé après notre première consultation."
+      },
+      {
+        "q": "Quels sont vos délais de réalisation ?",
+        "a": "Un site vitrine est généralement livré en 2 à 4 semaines. Un projet plus complexe (application, e-commerce) prend 4 à 10 semaines selon les fonctionnalités. Les délais sont définis et respectés dès la signature."
+      },
+      {
+        "q": "Puis-je suivre l'avancement de mon projet ?",
+        "a": "Oui — chaque client dispose d'un espace personnel sécurisé où il peut suivre en temps réel l'avancement, les mises à jour et communiquer avec l'équipe."
+      },
+      {
+        "q": "Proposez-vous un accompagnement après la livraison ?",
+        "a": "Absolument. Nous offrons des forfaits de maintenance, d'hébergement et de support technique. Nous formons également vos équipes à l'utilisation des outils livrés."
+      },
+      {
+        "q": "Travaillez-vous avec des clients à l'international ?",
+        "a": "Oui, nous travaillons avec des clients en France, en Europe et à l'international. Toute notre communication peut se faire en français ou en anglais."
+      },
+      {
+        "q": "Comment se déroule la première consultation ?",
+        "a": "La première consultation est gratuite et sans engagement. Nous prenons le temps de comprendre vos besoins, vos objectifs et votre budget avant de vous proposer une solution adaptée."
+      }
+    ]
+  },
+  "cta": {
+    "badge": "Consultation gratuite",
+    "title_1": "PRÊT À",
+    "title_2": "TRANSFORMER?",
+    "subtitle": "Obtenez un devis gratuit en 24h. Sans engagement, sans frais cachés.",
+    "button_primary": "Demander un devis",
+    "button_secondary": "Nous contacter"
+  },
+  "footer": {
+    "tagline": "Votre partenaire digital pour créer, développer et faire rayonner votre présence en ligne.",
+    "services_title": "Services",
+    "company_title": "Entreprise",
+    "legal_title": "Légal",
+    "copyright": "© 2024 OverBrand. Tous droits réservés.",
+    "made_by": "Conçu et développé avec ❤️ par OverBrand",
+    "services_links": [
+      "Création de sites web",
+      "Applications mobiles",
+      "Hébergement",
+      "Publicité en ligne",
+      "SEO & Visibilité",
+      "Identité de marque"
+    ],
+    "company_links": [
+      "À propos",
+      "Notre processus",
+      "Devis gratuit",
+      "Espace client"
+    ],
+    "legal_links": [
+      "Mentions légales",
+      "Politique de confidentialité",
+      "CGV"
+    ]
+  },
+  "auth": {
+    "back": "Retour au site",
+    "login_title": "Connexion",
+    "login_subtitle": "Accédez à votre espace client pour suivre vos projets.",
+    "register_title": "Créer un compte",
+    "register_subtitle": "Accédez à votre espace client et suivez vos projets en temps réel.",
+    "email": "Email",
+    "email_placeholder": "vous@exemple.com",
+    "password": "Mot de passe",
+    "password_placeholder": "••••••••",
+    "forgot_password": "Mot de passe oublié?",
+    "login_button": "Se connecter",
+    "login_loading": "Connexion...",
+    "register_button": "Créer mon compte",
+    "register_loading": "Création...",
+    "no_account": "Pas encore de compte?",
+    "create_account": "Créer un compte",
+    "have_account": "Déjà un compte?",
+    "sign_in": "Se connecter",
+    "full_name": "Nom complet",
+    "full_name_placeholder": "Jean Dupont",
+    "company": "Entreprise",
+    "company_placeholder": "Mon Entreprise",
+    "phone": "Téléphone",
+    "phone_placeholder": "+33 6 00 00 00 00",
+    "password_min": "8 caractères minimum",
+    "success_title": "Inscription réussie!",
+    "success_text": "Un email de confirmation a été envoyé à",
+    "success_check": "Vérifiez votre boîte mail pour activer votre compte.",
+    "go_to_login": "Aller à la connexion",
+    "or_continue_with": "Ou continuer avec",
+    "google_button": "Continuer avec Google",
+    "google_loading": "Redirection..."
+  },
+  "metadata": {
+    "title": "OverBrand — Agence Digitale Créative",
+    "description": "OverBrand est votre partenaire digital pour la création de sites web, applications mobiles, branding, SEO et publicité en ligne."
+  }
+}

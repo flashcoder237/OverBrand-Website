@@ -5,34 +5,26 @@ import Image from 'next/image'
 import { Mail, Phone, MapPin, Globe, AtSign, ExternalLink, Share2 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
-
-const LINKS = {
-  services: [
-    { label: 'Création de sites web', href: '#services' },
-    { label: 'Applications mobiles', href: '#services' },
-    { label: 'Hébergement', href: '#services' },
-    { label: 'Publicité en ligne', href: '#services' },
-    { label: 'SEO & Visibilité', href: '#services' },
-    { label: 'Identité de marque', href: '#services' },
-  ],
-  company: [
-    { label: 'À propos', href: '#about' },
-    { label: 'Notre processus', href: '#process' },
-    { label: 'Devis gratuit', href: '#contact' },
-    { label: 'Espace client', href: '/dashboard' },
-  ],
-  legal: [
-    { label: 'Mentions légales', href: '#' },
-    { label: 'Politique de confidentialité', href: '#' },
-    { label: 'CGV', href: '#' },
-  ],
-}
+import { useTranslations, useLocale } from 'next-intl'
 
 export function Footer() {
+  const t = useTranslations('footer')
+  const locale = useLocale()
   const { resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
   const logoSrc = mounted && resolvedTheme === 'dark' ? '/logo-bg.png' : '/logo.png'
+
+  const servicesLinks = t.raw('services_links') as string[]
+  const companyLinks = t.raw('company_links') as string[]
+  const legalLinks = t.raw('legal_links') as string[]
+
+  const companyHrefs = [
+    '#about',
+    '#process',
+    '#contact',
+    `/${locale}/dashboard`,
+  ]
 
   return (
     <footer style={{ background: 'var(--bg-secondary)', borderTop: '1px solid var(--border)' }}>
@@ -40,7 +32,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-3 mb-4 group">
+            <Link href={`/${locale}`} className="flex items-center gap-3 mb-4 group">
               <div className="relative w-9 h-9 transition-transform group-hover:scale-105">
                 <Image src={logoSrc} alt="OverBrand" fill className="object-contain" />
               </div>
@@ -49,7 +41,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-sm leading-relaxed mb-6 max-w-xs" style={{ color: 'var(--text-muted)' }}>
-              Votre partenaire digital pour créer, développer et faire rayonner votre présence en ligne.
+              {t('tagline')}
             </p>
             <div className="space-y-2">
               <a href="mailto:contact@overbrand.com" className="flex items-center gap-2 text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
@@ -81,12 +73,12 @@ export function Footer() {
 
           {/* Services */}
           <div>
-            <h4 className="font-semibold text-sm mb-4" style={{ color: 'var(--text)' }}>Services</h4>
+            <h4 className="font-semibold text-sm mb-4" style={{ color: 'var(--text)' }}>{t('services_title')}</h4>
             <ul className="space-y-2.5">
-              {LINKS.services.map((link) => (
-                <li key={link.label}>
-                  <a href={link.href} className="text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
-                    {link.label}
+              {servicesLinks.map((label) => (
+                <li key={label}>
+                  <a href="#services" className="text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
+                    {label}
                   </a>
                 </li>
               ))}
@@ -95,12 +87,12 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className="font-semibold text-sm mb-4" style={{ color: 'var(--text)' }}>Entreprise</h4>
+            <h4 className="font-semibold text-sm mb-4" style={{ color: 'var(--text)' }}>{t('company_title')}</h4>
             <ul className="space-y-2.5">
-              {LINKS.company.map((link) => (
-                <li key={link.label}>
-                  <a href={link.href} className="text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
-                    {link.label}
+              {companyLinks.map((label, i) => (
+                <li key={label}>
+                  <a href={companyHrefs[i]} className="text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
+                    {label}
                   </a>
                 </li>
               ))}
@@ -109,12 +101,12 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="font-semibold text-sm mb-4" style={{ color: 'var(--text)' }}>Légal</h4>
+            <h4 className="font-semibold text-sm mb-4" style={{ color: 'var(--text)' }}>{t('legal_title')}</h4>
             <ul className="space-y-2.5">
-              {LINKS.legal.map((link) => (
-                <li key={link.label}>
-                  <a href={link.href} className="text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
-                    {link.label}
+              {legalLinks.map((label) => (
+                <li key={label}>
+                  <a href="#" className="text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
+                    {label}
                   </a>
                 </li>
               ))}
@@ -127,10 +119,10 @@ export function Footer() {
           style={{ borderTop: '1px solid var(--border)' }}
         >
           <p className="text-xs" style={{ color: 'var(--text-subtle)' }}>
-            © 2024 OverBrand. Tous droits réservés.
+            {t('copyright')}
           </p>
           <p className="text-xs" style={{ color: 'var(--text-subtle)' }}>
-            Conçu et développé avec ❤️ par OverBrand
+            {t('made_by')}
           </p>
         </div>
       </div>

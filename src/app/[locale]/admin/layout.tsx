@@ -2,21 +2,30 @@ import { createClient } from '@/lib/supabase/server'
 import { requireAdmin } from '@/lib/supabase/admin'
 import Link from 'next/link'
 import Image from 'next/image'
-import { LayoutDashboard, FileText, FolderOpen, Users, Shield } from 'lucide-react'
+import { LayoutDashboard, FileText, FolderOpen, Users, Shield, ImageIcon } from 'lucide-react'
 import { AdminLogoutButton } from '@/components/admin/logout-button'
 
-const NAV = [
-  { label: "Vue d'ensemble", href: '/admin', icon: LayoutDashboard },
-  { label: 'Devis',          href: '/admin/devis',        icon: FileText },
-  { label: 'Projets',        href: '/admin/projets',      icon: FolderOpen },
-  { label: 'Utilisateurs',   href: '/admin/utilisateurs', icon: Users },
-]
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  await requireAdmin()
+export default async function AdminLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  await requireAdmin(locale)
 
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
+
+  const nav = [
+    { label: "Vue d'ensemble", href: `/${locale}/admin`,               icon: LayoutDashboard },
+    { label: 'Vitrine',        href: `/${locale}/admin/vitrine`,       icon: ImageIcon },
+    { label: 'Devis',          href: `/${locale}/admin/devis`,         icon: FileText },
+    { label: 'Projets',        href: `/${locale}/admin/projets`,       icon: FolderOpen },
+    { label: 'Utilisateurs',   href: `/${locale}/admin/utilisateurs`,  icon: Users },
+  ]
 
   return (
     <div className="min-h-screen flex" style={{ background: 'var(--bg)' }}>
@@ -63,7 +72,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-1">
-          {NAV.map((item) => (
+          {nav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -79,14 +88,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         {/* Bottom */}
         <div className="px-3 py-4 space-y-1" style={{ borderTop: '1px solid var(--border)' }}>
           <Link
-            href="/dashboard"
+            href={`/${locale}/dashboard`}
             className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all hover:opacity-80"
             style={{ color: 'var(--text-muted)' }}
           >
             <LayoutDashboard size={16} />
             Espace client
           </Link>
-          <AdminLogoutButton />
+          <AdminLogoutButton locale={locale} />
         </div>
       </aside>
 

@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -r \"/dashboard\\\\|/admin\\\\|/auth\" C:UserstefbaDesktopOverBrandoverbrand-websitesrc --include=*.ts --include=*.tsx --include=*.js --include=*.jsx)"
+    ]
+  }
+}

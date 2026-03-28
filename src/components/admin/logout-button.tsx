@@ -4,13 +4,13 @@ import { LogOut } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
-export function AdminLogoutButton() {
+export function AdminLogoutButton({ locale = 'fr' }: { locale?: string }) {
   const router = useRouter()
 
   async function handleLogout() {
     const supabase = createClient()
     await supabase.auth.signOut()
-    router.push('/')
+    router.push(`/${locale}`)
     router.refresh()
   }
 
