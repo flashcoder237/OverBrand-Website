@@ -439,8 +439,8 @@ export function HeroSection() {
                     initial={{ scale: 0.4, opacity: 0, rotateY: -45 }}
                     animate={{ scale: 1, opacity: 1, rotateY: 0 }}
                     transition={{ duration: 1.1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                    style={{ isolation: 'isolate' }}
                   >
+                    {/* Logo image */}
                     <Image
                       src={logoSrc}
                       alt="OverBrand"
@@ -451,16 +451,23 @@ export function HeroSection() {
                       priority
                     />
 
-                    {/* Shimmer — mix-blend-mode screen so it only lights pixels where the logo is opaque */}
+                    {/* Shimmer — masqué par la forme exacte du logo via mask-image */}
                     <motion.div
                       className="absolute inset-0 pointer-events-none"
                       style={{
-                        background: 'linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.9) 50%, transparent 80%)',
+                        maskImage: `url(${logoSrc})`,
+                        maskSize: 'contain',
+                        maskRepeat: 'no-repeat',
+                        maskPosition: 'center',
+                        WebkitMaskImage: `url(${logoSrc})`,
+                        WebkitMaskSize: 'contain',
+                        WebkitMaskRepeat: 'no-repeat',
+                        WebkitMaskPosition: 'center',
+                        background: 'linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.95) 50%, transparent 80%)',
                         backgroundSize: '300% 100%',
-                        mixBlendMode: 'screen',
                       }}
                       animate={{ backgroundPosition: ['-300% 0%', '300% 0%'] }}
-                      transition={{ duration: 2.4, repeat: Infinity, repeatDelay: 2.8, ease: 'easeInOut' }}
+                      transition={{ duration: 2.4, repeat: Infinity, repeatDelay: 3, ease: 'easeInOut' }}
                     />
                   </motion.div>
 
