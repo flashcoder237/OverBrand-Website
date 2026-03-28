@@ -1,6 +1,10 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import { Mail, Phone, MapPin, Globe, AtSign, ExternalLink, Share2 } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import { useEffect, useState } from 'react'
 
 const LINKS = {
   services: [
@@ -25,6 +29,11 @@ const LINKS = {
 }
 
 export function Footer() {
+  const { resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  const logoSrc = mounted && resolvedTheme === 'dark' ? '/logo-bg.png' : '/logo.png'
+
   return (
     <footer style={{ background: 'var(--bg-secondary)', borderTop: '1px solid var(--border)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -33,7 +42,7 @@ export function Footer() {
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-3 mb-4 group">
               <div className="relative w-9 h-9 transition-transform group-hover:scale-105">
-                <Image src="/logo.png" alt="OverBrand" fill className="object-contain" />
+                <Image src={logoSrc} alt="OverBrand" fill className="object-contain" />
               </div>
               <span className="text-xl font-black" style={{ fontFamily: 'var(--font-sans)', color: 'var(--text)' }}>
                 Over<span style={{ color: 'var(--primary)' }}>Brand</span>

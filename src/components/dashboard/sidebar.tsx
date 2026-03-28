@@ -4,11 +4,12 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
-  Zap, LayoutDashboard, FileText, FolderOpen,
+  LayoutDashboard, FileText, FolderOpen,
   LogOut, Menu, X, User, ChevronRight,
 } from 'lucide-react'
+import Image from 'next/image'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
-import { ColorPicker } from '@/components/theme/color-picker'
+import { useTheme } from 'next-themes'
 import { createClient } from '@/lib/supabase/client'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 
@@ -23,6 +24,8 @@ export function DashboardSidebar({ user }: { user: SupabaseUser }) {
   const pathname = usePathname()
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { resolvedTheme } = useTheme()
+  const logoSrc = resolvedTheme === 'dark' ? '/logo-bg.png' : '/logo.png'
 
   async function handleLogout() {
     const supabase = createClient()
@@ -39,12 +42,11 @@ export function DashboardSidebar({ user }: { user: SupabaseUser }) {
       {/* Logo */}
       <div className="px-4 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'var(--primary)' }}>
-            <Zap size={16} className="text-white" fill="white" />
+          <div className="relative w-8 h-8">
+            <Image src={logoSrc} alt="OverBrand" fill className="object-contain" />
           </div>
-          <span className="font-bold text-base">
-            <span style={{ color: 'var(--text)' }}>Over</span>
-            <span className="text-gradient">Brand</span>
+          <span className="font-black text-base" style={{ fontFamily: 'var(--font-sans)', color: 'var(--text)' }}>
+            Over<span style={{ color: 'var(--primary)' }}>Brand</span>
           </span>
         </Link>
         <button className="md:hidden" onClick={() => setMobileOpen(false)} style={{ color: 'var(--text-muted)' }}>
@@ -94,7 +96,6 @@ export function DashboardSidebar({ user }: { user: SupabaseUser }) {
       {/* Bottom */}
       <div className="px-3 py-4 space-y-2" style={{ borderTop: '1px solid var(--border)' }}>
         <div className="flex items-center gap-2 px-3">
-          <ColorPicker />
           <ThemeToggle />
           <span className="text-xs ml-1" style={{ color: 'var(--text-subtle)' }}>Thème</span>
         </div>
