@@ -9,7 +9,12 @@ const STATUS_MAP: Record<string, { label: string; bg: string; text: string; dot:
   completed: { label: 'Terminé', bg: 'bg-green-400/10', text: 'text-green-400', dot: 'bg-green-400' },
 }
 
-export default async function ProjetsPage() {
+export default async function ProjetsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   const { data: projects } = await supabase
@@ -30,7 +35,7 @@ export default async function ProjetsPage() {
           {projects.map((project) => {
             const s = STATUS_MAP[project.status] ?? STATUS_MAP.not_started
             return (
-              <Link key={project.id} href={`/dashboard/projets/${project.id}`}>
+              <Link key={project.id} href={`/${locale}/dashboard/projets/${project.id}`}>
                 <div className="card p-6 cursor-pointer h-full">
                   <div className="flex items-start justify-between gap-3 mb-4">
                     <div>
@@ -84,7 +89,7 @@ export default async function ProjetsPage() {
           <p className="text-sm mb-6" style={{ color: 'var(--text-muted)' }}>
             Vos projets apparaîtront ici une fois qu&apos;un devis aura été accepté.
           </p>
-          <Link href="/dashboard/devis">
+          <Link href={`/${locale}/dashboard/devis`}>
             <button className="btn-primary px-6 py-3 rounded-xl text-sm">Demander un devis</button>
           </Link>
         </div>

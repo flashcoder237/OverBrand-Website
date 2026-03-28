@@ -261,6 +261,30 @@
     "google_button": "Continue with Google",
     "google_loading": "Redirecting..."
   },
+  "contact": {
+    "eyebrow": "Contact us",
+    "title_1": "LET'S START",
+    "title_2": "TOGETHER",
+    "subtitle": "Share your project and receive a free quote within 24 hours.",
+    "info_title": "Contact information",
+    "info_phone": "Phone",
+    "info_response": "Response",
+    "info_response_time": "Within 24 business hours",
+    "budget_label": "Estimated budget",
+    "field_name": "Full name",
+    "field_email": "Email address",
+    "field_phone": "Phone",
+    "field_company": "Company",
+    "field_message": "Describe your project",
+    "submit": "Send message",
+    "sending": "Sending...",
+    "success_title": "Message sent!",
+    "success_text": "Thank you! We'll reply within 24 business hours.",
+    "send_another": "Send another message",
+    "error_required": "This field is required",
+    "error_email": "Invalid email",
+    "error_send": "An error occurred. Please try again."
+  },
   "metadata": {
     "title": "OverBrand — Creative Digital Agency",
     "description": "OverBrand is your digital partner for website creation, mobile apps, branding, SEO and online advertising."

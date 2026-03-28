@@ -261,6 +261,30 @@
     "google_button": "Continuer avec Google",
     "google_loading": "Redirection..."
   },
+  "contact": {
+    "eyebrow": "Nous contacter",
+    "title_1": "DÉMARRONS",
+    "title_2": "ENSEMBLE",
+    "subtitle": "Partagez votre projet et recevez un devis gratuit sous 24h.",
+    "info_title": "Informations de contact",
+    "info_phone": "Téléphone",
+    "info_response": "Réponse",
+    "info_response_time": "Sous 24h ouvrées",
+    "budget_label": "Budget estimé",
+    "field_name": "Nom complet",
+    "field_email": "Adresse email",
+    "field_phone": "Téléphone",
+    "field_company": "Entreprise",
+    "field_message": "Décrivez votre projet",
+    "submit": "Envoyer le message",
+    "sending": "Envoi en cours...",
+    "success_title": "Message envoyé !",
+    "success_text": "Merci ! Nous vous répondons sous 24h ouvrées.",
+    "send_another": "Envoyer un autre message",
+    "error_required": "Ce champ est obligatoire",
+    "error_email": "Email invalide",
+    "error_send": "Une erreur s'est produite. Veuillez réessayer."
+  },
   "metadata": {
     "title": "OverBrand — Agence Digitale Créative",
     "description": "OverBrand est votre partenaire digital pour la création de sites web, applications mobiles, branding, SEO et publicité en ligne."

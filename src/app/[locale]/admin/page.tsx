@@ -2,7 +2,12 @@ import { createClient } from '@/lib/supabase/server'
 import { requireAdmin } from '@/lib/supabase/admin'
 import { FileText, FolderOpen, Users, Clock } from 'lucide-react'
 
-export default async function AdminPage() {
+export default async function AdminPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
   await requireAdmin()
   const supabase = await createClient()
 
@@ -88,7 +93,7 @@ export default async function AdminPage() {
             <h2 className="font-bold text-sm uppercase tracking-widest" style={{ color: 'var(--text)' }}>
               Derniers devis
             </h2>
-            <a href="/admin/devis" className="text-xs font-bold uppercase tracking-widest hover:opacity-70" style={{ color: 'var(--primary)' }}>
+            <a href={`/${locale}/admin/devis`} className="text-xs font-bold uppercase tracking-widest hover:opacity-70" style={{ color: 'var(--primary)' }}>
               Tout voir →
             </a>
           </div>
@@ -123,7 +128,7 @@ export default async function AdminPage() {
             <h2 className="font-bold text-sm uppercase tracking-widest" style={{ color: 'var(--text)' }}>
               Derniers projets
             </h2>
-            <a href="/admin/projets" className="text-xs font-bold uppercase tracking-widest hover:opacity-70" style={{ color: 'var(--primary)' }}>
+            <a href={`/${locale}/admin/projets`} className="text-xs font-bold uppercase tracking-widest hover:opacity-70" style={{ color: 'var(--primary)' }}>
               Tout voir →
             </a>
           </div>

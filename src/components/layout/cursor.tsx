@@ -19,6 +19,7 @@ export function MagneticCursor() {
   const [mode, setMode] = useState<CursorMode>('default')
   const [label, setLabel] = useState<string | null>(null)
   const [visible, setVisible] = useState(false)
+  const [isTouch, setIsTouch] = useState(false)
   const rafRef = useRef<number>(0)
 
   // Magnetic attraction
@@ -47,12 +48,15 @@ export function MagneticCursor() {
       rafRef.current = requestAnimationFrame(() => applyMagnetic(e))
     }
 
-    const onEnter = () => setVisible(true)
-    const onLeave = () => setVisible(false)
     const onDown = () => setMode('click')
     const onUp = () => setMode('default')
+    const onDocLeave = (e: MouseEvent) => {
+      if (!e.relatedTarget) setVisible(false)
+    }
+    const onDocEnter = () => setVisible(true)
 
     const onOver = (e: MouseEvent) => {
+      setVisible(true)
       const el = (e.target as HTMLElement).closest(
         'a, button, [data-cursor], input, textarea, [data-magnetic]'
       ) as HTMLElement | null
@@ -77,16 +81,16 @@ export function MagneticCursor() {
     }
 
     window.addEventListener('mousemove', onMove, { passive: true })
-    window.addEventListener('mouseenter', onEnter)
-    window.addEventListener('mouseleave', onLeave)
+    document.addEventListener('mouseenter', onDocEnter)
+    document.addEventListener('mouseleave', onDocLeave)
     window.addEventListener('mousedown', onDown)
     window.addEventListener('mouseup', onUp)
     window.addEventListener('mouseover', onOver, { passive: true })
 
     return () => {
       window.removeEventListener('mousemove', onMove)
-      window.removeEventListener('mouseenter', onEnter)
-      window.removeEventListener('mouseleave', onLeave)
+      document.removeEventListener('mouseenter', onDocEnter)
+      document.removeEventListener('mouseleave', onDocLeave)
       window.removeEventListener('mousedown', onDown)
       window.removeEventListener('mouseup', onUp)
       window.removeEventListener('mouseover', onOver)
@@ -94,9 +98,11 @@ export function MagneticCursor() {
     }
   }, [applyMagnetic])
 
-  if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
-    return null
-  }
+  useEffect(() => {
+    setIsTouch(window.matchMedia('(pointer: coarse)').matches)
+  }, [])
+
+  if (isTouch) return null
 
   return (
     <>

@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { ArrowLeft, Plus, Loader2, CheckCircle, Trash2 } from 'lucide-react'
 import Link from 'next/link'
+import { useLocale } from 'next-intl'
 
 const STATUS_OPTIONS = [
   { value: 'not_started', label: 'Non commencé' },
@@ -32,6 +33,7 @@ type Update = {
 
 export default function AdminProjetDetailPage() {
   const { id } = useParams<{ id: string }>()
+  const locale = useLocale()
   const router = useRouter()
   const supabase = createClient()
 
@@ -102,7 +104,7 @@ export default function AdminProjetDetailPage() {
     return (
       <div className="text-center py-16" style={{ color: 'var(--text-muted)' }}>
         Projet introuvable.{' '}
-        <Link href="/admin/projets" style={{ color: 'var(--primary)' }}>Retour</Link>
+        <Link href={`/${locale}/admin/projets`} style={{ color: 'var(--primary)' }}>Retour</Link>
       </div>
     )
   }
@@ -110,7 +112,7 @@ export default function AdminProjetDetailPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <Link
-        href="/admin/projets"
+        href={`/${locale}/admin/projets`}
         className="inline-flex items-center gap-2 text-sm mb-6 hover:opacity-70 transition-opacity"
         style={{ color: 'var(--text-muted)' }}
       >

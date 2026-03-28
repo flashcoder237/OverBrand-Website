@@ -11,26 +11,28 @@ import Image from 'next/image'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { useTheme } from 'next-themes'
 import { createClient } from '@/lib/supabase/client'
+import { useLocale } from 'next-intl'
 import type { User as SupabaseUser } from '@supabase/supabase-js'
 
-const NAV_ITEMS = [
-  { label: 'Tableau de bord', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'Demande de devis', href: '/dashboard/devis', icon: FileText },
-  { label: 'Mes projets', href: '/dashboard/projets', icon: FolderOpen },
-  { label: 'Mon profil', href: '/dashboard/profil', icon: User },
-]
-
 export function DashboardSidebar({ user, isAdmin }: { user: SupabaseUser; isAdmin?: boolean }) {
+  const locale = useLocale()
   const pathname = usePathname()
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
   const { resolvedTheme } = useTheme()
   const logoSrc = resolvedTheme === 'dark' ? '/logo-bg.png' : '/logo.png'
 
+  const NAV_ITEMS = [
+    { label: 'Tableau de bord', href: `/${locale}/dashboard`, icon: LayoutDashboard },
+    { label: 'Demande de devis', href: `/${locale}/dashboard/devis`, icon: FileText },
+    { label: 'Mes projets', href: `/${locale}/dashboard/projets`, icon: FolderOpen },
+    { label: 'Mon profil', href: `/${locale}/dashboard/profil`, icon: User },
+  ]
+
   async function handleLogout() {
     const supabase = createClient()
     await supabase.auth.signOut()
-    router.push('/')
+    router.push(`/${locale}`)
     router.refresh()
   }
 
@@ -97,7 +99,7 @@ export function DashboardSidebar({ user, isAdmin }: { user: SupabaseUser; isAdmi
       <div className="px-3 py-4 space-y-2" style={{ borderTop: '1px solid var(--border)' }}>
         {isAdmin && (
           <Link
-            href="/admin"
+            href={`/${locale}/admin`}
             onClick={() => setMobileOpen(false)}
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-100"
             style={{ color: '#f59e0b', background: '#f59e0b12' }}

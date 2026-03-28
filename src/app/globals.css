@@ -481,3 +481,50 @@ a, button, [role="button"] {
   background: var(--primary);
   color: white;
 }
+
+/* ===== FORM micro-animations ===== */
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  transform: translateY(-1px);
+}
+
+/* ===== LENIS smooth scroll ===== */
+html.lenis {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ===== TIMELINE ===== */
+.timeline-line {
+  background: linear-gradient(90deg, transparent, var(--primary), var(--accent), transparent);
+}
+
+/* ===== SKELETON SHIMMER ===== */
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ===== PAGE LOADER curtain ===== */
+@keyframes curtain-left {
+  0% { transform: scaleX(0); }
+  40% { transform: scaleX(1); }
+  100% { transform: scaleX(0); }
+}
+@keyframes curtain-right {
+  0% { transform: scaleX(0); }
+  40% { transform: scaleX(1); }
+  100% { transform: scaleX(0); }
+}

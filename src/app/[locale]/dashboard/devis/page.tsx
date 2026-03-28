@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { CheckCircle, Loader2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import { useLocale } from 'next-intl'
 import { SERVICES } from '@/lib/utils'
 
 const BUDGETS = [
@@ -16,6 +17,7 @@ const BUDGETS = [
 ]
 
 export default function DevisPage() {
+  const locale = useLocale()
   const [selectedServices, setSelectedServices] = useState<string[]>([])
   const [form, setForm] = useState({ description: '', budget: '', deadline: '' })
   const [loading, setLoading] = useState(false)
@@ -71,7 +73,7 @@ export default function DevisPage() {
           Nous avons bien reçu votre demande. Notre équipe vous contactera dans les <strong>24 heures</strong> pour discuter de votre projet.
         </p>
         <div className="flex items-center justify-center gap-4">
-          <Link href="/dashboard">
+          <Link href={`/${locale}/dashboard`}>
             <button className="btn-outline px-6 py-3 rounded-xl text-sm">Tableau de bord</button>
           </Link>
           <button onClick={() => { setSuccess(false); setSelectedServices([]); setForm({ description: '', budget: '', deadline: '' }) }} className="btn-primary px-6 py-3 rounded-xl text-sm">
@@ -85,7 +87,7 @@ export default function DevisPage() {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-8">
-        <Link href="/dashboard" className="flex items-center gap-2 text-sm mb-4 hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
+        <Link href={`/${locale}/dashboard`} className="flex items-center gap-2 text-sm mb-4 hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
           <ArrowLeft size={16} /> Retour
         </Link>
         <h1 className="text-2xl md:text-3xl font-black mb-2" style={{ color: 'var(--text)' }}>Demande de devis</h1>

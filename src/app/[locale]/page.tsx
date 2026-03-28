@@ -9,6 +9,7 @@ import { ProcessSection } from '@/components/sections/process'
 import { TestimonialsSection } from '@/components/sections/testimonials'
 import { FAQSection } from '@/components/sections/faq'
 import { CTASection } from '@/components/sections/cta'
+import { ContactSection } from '@/components/sections/contact'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function HomePage() {
@@ -35,6 +36,7 @@ export default async function HomePage() {
         <ProcessSection />
         <TestimonialsSection />
         <FAQSection />
+        <ContactSection />
         <CTASection />
       </main>
       <Footer />

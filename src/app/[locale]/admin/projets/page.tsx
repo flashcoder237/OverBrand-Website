@@ -9,7 +9,12 @@ const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   completed:   { label: 'Terminé',      color: '#22c55e' },
 }
 
-export default async function AdminProjetsPage() {
+export default async function AdminProjetsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
   await requireAdmin()
   const supabase = await createClient()
 
@@ -33,7 +38,7 @@ export default async function AdminProjetsPage() {
         {projects?.map((p) => {
           const s = STATUS_LABELS[p.status]
           return (
-            <Link key={p.id} href={`/admin/projets/${p.id}`}>
+            <Link key={p.id} href={`/${locale}/admin/projets/${p.id}`}>
               <div className="card p-5 group cursor-pointer">
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <h3 className="font-bold text-sm" style={{ color: 'var(--text)' }}>{p.title}</h3>

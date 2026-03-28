@@ -1,28 +1,27 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { CheckCircle, TrendingUp, Shield, Zap } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { useRef } from 'react'
+
+const TIMELINE = [
+  { year: '2019', label: 'Fondation', desc: 'Création de l\'agence à Paris.' },
+  { year: '2020', label: 'Premiers projets', desc: '10 clients servis, branding & web.' },
+  { year: '2021', label: 'Expansion', desc: 'Équipe x3, clients internationaux.' },
+  { year: '2022', label: 'Digitale 360°', desc: 'Lancement des services SEO & Ads.' },
+  { year: '2023', label: 'Applications', desc: 'Dev mobile & logiciels sur mesure.' },
+  { year: '2024', label: 'OverBrand Pro', desc: '50+ projets, dashboard client.' },
+]
 
 export function AboutSection() {
   const t = useTranslations('about')
+  const timelineRef = useRef<HTMLDivElement>(null)
 
   const VALUES = [
-    {
-      icon: Zap,
-      title: t('value_reactivity_title'),
-      description: t('value_reactivity_desc'),
-    },
-    {
-      icon: Shield,
-      title: t('value_reliability_title'),
-      description: t('value_reliability_desc'),
-    },
-    {
-      icon: TrendingUp,
-      title: t('value_performance_title'),
-      description: t('value_performance_desc'),
-    },
+    { icon: Zap, title: t('value_reactivity_title'), description: t('value_reactivity_desc') },
+    { icon: Shield, title: t('value_reliability_title'), description: t('value_reliability_desc') },
+    { icon: TrendingUp, title: t('value_performance_title'), description: t('value_performance_desc') },
   ]
 
   const checklist: string[] = t.raw('checklist') as string[]
@@ -44,11 +43,7 @@ export function AboutSection() {
             </div>
             <h2
               className="font-display leading-none mb-6"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(3rem, 6vw, 5rem)',
-                color: 'var(--text)',
-              }}
+              style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(3rem, 6vw, 5rem)', color: 'var(--text)' }}
             >
               {t('title_1')}<br />
               <span style={{ color: 'var(--primary)' }}>{t('title_2')}</span>
@@ -60,7 +55,6 @@ export function AboutSection() {
               {t('description_2')}
             </p>
 
-            {/* Checklist */}
             <ul className="space-y-3">
               {checklist.map((item) => (
                 <li key={item} className="flex items-center gap-3 text-sm" style={{ color: 'var(--text-muted)' }}>
@@ -81,10 +75,8 @@ export function AboutSection() {
           >
             {/* Big card */}
             <div
-              className="rounded-2xl p-8 relative overflow-hidden"
-              style={{
-                background: `linear-gradient(135deg, var(--primary) 0%, hsl(calc(var(--hue) + 40), 82%, 55%) 100%)`,
-              }}
+              className="p-8 relative overflow-hidden"
+              style={{ background: 'linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)' }}
             >
               <div className="absolute inset-0 dot-bg opacity-20" />
               <div className="relative">
@@ -120,6 +112,71 @@ export function AboutSection() {
             </div>
           </motion.div>
         </div>
+
+        {/* Horizontal timeline */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mt-20"
+        >
+          <div className="flex items-center gap-3 mb-10">
+            <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
+            <span className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--primary)' }}>Notre histoire</span>
+          </div>
+
+          <div
+            ref={timelineRef}
+            className="relative overflow-x-auto scrollbar-none pb-6"
+          >
+            {/* Connecting line */}
+            <div
+              className="absolute top-[28px] left-0 right-0 h-px pointer-events-none"
+              style={{ background: 'linear-gradient(90deg, transparent, var(--primary), var(--accent), transparent)' }}
+            />
+
+            <div className="flex gap-0 min-w-max">
+              {TIMELINE.map((item, i) => (
+                <motion.div
+                  key={item.year}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.08 }}
+                  className="relative flex flex-col items-center group"
+                  style={{ width: '160px', paddingTop: '0' }}
+                >
+                  {/* Dot */}
+                  <motion.div
+                    className="w-3 h-3 rounded-full relative z-10 mb-4 transition-all duration-300"
+                    style={{ background: i === TIMELINE.length - 1 ? 'var(--primary)' : 'var(--border)', border: '2px solid var(--primary)' }}
+                    whileHover={{ scale: 1.6, background: 'var(--accent)' }}
+                  />
+
+                  {/* Content alternating */}
+                  <div
+                    className="text-center px-3"
+                    style={{ marginTop: i % 2 === 0 ? '0' : '0' }}
+                  >
+                    <div
+                      className="font-display text-2xl mb-1 group-hover:text-primary transition-colors duration-200"
+                      style={{ fontFamily: 'var(--font-display)', color: i === TIMELINE.length - 1 ? 'var(--primary)' : 'var(--text)' }}
+                    >
+                      {item.year}
+                    </div>
+                    <div className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--primary)' }}>
+                      {item.label}
+                    </div>
+                    <div className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+                      {item.desc}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   )

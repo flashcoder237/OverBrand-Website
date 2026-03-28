@@ -13,9 +13,9 @@ const STATUS_MAP: Record<string, { label: string; bg: string; text: string }> = 
 export default async function ProjetDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ locale: string; id: string }>
 }) {
-  const { id } = await params
+  const { locale, id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -31,7 +31,7 @@ export default async function ProjetDetailPage({
   return (
     <div className="max-w-4xl mx-auto">
       {/* Back */}
-      <Link href="/dashboard/projets" className="flex items-center gap-2 text-sm mb-6 hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
+      <Link href={`/${locale}/dashboard/projets`} className="flex items-center gap-2 text-sm mb-6 hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
         <ArrowLeft size={16} /> Tous les projets
       </Link>
 

@@ -2,7 +2,12 @@ import { createClient } from '@/lib/supabase/server'
 import { FileText, FolderOpen, Clock, CheckCircle, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -61,7 +66,7 @@ export default async function DashboardPage() {
         <div className="card p-6">
           <div className="flex items-center justify-between mb-5">
             <h2 className="font-bold text-base" style={{ color: 'var(--text)' }}>Mes devis récents</h2>
-            <Link href="/dashboard/devis" className="text-xs flex items-center gap-1 hover:opacity-70" style={{ color: 'var(--primary)' }}>
+            <Link href={`/${locale}/dashboard/devis`} className="text-xs flex items-center gap-1 hover:opacity-70" style={{ color: 'var(--primary)' }}>
               Voir tout <ArrowRight size={12} />
             </Link>
           </div>
@@ -91,7 +96,7 @@ export default async function DashboardPage() {
             <div className="text-center py-8">
               <FileText size={32} className="mx-auto mb-3 opacity-30" style={{ color: 'var(--text-muted)' }} />
               <p className="text-sm mb-4" style={{ color: 'var(--text-muted)' }}>Aucun devis soumis</p>
-              <Link href="/dashboard/devis">
+              <Link href={`/${locale}/dashboard/devis`}>
                 <button className="btn-primary text-sm px-5 py-2.5 rounded-xl">Demander un devis</button>
               </Link>
             </div>
@@ -102,7 +107,7 @@ export default async function DashboardPage() {
         <div className="card p-6">
           <div className="flex items-center justify-between mb-5">
             <h2 className="font-bold text-base" style={{ color: 'var(--text)' }}>Mes projets</h2>
-            <Link href="/dashboard/projets" className="text-xs flex items-center gap-1 hover:opacity-70" style={{ color: 'var(--primary)' }}>
+            <Link href={`/${locale}/dashboard/projets`} className="text-xs flex items-center gap-1 hover:opacity-70" style={{ color: 'var(--primary)' }}>
               Voir tout <ArrowRight size={12} />
             </Link>
           </div>
@@ -112,7 +117,7 @@ export default async function DashboardPage() {
               {projects.map((project) => {
                 const s = statusColors[project.status] ?? statusColors.not_started
                 return (
-                  <Link key={project.id} href={`/dashboard/projets/${project.id}`}>
+                  <Link key={project.id} href={`/${locale}/dashboard/projets/${project.id}`}>
                     <div className="p-4 rounded-xl transition-all hover:opacity-80 cursor-pointer" style={{ background: 'var(--surface)' }}>
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <div className="text-sm font-medium" style={{ color: 'var(--text)' }}>{project.title}</div>
@@ -153,7 +158,7 @@ export default async function DashboardPage() {
           <h3 className="font-bold text-base mb-1" style={{ color: 'var(--text)' }}>Nouveau projet en tête?</h3>
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Soumettez une demande de devis et recevez une réponse sous 24h.</p>
         </div>
-        <Link href="/dashboard/devis">
+        <Link href={`/${locale}/dashboard/devis`}>
           <button className="btn-primary text-sm px-6 py-3 rounded-xl whitespace-nowrap">Demander un devis</button>
         </Link>
       </div>
