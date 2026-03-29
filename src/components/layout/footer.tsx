@@ -44,17 +44,17 @@ export function Footer() {
               {t('tagline')}
             </p>
             <div className="space-y-2">
-              <a href="mailto:contact@overbrand.com" className="flex items-center gap-2 text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
+              <a href="mailto:contact@overbrand.net" className="flex items-center gap-2 text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
                 <Mail size={14} />
-                contact@overbrand.com
+                contact@overbrand.net
               </a>
-              <a href="tel:+000000000" className="flex items-center gap-2 text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
+              <a href="tel:+237652761931" className="flex items-center gap-2 text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
                 <Phone size={14} />
-                +00 00 00 00 00
+                +237 652 761 931
               </a>
               <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-muted)' }}>
                 <MapPin size={14} />
-                Votre ville, Pays
+                Douala, Cameroun
               </div>
             </div>
             <div className="flex items-center gap-3 mt-6">

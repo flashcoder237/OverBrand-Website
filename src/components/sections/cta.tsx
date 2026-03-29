@@ -60,7 +60,7 @@ export function CTASection() {
                   <ArrowRight size={18} />
                 </button>
               </Link>
-              <a href="mailto:contact@overbrand.com">
+              <a href="mailto:contact@overbrand.net">
                 <button data-magnetic data-magnetic-strength="0.25" className="flex items-center gap-2 border-2 border-white/50 text-white font-semibold px-8 py-4 rounded-full transition-all hover:bg-white/10 hover:-translate-y-1">
                   {t('button_secondary')}
                 </button>

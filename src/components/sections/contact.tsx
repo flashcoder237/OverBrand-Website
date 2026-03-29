@@ -205,7 +205,7 @@ export function ContactSection() {
               <div className="space-y-4">
                 {[
                   { icon: Mail, label: 'Email', value: 'contact@overbrand.fr' },
-                  { icon: Phone, label: t('info_phone'), value: '+33 1 00 00 00 00' },
+                  { icon: Phone, label: t('info_phone'), value: '+237 652 761 931' },
                   { icon: MessageSquare, label: t('info_response'), value: t('info_response_time') },
                 ].map(({ icon: Icon, label, value }) => (
                   <div key={label} className="flex items-center gap-3">
