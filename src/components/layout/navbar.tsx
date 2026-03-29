@@ -135,11 +135,8 @@ export function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
                 </button>
               </Link>
             ) : (
-              <Link href={`/${locale}/auth/login`}>
-                <button
-                  className="hidden md:block text-xs font-bold uppercase tracking-widest px-4 py-2 transition-all hover:opacity-80"
-                  style={{ color: 'var(--text-muted)', border: '1px solid var(--border)', letterSpacing: '0.1em' }}
-                >
+              <Link href={`/${locale}/auth/login`} className="hidden md:block">
+                <button className="btn-outline text-xs px-5 py-2.5">
                   {t('login')}
                 </button>
               </Link>

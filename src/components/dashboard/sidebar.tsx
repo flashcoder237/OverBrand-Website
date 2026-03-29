@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
   LayoutDashboard, FileText, FolderOpen,
-  LogOut, Menu, X, User, ChevronRight, Shield,
+  LogOut, Menu, X, User, Shield, Home,
 } from 'lucide-react'
 import Image from 'next/image'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
@@ -19,14 +19,14 @@ export function DashboardSidebar({ user, isAdmin }: { user: SupabaseUser; isAdmi
   const pathname = usePathname()
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const { resolvedTheme } = useTheme()
+  const { resolvedTheme, mounted } = useTheme() as { resolvedTheme: string | undefined; mounted?: boolean }
   const logoSrc = resolvedTheme === 'dark' ? '/logo-bg.png' : '/logo.png'
 
   const NAV_ITEMS = [
-    { label: 'Tableau de bord', href: `/${locale}/dashboard`, icon: LayoutDashboard },
-    { label: 'Demande de devis', href: `/${locale}/dashboard/devis`, icon: FileText },
-    { label: 'Mes projets', href: `/${locale}/dashboard/projets`, icon: FolderOpen },
-    { label: 'Mon profil', href: `/${locale}/dashboard/profil`, icon: User },
+    { label: 'Tableau de bord', href: `/${locale}/dashboard`,         icon: LayoutDashboard },
+    { label: 'Demande de devis', href: `/${locale}/dashboard/devis`,   icon: FileText },
+    { label: 'Mes projets',      href: `/${locale}/dashboard/projets`, icon: FolderOpen },
+    { label: 'Mon profil',       href: `/${locale}/dashboard/profil`,  icon: User },
   ]
 
   async function handleLogout() {
@@ -41,39 +41,61 @@ export function DashboardSidebar({ user, isAdmin }: { user: SupabaseUser; isAdmi
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
+
       {/* Logo */}
-      <div className="px-4 py-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
-        <Link href="/" className="flex items-center gap-2">
-          <div className="relative w-8 h-8">
+      <div className="px-5 h-16 flex items-center justify-between flex-shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+        <Link href={`/${locale}`} className="flex items-center gap-2.5 group">
+          <div className="relative w-7 h-7 transition-transform group-hover:scale-105">
             <Image src={logoSrc} alt="OverBrand" fill className="object-contain" />
           </div>
-          <span className="font-black text-base" style={{ fontFamily: 'var(--font-sans)', color: 'var(--text)' }}>
+          <span className="font-black text-sm tracking-tight" style={{ fontFamily: 'var(--font-sans)', color: 'var(--text)' }}>
             Over<span style={{ color: 'var(--primary)' }}>Brand</span>
           </span>
         </Link>
-        <button className="md:hidden" onClick={() => setMobileOpen(false)} style={{ color: 'var(--text-muted)' }}>
-          <X size={20} />
+        <button
+          className="md:hidden"
+          onClick={() => setMobileOpen(false)}
+          style={{ color: 'var(--text-muted)' }}
+        >
+          <X size={18} />
         </button>
       </div>
 
-      {/* User info */}
-      <div className="px-4 py-4 mx-3 mt-3 rounded-xl" style={{ background: 'var(--surface)' }}>
-        <div className="flex items-center gap-3">
+      {/* User card */}
+      <div className="px-4 pt-5 pb-3">
+        <div
+          className="flex items-center gap-3 p-3 relative overflow-hidden"
+          style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+        >
           <div
-            className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0"
-            style={{ background: 'var(--primary)' }}
+            className="w-9 h-9 flex items-center justify-center text-xs font-black text-white flex-shrink-0"
+            style={{
+              background: 'linear-gradient(135deg, var(--primary), var(--accent))',
+              clipPath: 'polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%)',
+            }}
           >
             {initials}
           </div>
-          <div className="overflow-hidden">
-            <div className="text-sm font-semibold truncate" style={{ color: 'var(--text)' }}>{userName}</div>
-            <div className="text-xs truncate" style={{ color: 'var(--text-subtle)' }}>{user.email}</div>
+          <div className="overflow-hidden flex-1 min-w-0">
+            <div className="text-xs font-bold truncate" style={{ color: 'var(--text)' }}>{userName}</div>
+            <div className="text-xs truncate" style={{ color: 'var(--text-subtle)', fontSize: '0.65rem' }}>{user.email}</div>
           </div>
+          {/* Accent corner */}
+          <div className="absolute top-0 right-0 w-6 h-6 opacity-20"
+            style={{ background: 'var(--primary)', clipPath: 'polygon(100% 0, 0 0, 100% 100%)' }}
+          />
         </div>
       </div>
 
+      {/* Section label */}
+      <div className="px-5 pb-2">
+        <span className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: 'var(--text-subtle)', fontSize: '0.6rem' }}>
+          Navigation
+        </span>
+      </div>
+
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-3 space-y-0.5 overflow-y-auto">
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.href
           return (
@@ -81,45 +103,67 @@ export function DashboardSidebar({ user, isAdmin }: { user: SupabaseUser; isAdmi
               key={item.href}
               href={item.href}
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group"
+              className="flex items-center gap-3 px-3 py-2.5 text-xs font-bold uppercase tracking-widest transition-all group relative"
               style={{
-                background: active ? 'var(--primary-glow)' : 'transparent',
                 color: active ? 'var(--primary)' : 'var(--text-muted)',
+                background: active ? 'var(--primary-glow)' : 'transparent',
+                letterSpacing: '0.08em',
               }}
             >
-              <item.icon size={18} />
+              {/* Active indicator */}
+              {active && (
+                <div
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5"
+                  style={{ background: 'var(--primary)' }}
+                />
+              )}
+              <item.icon size={15} className="flex-shrink-0" />
               {item.label}
-              {active && <ChevronRight size={14} className="ml-auto" />}
             </Link>
           )
         })}
       </nav>
 
-      {/* Bottom */}
-      <div className="px-3 py-4 space-y-2" style={{ borderTop: '1px solid var(--border)' }}>
+      {/* Bottom actions */}
+      <div className="px-3 py-4 space-y-0.5" style={{ borderTop: '1px solid var(--border)' }}>
+
+        {/* Back to site */}
+        <Link
+          href={`/${locale}`}
+          className="flex items-center gap-3 px-3 py-2.5 text-xs font-bold uppercase tracking-widest transition-all hover:opacity-80"
+          style={{ color: 'var(--text-muted)', letterSpacing: '0.08em' }}
+        >
+          <Home size={15} />
+          Retour au site
+        </Link>
+
+        {/* Admin panel */}
         {isAdmin && (
           <Link
             href={`/${locale}/admin`}
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-100"
-            style={{ color: '#f59e0b', background: '#f59e0b12' }}
+            className="flex items-center gap-3 px-3 py-2.5 text-xs font-bold uppercase tracking-widest transition-all hover:opacity-80"
+            style={{ color: 'var(--primary)', background: 'var(--primary-glow)', letterSpacing: '0.08em' }}
           >
-            <Shield size={18} />
+            <Shield size={15} />
             Panneau Admin
           </Link>
         )}
-        <div className="flex items-center gap-2 px-3">
-          <ThemeToggle />
-          <span className="text-xs ml-1" style={{ color: 'var(--text-subtle)' }}>Thème</span>
+
+        {/* Theme + logout row */}
+        <div className="flex items-center justify-between px-3 pt-2">
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <span className="text-xs" style={{ color: 'var(--text-subtle)', fontSize: '0.65rem' }}>Thème</span>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest transition-all hover:opacity-80"
+            style={{ color: 'var(--text-subtle)', letterSpacing: '0.08em' }}
+          >
+            <LogOut size={13} />
+            Quitter
+          </button>
         </div>
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-all hover:opacity-80"
-          style={{ color: 'var(--text-muted)', background: 'transparent' }}
-        >
-          <LogOut size={18} />
-          Déconnexion
-        </button>
       </div>
     </div>
   )
@@ -128,21 +172,24 @@ export function DashboardSidebar({ user, isAdmin }: { user: SupabaseUser; isAdmi
     <>
       {/* Mobile toggle */}
       <button
-        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-xl"
+        className="md:hidden fixed top-4 left-4 z-50 w-9 h-9 flex items-center justify-center"
         style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
         onClick={() => setMobileOpen(true)}
       >
-        <Menu size={20} />
+        <Menu size={18} />
       </button>
 
       {/* Mobile overlay */}
       {mobileOpen && (
-        <div className="md:hidden fixed inset-0 z-40 bg-black/60" onClick={() => setMobileOpen(false)} />
+        <div
+          className="md:hidden fixed inset-0 z-40 bg-black/50"
+          onClick={() => setMobileOpen(false)}
+        />
       )}
 
       {/* Mobile sidebar */}
       <aside
-        className={`md:hidden fixed top-0 left-0 h-full w-64 z-50 transition-transform duration-300 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`md:hidden fixed top-0 left-0 h-full w-60 z-50 transition-transform duration-300 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
         style={{ background: 'var(--card-bg)', borderRight: '1px solid var(--border)' }}
       >
         <SidebarContent />
@@ -150,7 +197,7 @@ export function DashboardSidebar({ user, isAdmin }: { user: SupabaseUser; isAdmi
 
       {/* Desktop sidebar */}
       <aside
-        className="hidden md:flex flex-col fixed top-0 left-0 h-full w-64"
+        className="hidden md:flex flex-col fixed top-0 left-0 h-full w-60"
         style={{ background: 'var(--card-bg)', borderRight: '1px solid var(--border)' }}
       >
         <SidebarContent />

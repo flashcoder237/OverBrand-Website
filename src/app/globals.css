@@ -250,6 +250,8 @@ body {
   border: none;
   cursor: pointer;
   clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  /* Crée un contexte d'empilement isolé pour que ::before reste derrière le texte */
+  isolation: isolate;
 }
 
 .btn-primary::before {
@@ -259,11 +261,7 @@ body {
   background: linear-gradient(135deg, var(--accent) 0%, var(--primary-dark) 100%);
   opacity: 0;
   transition: opacity 0.3s ease;
-}
-
-.btn-primary > * {
-  position: relative;
-  z-index: 1;
+  z-index: -1;
 }
 
 .btn-primary:hover::before {

@@ -27,12 +27,6 @@ export function LenisProvider() {
 
     const rafId = requestAnimationFrame(raf)
 
-    // Sync framer-motion scroll with lenis
-    lenis.on('scroll', () => {
-      // dispatch a custom event so framer-motion useScroll picks up lenis scroll
-      window.dispatchEvent(new Event('scroll', { bubbles: true }))
-    })
-
     return () => {
       cancelAnimationFrame(rafId)
       lenis.destroy()

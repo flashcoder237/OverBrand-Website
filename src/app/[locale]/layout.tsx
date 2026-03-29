@@ -10,6 +10,7 @@ import { MagneticCursor } from '@/components/layout/cursor'
 import { ScrollProgress } from '@/components/layout/scroll-progress'
 import { PageTransition } from '@/components/layout/page-transition'
 import { Grain } from '@/components/layout/grain'
+import { FloatingButtons } from '@/components/layout/floating-buttons'
 import { Loader } from '@/components/layout/loader'
 import { LenisProvider } from '@/components/layout/lenis-provider'
 
@@ -98,6 +99,7 @@ export default async function LocaleLayout({
             <MagneticCursor />
             <ScrollProgress />
             <Grain />
+            <FloatingButtons />
             {/* Page content with transitions */}
             <PageTransition>
               {children}

@@ -276,11 +276,11 @@ export function ProjectsSection({ projects: dbProjects }: { projects: ShowcasePr
                   <p className="text-sm max-w-xs" style={{ color: 'var(--text-muted)' }}>
                     {t('subtitle')}
                   </p>
-                  <Link href={`/${locale}/dashboard/projets`}>
+                  <a href="#contact">
                     <button className="btn-outline text-xs px-6 py-3 flex items-center gap-2 whitespace-nowrap" data-magnetic>
                       {t('view_all')} <ArrowRight size={14} />
                     </button>
-                  </Link>
+                  </a>
                 </div>
               </div>
             </motion.div>
