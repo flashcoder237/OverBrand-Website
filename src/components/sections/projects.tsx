@@ -4,6 +4,7 @@ import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
 import { ArrowUpRight, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useTranslations, useLocale } from 'next-intl'
 
 type ShowcaseProject = {
@@ -14,6 +15,8 @@ type ShowcaseProject = {
   gradient: string
   accent: string
   size: string
+  image_url: string | null
+  image_position: string | null
 }
 
 const FALLBACK_PROJECTS: ShowcaseProject[] = [
@@ -25,6 +28,8 @@ const FALLBACK_PROJECTS: ShowcaseProject[] = [
     gradient: 'linear-gradient(135deg, #0d2240 0%, #2855a0 50%, #3a6fd8 100%)',
     accent: '#3a6fd8',
     size: 'large',
+    image_url: null,
+    image_position: null,
   },
   {
     id: 2,
@@ -34,6 +39,8 @@ const FALLBACK_PROJECTS: ShowcaseProject[] = [
     gradient: 'linear-gradient(135deg, #1a3a6b 0%, #6b9fd4 100%)',
     accent: '#6b9fd4',
     size: 'medium',
+    image_url: null,
+    image_position: null,
   },
   {
     id: 3,
@@ -43,6 +50,8 @@ const FALLBACK_PROJECTS: ShowcaseProject[] = [
     gradient: 'linear-gradient(160deg, #2855a0 0%, #0d2240 100%)',
     accent: '#2855a0',
     size: 'medium',
+    image_url: null,
+    image_position: null,
   },
   {
     id: 4,
@@ -52,6 +61,8 @@ const FALLBACK_PROJECTS: ShowcaseProject[] = [
     gradient: 'linear-gradient(135deg, #3a6fd8 0%, #1a3a6b 100%)',
     accent: '#3a6fd8',
     size: 'medium',
+    image_url: null,
+    image_position: null,
   },
   {
     id: 5,
@@ -61,6 +72,8 @@ const FALLBACK_PROJECTS: ShowcaseProject[] = [
     gradient: 'linear-gradient(135deg, #6b9fd4 0%, #2855a0 60%, #0d2240 100%)',
     accent: '#6b9fd4',
     size: 'medium',
+    image_url: null,
+    image_position: null,
   },
 ]
 
@@ -118,6 +131,17 @@ function ProjectCard({ project, index }: { project: ShowcaseProject; index: numb
         className="relative overflow-hidden"
         style={{ height: '260px', background: project.gradient }}
       >
+        {/* Real image if uploaded */}
+        {project.image_url && (
+          <Image
+            src={project.image_url}
+            alt={project.title}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            style={{ objectPosition: project.image_position ?? 'center' }}
+            sizes="420px"
+          />
+        )}
         <div className="absolute inset-0 opacity-20"
           style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px)', backgroundSize: '18px 18px' }} />
         <div className="absolute bottom-0 right-0 w-40 h-40 opacity-10"
@@ -151,7 +175,7 @@ function ProjectCard({ project, index }: { project: ShowcaseProject; index: numb
           transition={{ duration: 0.25 }}
           style={{ background: 'linear-gradient(to top, rgba(13,34,64,0.88) 0%, transparent 60%)' }}
         >
-          <Link href={`/${locale}/dashboard/projets`}>
+          <Link href={`/${locale}/projets/${project.id}`}>
             <button className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-5 py-3 text-white"
               style={{ background: 'var(--primary)', clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)' }}
             >

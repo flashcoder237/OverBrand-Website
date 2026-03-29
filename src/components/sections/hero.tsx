@@ -388,7 +388,7 @@ export function HeroSection() {
                 className="absolute top-12 right-6 pointer-events-none"
               >
                 <motion.div animate={{ y: [-6, 6, -6] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                  className="glass px-4 py-2.5" style={{ border: '1px solid rgba(255,255,255,0.2)' }}
+                  className="px-4 py-2.5 rounded" style={{ background: 'var(--primary)', border: '1px solid var(--accent)' }}
                 >
                   <span className="text-xs font-bold uppercase tracking-widest text-white">{t('badge_premium')}</span>
                 </motion.div>
@@ -400,7 +400,7 @@ export function HeroSection() {
                 className="absolute bottom-16 left-2 pointer-events-none"
               >
                 <motion.div animate={{ y: [6, -6, 6] }} transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-                  className="glass px-4 py-2.5" style={{ border: '1px solid rgba(255,255,255,0.2)' }}
+                  className="px-4 py-2.5 rounded" style={{ background: 'var(--primary)', border: '1px solid var(--accent)' }}
                 >
                   <span className="text-xs font-bold uppercase tracking-widest text-white">{t('badge_custom')}</span>
                 </motion.div>

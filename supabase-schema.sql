@@ -105,17 +105,23 @@ CREATE TABLE IF NOT EXISTS project_updates (
 -- TABLE: showcase_projects (Projets vitrine homepage)
 -- ====================================
 CREATE TABLE IF NOT EXISTS showcase_projects (
-  id            UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  title         TEXT NOT NULL,
-  category      TEXT NOT NULL,
-  description   TEXT,
-  gradient      TEXT NOT NULL DEFAULT 'linear-gradient(135deg, #0d2240 0%, #3a6fd8 100%)',
-  accent        TEXT NOT NULL DEFAULT '#3a6fd8',
-  size          TEXT NOT NULL DEFAULT 'medium' CHECK (size IN ('large', 'medium', 'small')),
-  display_order INTEGER NOT NULL DEFAULT 0,
-  visible       BOOLEAN NOT NULL DEFAULT true,
-  created_at    TIMESTAMPTZ DEFAULT NOW() NOT NULL
+  id             UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  title          TEXT NOT NULL,
+  category       TEXT NOT NULL,
+  description    TEXT,
+  gradient       TEXT NOT NULL DEFAULT 'linear-gradient(135deg, #0d2240 0%, #3a6fd8 100%)',
+  accent         TEXT NOT NULL DEFAULT '#3a6fd8',
+  size           TEXT NOT NULL DEFAULT 'medium' CHECK (size IN ('large', 'medium', 'small')),
+  display_order  INTEGER NOT NULL DEFAULT 0,
+  visible        BOOLEAN NOT NULL DEFAULT true,
+  image_url      TEXT,
+  image_position TEXT DEFAULT 'center',
+  created_at     TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
+
+-- Ajouter les colonnes si la table existe déjà (idempotent)
+ALTER TABLE showcase_projects ADD COLUMN IF NOT EXISTS image_url      TEXT;
+ALTER TABLE showcase_projects ADD COLUMN IF NOT EXISTS image_position TEXT DEFAULT 'center';
 
 -- ====================================
 -- ROW LEVEL SECURITY (RLS)
@@ -238,6 +244,62 @@ CREATE TRIGGER projects_updated_at
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
 -- ====================================
+-- STORAGE BUCKET: media
+-- ====================================
+-- Créer le bucket (lecture publique, upload réservé aux admins)
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('media', 'media', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Lecture publique
+DROP POLICY IF EXISTS "Public read media" ON storage.objects;
+CREATE POLICY "Public read media" ON storage.objects
+  FOR SELECT USING (bucket_id = 'media');
+
+-- Upload réservé aux admins
+DROP POLICY IF EXISTS "Admins can upload media" ON storage.objects;
+CREATE POLICY "Admins can upload media" ON storage.objects
+  FOR INSERT WITH CHECK (
+    bucket_id = 'media' AND public.is_admin()
+  );
+
+-- Suppression réservée aux admins
+DROP POLICY IF EXISTS "Admins can delete media" ON storage.objects;
+CREATE POLICY "Admins can delete media" ON storage.objects
+  FOR DELETE USING (
+    bucket_id = 'media' AND public.is_admin()
+  );
+
+-- ====================================
+-- TABLE: team_members (Équipe)
+-- ====================================
+CREATE TABLE IF NOT EXISTS team_members (
+  id             UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  name           TEXT NOT NULL,
+  role           TEXT NOT NULL,
+  bio            TEXT,
+  photo_url      TEXT,
+  photo_position TEXT DEFAULT 'center',
+  tag            TEXT,
+  linkedin_url   TEXT,
+  twitter_url    TEXT,
+  website_url    TEXT,
+  display_order  INTEGER NOT NULL DEFAULT 0,
+  visible        BOOLEAN NOT NULL DEFAULT true,
+  created_at     TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
+ALTER TABLE team_members ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Anyone can view visible team members" ON team_members;
+CREATE POLICY "Anyone can view visible team members" ON team_members
+  FOR SELECT USING (visible = true);
+
+DROP POLICY IF EXISTS "Admins can manage team members" ON team_members;
+CREATE POLICY "Admins can manage team members" ON team_members
+  FOR ALL USING (public.is_admin());
+
+-- ====================================
 -- SE DÉFINIR COMME ADMIN
 -- ====================================
 -- Remplace 'VOTRE-UUID' par votre UUID (Authentication > Users dans Supabase)
@@ -262,3 +324,98 @@ CREATE TRIGGER projects_updated_at
 --   ('App Mobile Fintech', 'Application', 'Interface utilisateur pour une startup de paiement mobile.', 'linear-gradient(160deg, #2855a0 0%, #0d2240 100%)', '#2855a0', 'small', 3),
 --   ('Campagne SEO & Ads', 'Marketing', 'Stratégie 360° qui a triplé le trafic organique en 3 mois.', 'linear-gradient(135deg, #3a6fd8 0%, #1a3a6b 100%)', '#3a6fd8', 'medium', 4),
 --   ('Motion Design Brand', 'Contenu', 'Série de vidéos animées pour lancement de produit.', 'linear-gradient(135deg, #6b9fd4 0%, #0d2240 100%)', '#6b9fd4', 'medium', 5);
+
+-- ====================================
+-- COLONNE image_url sur showcase_projects
+-- ====================================
+ALTER TABLE showcase_projects ADD COLUMN IF NOT EXISTS image_url TEXT;
+ALTER TABLE showcase_projects ADD COLUMN IF NOT EXISTS image_position TEXT DEFAULT 'center';
+ALTER TABLE showcase_projects ADD COLUMN IF NOT EXISTS image_urls TEXT[] DEFAULT '{}';
+ALTER TABLE showcase_projects ADD COLUMN IF NOT EXISTS tags TEXT[] DEFAULT '{}';
+ALTER TABLE showcase_projects ADD COLUMN IF NOT EXISTS client TEXT;
+ALTER TABLE showcase_projects ADD COLUMN IF NOT EXISTS year TEXT;
+ALTER TABLE showcase_projects ADD COLUMN IF NOT EXISTS link_url TEXT;
+ALTER TABLE showcase_projects ADD COLUMN IF NOT EXISTS long_description TEXT;
+ALTER TABLE team_members ADD COLUMN IF NOT EXISTS photo_position TEXT DEFAULT 'center top';
+
+-- ====================================
+-- STORAGE BUCKET: media
+-- ====================================
+-- À exécuter dans le SQL Editor Supabase :
+-- 1. Créer le bucket
+INSERT INTO storage.buckets (id, name, public) VALUES ('media', 'media', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- 2. Politique : admins peuvent uploader
+DROP POLICY IF EXISTS "Admins can upload media" ON storage.objects;
+CREATE POLICY "Admins can upload media" ON storage.objects
+  FOR INSERT WITH CHECK (
+    bucket_id = 'media' AND
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+  );
+
+-- 3. Politique : admins peuvent supprimer
+DROP POLICY IF EXISTS "Admins can delete media" ON storage.objects;
+CREATE POLICY "Admins can delete media" ON storage.objects
+  FOR DELETE USING (
+    bucket_id = 'media' AND
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+  );
+
+-- 4. Lecture publique
+DROP POLICY IF EXISTS "Public can view media" ON storage.objects;
+CREATE POLICY "Public can view media" ON storage.objects
+  FOR SELECT USING (bucket_id = 'media');
+
+-- ====================================
+-- TABLE: team_members (Équipe OverBrand)
+-- ====================================
+CREATE TABLE IF NOT EXISTS team_members (
+  id            UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  name          TEXT NOT NULL,
+  role          TEXT NOT NULL,
+  bio           TEXT,
+  photo_url     TEXT,
+  tag           TEXT,
+  linkedin_url  TEXT,
+  twitter_url   TEXT,
+  website_url   TEXT,
+  display_order INTEGER NOT NULL DEFAULT 0,
+  visible       BOOLEAN NOT NULL DEFAULT true,
+  created_at    TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
+ALTER TABLE team_members ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Anyone can view visible team members" ON team_members;
+CREATE POLICY "Anyone can view visible team members" ON team_members
+  FOR SELECT USING (visible = true);
+
+DROP POLICY IF EXISTS "Admins can manage team members" ON team_members;
+CREATE POLICY "Admins can manage team members" ON team_members
+  FOR ALL USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+  );
+
+-- ====================================
+-- TABLE: contacts (Messages du formulaire de contact)
+-- ====================================
+CREATE TABLE IF NOT EXISTS contacts (
+  id         UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  name       TEXT NOT NULL,
+  email      TEXT NOT NULL,
+  phone      TEXT,
+  company    TEXT,
+  message    TEXT NOT NULL,
+  budget     TEXT,
+  read       BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
+ALTER TABLE contacts ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Admins can manage contacts" ON contacts;
+CREATE POLICY "Admins can manage contacts" ON contacts
+  FOR ALL USING (
+    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+  );

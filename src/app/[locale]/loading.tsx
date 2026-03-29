@@ -1,11 +1,32 @@
 import type { CSSProperties } from 'react'
 
 // ─── 800×400 coordinate space — shared between SVG and CSS offset-path ───────
+//
+// Two perfect circles, radius=150, touching at (400,200):
+//   Right lobe center (550,200) — traced clockwise
+//   Left  lobe center (250,200) — traced counter-clockwise
+//
+// Bezier circle approximation: k = 0.5523 × r = 0.5523 × 150 ≈ 83
+//   Each quarter-arc uses handles offset by k from the cardinal points.
+//
+// Right lobe cardinal points: top=(550,50)  right=(700,200)  bottom=(550,350)  left=(400,200)
+// Left  lobe cardinal points: top=(250,50)  left=(100,200)   bottom=(250,350)  right=(400,200)
 const PATH =
-  'M400,200 C430,108 548,72 622,138 C696,200 696,200 622,262 C548,328 430,292 400,200 C370,108 252,72 178,138 C104,200 104,200 178,262 C252,328 370,292 400,200 Z'
+  'M400,200 ' +
+  // ── Right lobe (clockwise) ──────────────────────────────────────────
+  'C400,117 467,50 550,50 ' +   // left  → top
+  'C633,50 700,117 700,200 ' +  // top   → right
+  'C700,283 633,350 550,350 ' + // right → bottom
+  'C467,350 400,283 400,200 ' + // bottom→ left (= centre)
+  // ── Left lobe (counter-clockwise) ───────────────────────────────────
+  'C400,283 333,350 250,350 ' + // centre→ bottom
+  'C167,350 100,283 100,200 ' + // bottom→ left
+  'C100,117 167,50 250,50 ' +   // left  → top
+  'C333,50 400,117 400,200 ' +  // top   → right (= centre)
+  'Z'
 
 const DUR = '3.5s'
-const PATH_LEN = 1560 // approximate total path length for dashoffset
+const PATH_LEN = 1885 // 2 × 2πr = 2 × 2π × 150 ≈ 1885
 
 // ─── Lead orb: bright white-cyan head + tapering comet trail ──────────────────
 const HEAD: { s: number; c: string; o: number; sh: string; d: string }[] = [

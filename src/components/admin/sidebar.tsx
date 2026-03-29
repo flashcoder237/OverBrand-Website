@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
   LayoutDashboard, FileText, FolderOpen, Users,
-  Shield, ImageIcon, LogOut, Home, Menu, X,
+  Shield, ImageIcon, LogOut, Home, Menu, X, Mail, UsersRound,
 } from 'lucide-react'
 import Image from 'next/image'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
@@ -25,9 +25,11 @@ export function AdminSidebar({ user }: { user: SupabaseUser }) {
   const NAV_ITEMS = [
     { label: "Vue d'ensemble", href: `/${locale}/admin`,              icon: LayoutDashboard },
     { label: 'Vitrine',        href: `/${locale}/admin/vitrine`,      icon: ImageIcon },
+    { label: 'Équipe',         href: `/${locale}/admin/equipe`,       icon: UsersRound },
     { label: 'Devis',          href: `/${locale}/admin/devis`,        icon: FileText },
     { label: 'Projets',        href: `/${locale}/admin/projets`,      icon: FolderOpen },
     { label: 'Utilisateurs',   href: `/${locale}/admin/utilisateurs`, icon: Users },
+    { label: 'Contacts',       href: `/${locale}/admin/contacts`,     icon: Mail },
   ]
 
   async function handleLogout() {

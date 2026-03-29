@@ -204,7 +204,7 @@ export function ContactSection() {
               <h3 className="font-bold text-base mb-4" style={{ color: 'var(--text)' }}>{t('info_title')}</h3>
               <div className="space-y-4">
                 {[
-                  { icon: Mail, label: 'Email', value: 'contact@overbrand.fr' },
+                  { icon: Mail, label: 'Email', value: 'contact@overbrand.net' },
                   { icon: Phone, label: t('info_phone'), value: '+237 652 761 931' },
                   { icon: MessageSquare, label: t('info_response'), value: t('info_response_time') },
                 ].map(({ icon: Icon, label, value }) => (

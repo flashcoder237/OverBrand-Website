@@ -126,14 +126,14 @@ export function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
             </div>
             {isLoggedIn ? (
               <Link href={`/${locale}/dashboard`} className="hidden md:block">
-                <button className="btn-outline text-xs px-5 py-2.5 flex items-center gap-2">
+                <button className="btn-outline text-xs px-5 py-2.5 flex items-center gap-2" style={!scrolled ? { color: 'white', borderColor: 'rgba(255,255,255,0.5)' } : {}}>
                   <LayoutDashboard size={14} />
                   {t('dashboard')}
                 </button>
               </Link>
             ) : (
               <Link href={`/${locale}/auth/login`} className="hidden md:block">
-                <button className="btn-outline text-xs px-5 py-2.5">
+                <button className="btn-outline text-xs px-5 py-2.5" style={!scrolled ? { color: 'white', borderColor: 'rgba(255,255,255,0.5)' } : {}}>
                   {t('login')}
                 </button>
               </Link>

@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     }
 
     const RESEND_API_KEY = process.env.RESEND_API_KEY
-    const TO_EMAIL = process.env.CONTACT_EMAIL || 'contact@overbrand.fr'
+    const TO_EMAIL = process.env.CONTACT_EMAIL || 'contact@overbrand.net'
 
     if (!RESEND_API_KEY) {
       console.log('[Contact Form] Saved to DB (no email — RESEND_API_KEY not set)')
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: 'OverBrand <noreply@overbrand.fr>',
+        from: 'OverBrand <noreply@overbrand.net>',
         to: [TO_EMAIL],
         reply_to: email,
         subject: `[OverBrand] Nouveau message de ${name}`,

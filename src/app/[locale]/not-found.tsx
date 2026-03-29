@@ -5,8 +5,14 @@ import { usePathname } from 'next/navigation'
 import { ArrowLeft, Radio } from 'lucide-react'
 
 // Compact infinity path for the decorative divider (200×80 space)
+// Two perfect circles, radius=30, k = 0.5523 × 30 ≈ 17
+// Right lobe: centre (130,40), Left lobe: centre (70,40), touching at (100,40)
 const INF_PATH =
-  'M100,40 C108,22 134,14 152,28 C170,40 170,40 152,52 C134,66 108,58 100,40 C92,22 66,14 48,28 C30,40 30,40 48,52 C66,66 92,58 100,40 Z'
+  'M100,40 ' +
+  'C100,23 113,10 130,10 C147,10 160,23 160,40 ' +
+  'C160,57 147,70 130,70 C113,70 100,57 100,40 ' +
+  'C100,57 87,70 70,70 C53,70 40,57 40,40 ' +
+  'C40,23 53,10 70,10 C87,10 100,23 100,40 Z'
 
 export default function NotFound() {
   const pathname = usePathname() ?? ''
@@ -209,16 +215,16 @@ export default function NotFound() {
               opacity="0.6"
               style={{ animation: 'nf-core 3s ease-in-out infinite' }}
             />
-            {/* Broken gap — "signal lost" — a white rectangle to erase part of the path */}
-            <rect x="88" y="30" width="24" height="20" fill="var(--bg)" />
+            {/* Broken gap — "signal lost" — erases the crossover */}
+            <rect x="90" y="30" width="20" height="20" fill="var(--bg)" />
             {/* Break marks */}
-            <line x1="88" y1="33" x2="84" y2="28" stroke="#3a6fd8" strokeWidth="1.2" opacity="0.5" />
-            <line x1="112" y1="33" x2="116" y2="28" stroke="#3a6fd8" strokeWidth="1.2" opacity="0.5" />
-            <line x1="88" y1="47" x2="84" y2="52" stroke="#3a6fd8" strokeWidth="1.2" opacity="0.5" />
-            <line x1="112" y1="47" x2="116" y2="52" stroke="#3a6fd8" strokeWidth="1.2" opacity="0.5" />
-            {/* Center crossover node */}
-            <circle cx="100" cy="40" r="3.5" fill="#3a6fd8" opacity="0.3" filter="url(#nf-glow)" />
-            <circle cx="100" cy="40" r="2" fill="#3a6fd8" opacity="0.5" />
+            <line x1="90"  y1="32" x2="85"  y2="26" stroke="#3a6fd8" strokeWidth="1.2" opacity="0.5" />
+            <line x1="110" y1="32" x2="115" y2="26" stroke="#3a6fd8" strokeWidth="1.2" opacity="0.5" />
+            <line x1="90"  y1="48" x2="85"  y2="54" stroke="#3a6fd8" strokeWidth="1.2" opacity="0.5" />
+            <line x1="110" y1="48" x2="115" y2="54" stroke="#3a6fd8" strokeWidth="1.2" opacity="0.5" />
+            {/* Center node (behind the gap — hint of what was there) */}
+            <circle cx="100" cy="40" r="3.5" fill="#3a6fd8" opacity="0.2" filter="url(#nf-glow)" />
+            <circle cx="100" cy="40" r="1.5" fill="#3a6fd8" opacity="0.35" />
           </svg>
         </div>
 

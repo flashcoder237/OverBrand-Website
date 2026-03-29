@@ -24,6 +24,13 @@ export function Footer() {
     '#process',
     '#contact',
     `/${locale}/dashboard`,
+    `/${locale}/team`,
+  ]
+
+  const legalHrefs = [
+    `/${locale}/legal/mentions-legales`,
+    `/${locale}/legal/confidentialite`,
+    `/${locale}/legal/cgv`,
   ]
 
   return (
@@ -103,11 +110,11 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-sm mb-4" style={{ color: 'var(--text)' }}>{t('legal_title')}</h4>
             <ul className="space-y-2.5">
-              {legalLinks.map((label) => (
+              {legalLinks.map((label, i) => (
                 <li key={label}>
-                  <a href="#" className="text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
+                  <Link href={legalHrefs[i]} className="text-sm transition-opacity hover:opacity-70" style={{ color: 'var(--text-muted)' }}>
                     {label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
