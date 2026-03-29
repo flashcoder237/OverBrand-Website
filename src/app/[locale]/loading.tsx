@@ -1,46 +1,45 @@
 import type { CSSProperties } from 'react'
 
-// Infinity path in 400×200 coordinate space
+// ─── 800×400 coordinate space — shared between SVG and CSS offset-path ───────
 const PATH =
-  'M200,100 C200,44 156,10 110,10 C64,10 20,44 20,100 C20,156 64,190 110,190 C156,190 200,156 200,100 C200,44 244,10 290,10 C336,10 380,44 380,100 C380,156 336,190 290,190 C244,190 200,156 200,100 Z'
+  'M400,200 C430,108 548,72 622,138 C696,200 696,200 622,262 C548,328 430,292 400,200 C370,108 252,72 178,138 C104,200 104,200 178,262 C252,328 370,292 400,200 Z'
 
-// Particle definitions — orb A (cyan), orb B (blue), each with trailing dots
-// animationDelay negative = starts mid-cycle = appears "behind" on the path
-const ORB_A: { size: number; opacity: number; color: string; shadow: string; delay: string }[] = [
-  { size: 16, opacity: 1,    color: '#c8eaff', shadow: '0 0 10px 5px #c8eaff, 0 0 28px 10px #6b9fd4, 0 0 56px 18px rgba(58,111,216,0.45)', delay: '0s'     },
-  { size: 11, opacity: 0.7,  color: '#6b9fd4', shadow: '0 0 8px 3px #6b9fd4',                                                                  delay: '-0.1s'  },
-  { size: 7,  opacity: 0.38, color: '#3a6fd8', shadow: 'none',                                                                                  delay: '-0.2s'  },
-  { size: 4,  opacity: 0.16, color: '#2855a0', shadow: 'none',                                                                                  delay: '-0.3s'  },
+const DUR = '3.5s'
+const PATH_LEN = 1560 // approximate total path length for dashoffset
+
+// ─── Lead orb: bright white-cyan head + tapering comet trail ──────────────────
+const HEAD: { s: number; c: string; o: number; sh: string; d: string }[] = [
+  { s: 22, c: '#ffffff', o: 1,    sh: '0 0 16px 8px #d6eeff, 0 0 40px 16px #6b9fd4, 0 0 80px 28px rgba(58,111,216,0.55)', d: '0s'      },
+  { s: 14, c: '#c0e0ff', o: 0.80, sh: '0 0 12px 5px #6b9fd4',                                                               d: '-0.09s'  },
+  { s:  9, c: '#3a6fd8', o: 0.50, sh: 'none',                                                                                d: '-0.18s'  },
+  { s:  6, c: '#2855a0', o: 0.28, sh: 'none',                                                                                d: '-0.27s'  },
+  { s:  3, c: '#1a3a6b', o: 0.12, sh: 'none',                                                                                d: '-0.36s'  },
 ]
 
-const ORB_B: typeof ORB_A = [
-  { size: 13, opacity: 1,    color: '#3a6fd8', shadow: '0 0 8px 4px #3a6fd8, 0 0 22px 8px rgba(40,85,160,0.5)',                                 delay: '-1.6s'  },
-  { size: 9,  opacity: 0.6,  color: '#2855a0', shadow: '0 0 6px 2px #2855a0',                                                                   delay: '-1.7s'  },
-  { size: 5,  opacity: 0.28, color: '#1a3a6b', shadow: 'none',                                                                                  delay: '-1.8s'  },
+// ─── Chase orb: medium blue, half-cycle behind ────────────────────────────────
+const ECHO: typeof HEAD = [
+  { s: 16, c: '#6b9fd4', o: 0.90, sh: '0 0 12px 6px #3a6fd8, 0 0 32px 12px rgba(40,85,160,0.5)',                            d: '-1.75s'  },
+  { s: 10, c: '#3a6fd8', o: 0.64, sh: '0 0 8px 3px #2855a0',                                                                d: '-1.84s'  },
+  { s:  7, c: '#2855a0', o: 0.38, sh: 'none',                                                                                d: '-1.93s'  },
+  { s:  4, c: '#1a3a6b', o: 0.17, sh: 'none',                                                                                d: '-2.02s'  },
 ]
 
-function dot(
-  p: typeof ORB_A[number],
-  key: string,
-): CSSProperties {
-  return {
-    position: 'absolute',
-    width: p.size,
-    height: p.size,
+const orbCss = (p: typeof HEAD[number]): CSSProperties =>
+  ({
+    position: 'absolute', top: 0, left: 0,
+    width: p.s, height: p.s,
     borderRadius: '50%',
-    background: p.color,
-    opacity: p.opacity,
-    boxShadow: p.shadow,
-    // CSS offset-path: starts IMMEDIATELY, no SVG timing dependency
+    background: p.c,
+    opacity: p.o,
+    boxShadow: p.sh,
     offsetPath: `path('${PATH}')`,
     offsetDistance: '0%',
     offsetRotate: '0deg',
     offsetAnchor: '50% 50%',
-    animation: `ov-orbit 3.2s linear infinite`,
-    animationDelay: p.delay,
+    animation: `ov-orbit ${DUR} linear infinite`,
+    animationDelay: p.d,
     willChange: 'offset-distance',
-  } as CSSProperties
-}
+  } as CSSProperties)
 
 export default function Loading() {
   return (
@@ -56,110 +55,182 @@ export default function Loading() {
         overflow: 'hidden',
       }}
     >
-      {/* ── Background grid ── */}
+      {/* ── Fine grid ────────────────────────────────────────────────────────── */}
       <div
         style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          backgroundImage: 'radial-gradient(circle, #1e3050 1.5px, transparent 1.5px)',
-          backgroundSize: '30px 30px',
-          opacity: 0.38,
+          backgroundImage:
+            'linear-gradient(rgba(26,58,107,0.11) 1px, transparent 1px),' +
+            'linear-gradient(90deg, rgba(26,58,107,0.11) 1px, transparent 1px)',
+          backgroundSize: '60px 60px',
         }}
       />
 
-      {/* ── Deep ambient glow ── */}
+      {/* ── Radial vignette ──────────────────────────────────────────────────── */}
+      <div
+        style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse 72% 72% at 50% 50%, transparent 18%, var(--bg) 88%)',
+        }}
+      />
+
+      {/* ── Central nebula ───────────────────────────────────────────────────── */}
       <div
         style={{
           position: 'absolute',
-          width: 760, height: 420,
-          borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(40,85,160,0.2) 0%, transparent 62%)',
+          width: 920, height: 560,
+          background:
+            'radial-gradient(ellipse at 50% 50%, rgba(40,85,160,0.26) 0%, rgba(58,111,216,0.07) 48%, transparent 72%)',
+          animation: 'ov-breathe 5s ease-in-out infinite',
           pointerEvents: 'none',
-          animation: 'ov-breathe 4.5s ease-in-out infinite',
         }}
       />
 
-      {/* ── Main scene ── */}
-      <div style={{ position: 'relative', zIndex: 1 }}>
+      {/* ── Main scene (800×400, scaled for small screens) ───────────────────── */}
+      <div
+        className="ov-scene"
+        style={{
+          position: 'relative', zIndex: 1,
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          gap: 52,
+        }}
+      >
+        {/* Infinity container */}
+        <div style={{ position: 'relative', width: 800, height: 400 }}>
 
-        {/* Container: both SVG and CSS particles share 400×200 coordinate space */}
-        <div style={{ position: 'relative', width: 400, height: 200 }}>
-
-          {/* SVG — neon tube visual only (no animation here) */}
+          {/* SVG: neon tube + traveling stroke pulse */}
           <svg
-            viewBox="0 0 400 200"
-            width="400"
-            height="200"
+            viewBox="0 0 800 400"
+            width="800"
+            height="400"
             style={{ position: 'absolute', inset: 0, overflow: 'visible' }}
           >
             <defs>
-              <filter id="ov-blur-xl" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="12" />
+              <filter id="ov-xxl" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur stdDeviation="32" />
               </filter>
-              <filter id="ov-blur-md" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="5" />
+              <filter id="ov-xl" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="14" />
               </filter>
+              <filter id="ov-md" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="6" />
+              </filter>
+              <filter id="ov-sm" x="-18%" y="-18%" width="136%" height="136%">
+                <feGaussianBlur stdDeviation="2.5" />
+              </filter>
+              {/* Gradient for lead scan streak */}
+              <linearGradient id="ov-scan-g" gradientUnits="userSpaceOnUse" x1="104" y1="200" x2="696" y2="200">
+                <stop offset="0%"   stopColor="#2855a0" stopOpacity="0.1" />
+                <stop offset="50%"  stopColor="#c0e0ff" stopOpacity="1"   />
+                <stop offset="100%" stopColor="#2855a0" stopOpacity="0.1" />
+              </linearGradient>
             </defs>
 
-            {/* Layer 1 — wide outer glow */}
-            <path d={PATH} fill="none" stroke="#3a6fd8" strokeWidth="22" opacity="0.07" filter="url(#ov-blur-xl)" />
-            {/* Layer 2 — mid glow */}
-            <path d={PATH} fill="none" stroke="#2855a0" strokeWidth="8"  opacity="0.22" filter="url(#ov-blur-md)" />
-            {/* Layer 3 — dark tube body */}
-            <path d={PATH} fill="none" stroke="#0e1f38" strokeWidth="4"  strokeLinecap="round" />
-            {/* Layer 4 — rim light */}
-            <path d={PATH} fill="none" stroke="#1a3a6b" strokeWidth="2.5" opacity="0.8" />
-            {/* Layer 5 — thin inner highlight, pulses */}
+            {/* L1 — atmospheric halo */}
+            <path d={PATH} fill="none" stroke="#3a6fd8" strokeWidth="110" opacity="0.016" filter="url(#ov-xxl)" />
+
+            {/* L2 — wide glow ring */}
+            <path d={PATH} fill="none" stroke="#2855a0" strokeWidth="32"  opacity="0.13"  filter="url(#ov-xl)" />
+
+            {/* L3 — inner soft glow */}
+            <path d={PATH} fill="none" stroke="#3a6fd8" strokeWidth="12"  opacity="0.24"  filter="url(#ov-md)" />
+
+            {/* L4 — tube body (very dark blue-black) */}
+            <path d={PATH} fill="none" stroke="#05101f" strokeWidth="7"   strokeLinecap="round" />
+
+            {/* L5 — tube rim */}
+            <path d={PATH} fill="none" stroke="#13274d" strokeWidth="4.5" opacity="0.95" />
+
+            {/* L6 — inner edge highlight (static, dim) */}
+            <path d={PATH} fill="none" stroke="#1e3f75" strokeWidth="2"   opacity="0.45" />
+
+            {/* L7 — TRAVELING PULSE (lead) — stroke-dashoffset animation */}
             <path
-              d={PATH} fill="none" stroke="#3a6fd8" strokeWidth="1"
-              opacity="0.5"
-              style={{ animation: 'ov-rim 4s ease-in-out infinite' }}
+              d={PATH}
+              fill="none"
+              stroke="url(#ov-scan-g)"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              strokeDasharray={`110 ${PATH_LEN}`}
+              style={{
+                animation: `ov-scan ${DUR} linear infinite`,
+                animationDelay: '0s',
+              }}
             />
+
+            {/* L8 — TRAVELING PULSE (echo) — half-cycle offset */}
+            <path
+              d={PATH}
+              fill="none"
+              stroke="#3a6fd8"
+              strokeWidth="2.5"
+              strokeOpacity="0.42"
+              strokeLinecap="round"
+              strokeDasharray={`75 ${PATH_LEN}`}
+              style={{
+                animation: `ov-scan ${DUR} linear infinite`,
+                animationDelay: '-1.75s',
+              }}
+            />
+
+            {/* Crossover node — where the two lobes meet */}
+            <circle cx="400" cy="200" r="8"   fill="#3a6fd8" opacity="0.12" filter="url(#ov-sm)" />
+            <circle cx="400" cy="200" r="4.5" fill="#3a6fd8" opacity="0.4"  />
+            <circle cx="400" cy="200" r="2.5" fill="#6b9fd4" opacity="0.75" />
+            <circle cx="400" cy="200" r="1.2" fill="#d0eeff" opacity="1"    />
           </svg>
 
-          {/* CSS particles — offset-path, start immediately */}
-          {ORB_A.map((p, i) => (
-            <div key={`a${i}`} style={dot(p, `a${i}`)} />
-          ))}
-          {ORB_B.map((p, i) => (
-            <div key={`b${i}`} style={dot(p, `b${i}`)} />
-          ))}
+          {/* CSS particles — orbit immediately, no SVG timing */}
+          {HEAD.map((p, i) => <div key={`h${i}`} style={orbCss(p)} />)}
+          {ECHO.map((p, i) => <div key={`e${i}`} style={orbCss(p)} />)}
         </div>
 
-        {/* ── Text ── */}
+        {/* ── Brand + loader ─────────────────────────────────────────────────── */}
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 6,
-            marginTop: 36,
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            gap: 20,
           }}
         >
-          {/* Brand */}
+          {/* Wordmark with shimmer sweep */}
           <span
             style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 9,
-              fontWeight: 700,
-              letterSpacing: '0.45em',
-              color: 'var(--text-subtle)',
-              opacity: 0.5,
+              fontFamily: 'var(--font-display)',
+              fontSize: 58,
+              letterSpacing: '0.26em',
+              background:
+                'linear-gradient(90deg, rgba(140,180,230,0.7) 0%, #c8e4ff 30%, #3a6fd8 55%, rgba(140,180,230,0.6) 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              backgroundSize: '250% auto',
+              animation: 'ov-shimmer 4.2s linear infinite',
+              lineHeight: 1,
+              userSelect: 'none',
             }}
           >
             OVERBRAND
           </span>
 
-          {/* Dots animation */}
-          <div style={{ display: 'flex', gap: 7 }}>
-            {[0, 1, 2].map((i) => (
+          {/* Thin rule */}
+          <div
+            style={{
+              width: 260, height: 1,
+              background:
+                'linear-gradient(90deg, transparent, rgba(58,111,216,0.5) 30%, rgba(107,159,212,0.5) 70%, transparent)',
+            }}
+          />
+
+          {/* Loading dots */}
+          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+            {[0, 1, 2, 3].map((i) => (
               <div
                 key={i}
                 style={{
-                  width: 4,
-                  height: 4,
+                  width: 5, height: 5,
                   borderRadius: '50%',
-                  background: '#3a6fd8',
-                  animation: 'ov-dot 1.4s ease-in-out infinite',
+                  background: i === 1 || i === 2 ? '#3a6fd8' : '#2855a0',
+                  animation: 'ov-dot 1.6s ease-in-out infinite',
                   animationDelay: `${i * 0.22}s`,
                 }}
               />
@@ -168,23 +239,48 @@ export default function Loading() {
         </div>
       </div>
 
+      {/* ── Corner brackets ──────────────────────────────────────────────────── */}
+      <div style={{ position: 'absolute', top: 28,    left: 28,  width: 22, height: 22, borderTop: '1px solid rgba(40,85,160,0.45)', borderLeft:  '1px solid rgba(40,85,160,0.45)' }} />
+      <div style={{ position: 'absolute', top: 28,    right: 28, width: 22, height: 22, borderTop: '1px solid rgba(40,85,160,0.45)', borderRight: '1px solid rgba(40,85,160,0.45)' }} />
+      <div style={{ position: 'absolute', bottom: 28, left: 28,  width: 22, height: 22, borderBottom: '1px solid rgba(40,85,160,0.45)', borderLeft:  '1px solid rgba(40,85,160,0.45)' }} />
+      <div style={{ position: 'absolute', bottom: 28, right: 28, width: 22, height: 22, borderBottom: '1px solid rgba(40,85,160,0.45)', borderRight: '1px solid rgba(40,85,160,0.45)' }} />
+
       <style>{`
+        /* Orb travels the lemniscate via CSS offset-path — starts immediately */
         @keyframes ov-orbit {
           from { offset-distance:   0%; }
           to   { offset-distance: 100%; }
         }
+
+        /* Energy pulse travels the SVG tube via stroke-dashoffset */
+        @keyframes ov-scan {
+          from { stroke-dashoffset: ${PATH_LEN}; }
+          to   { stroke-dashoffset: 0; }
+        }
+
+        /* Nebula breathes */
         @keyframes ov-breathe {
-          0%, 100% { transform: scale(1);    opacity: 0.65; }
-          50%       { transform: scale(1.18); opacity: 1;    }
+          0%, 100% { transform: scale(1);    opacity: 0.9; }
+          50%       { transform: scale(1.20); opacity: 1;   }
         }
-        @keyframes ov-rim {
-          0%, 100% { opacity: 0.3; }
-          50%       { opacity: 0.8; }
-        }
+
+        /* Bouncing dots */
         @keyframes ov-dot {
-          0%, 80%, 100% { transform: scale(0.6); opacity: 0.25; }
-          40%            { transform: scale(1.3); opacity: 1;    }
+          0%, 80%, 100% { transform: scale(0.45); opacity: 0.18; }
+          40%            { transform: scale(1.6);  opacity: 1;    }
         }
+
+        /* Wordmark shimmer sweep */
+        @keyframes ov-shimmer {
+          0%   { background-position: 220% center; }
+          100% { background-position: -220% center; }
+        }
+
+        /* Responsive scale — preserves CSS offset-path alignment */
+        .ov-scene { transform-origin: center center; }
+        @media (max-width: 900px)  { .ov-scene { transform: scale(0.72); } }
+        @media (max-width: 600px)  { .ov-scene { transform: scale(0.48); } }
+        @media (max-width: 400px)  { .ov-scene { transform: scale(0.38); } }
       `}</style>
     </div>
   )

@@ -125,11 +125,8 @@ export function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
               <ThemeToggle />
             </div>
             {isLoggedIn ? (
-              <Link href={`/${locale}/dashboard`}>
-                <button
-                  className="hidden md:flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-4 py-2 transition-all hover:opacity-80"
-                  style={{ color: 'var(--primary)', border: '1px solid var(--primary)', letterSpacing: '0.1em' }}
-                >
+              <Link href={`/${locale}/dashboard`} className="hidden md:block">
+                <button className="btn-outline text-xs px-5 py-2.5 flex items-center gap-2">
                   <LayoutDashboard size={14} />
                   {t('dashboard')}
                 </button>
