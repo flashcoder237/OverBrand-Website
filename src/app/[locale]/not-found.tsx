@@ -2,7 +2,11 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Radio } from 'lucide-react'
+
+// Compact infinity path for the decorative divider (200×80 space)
+const INF_PATH =
+  'M100,40 C108,22 134,14 152,28 C170,40 170,40 152,52 C134,66 108,58 100,40 C92,22 66,14 48,28 C30,40 30,40 48,52 C66,66 92,58 100,40 Z'
 
 export default function NotFound() {
   const pathname = usePathname() ?? ''
@@ -21,130 +25,213 @@ export default function NotFound() {
         overflow: 'hidden',
       }}
     >
-      {/* Scan lines */}
+      {/* ── Grid ─────────────────────────────────────────────────────────────── */}
+      <div
+        style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          backgroundImage:
+            'linear-gradient(rgba(40,85,160,0.08) 1px, transparent 1px),' +
+            'linear-gradient(90deg, rgba(40,85,160,0.08) 1px, transparent 1px)',
+          backgroundSize: '60px 60px',
+        }}
+      />
+
+      {/* ── Vignette ─────────────────────────────────────────────────────────── */}
+      <div
+        style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse 75% 75% at 50% 50%, transparent 20%, var(--bg) 90%)',
+        }}
+      />
+
+      {/* ── Horizontal scan lines ─────────────────────────────────────────────── */}
       <div
         style={{
           position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
           background:
-            'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(40,85,160,0.025) 3px, rgba(40,85,160,0.025) 4px)',
+            'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(40,85,160,0.022) 3px, rgba(40,85,160,0.022) 4px)',
         }}
       />
 
-      {/* Sweep line */}
+      {/* ── Radar sweep ──────────────────────────────────────────────────────── */}
+      <div
+        style={{
+          position: 'absolute',
+          width: 900, height: 900,
+          borderRadius: '50%',
+          border: '1px solid rgba(40,85,160,0.08)',
+          pointerEvents: 'none',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Concentric rings */}
+        {[600, 300].map((size) => (
+          <div
+            key={size}
+            style={{
+              position: 'absolute',
+              width: size, height: size,
+              borderRadius: '50%',
+              border: '1px solid rgba(40,85,160,0.07)',
+              top: '50%', left: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+          />
+        ))}
+
+        {/* Rotating sweep wedge */}
+        <div
+          style={{
+            position: 'absolute', inset: 0,
+            borderRadius: '50%',
+            background:
+              'conic-gradient(from 0deg, rgba(58,111,216,0.14) 0deg, rgba(58,111,216,0.02) 50deg, transparent 80deg, transparent 360deg)',
+            animation: 'nf-radar 7s linear infinite',
+          }}
+        />
+
+        {/* Sweep trailing dot */}
+        <div
+          style={{
+            position: 'absolute',
+            width: 4, height: 450,
+            top: '50%', left: '50%',
+            transformOrigin: '50% 0%',
+            background: 'linear-gradient(to bottom, transparent, rgba(58,111,216,0.4) 60%, rgba(107,159,212,0.7))',
+            animation: 'nf-radar 7s linear infinite',
+          }}
+        />
+      </div>
+
+      {/* ── Radial glow ──────────────────────────────────────────────────────── */}
+      <div
+        style={{
+          position: 'absolute',
+          width: 700, height: 500,
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(40,85,160,0.22) 0%, transparent 65%)',
+          pointerEvents: 'none',
+          animation: 'nf-breathe 5s ease-in-out infinite',
+        }}
+      />
+
+      {/* ── Sweep line ───────────────────────────────────────────────────────── */}
       <div
         style={{
           position: 'absolute', left: 0, right: 0, height: 1,
           pointerEvents: 'none', zIndex: 2,
           background:
-            'linear-gradient(90deg, transparent, rgba(58,111,216,0.55) 30%, rgba(107,159,212,0.9) 50%, rgba(58,111,216,0.55) 70%, transparent)',
-          boxShadow: '0 0 14px rgba(58,111,216,0.5)',
-          animation: 'sweep 5.5s linear infinite',
+            'linear-gradient(90deg, transparent, rgba(58,111,216,0.45) 25%, rgba(107,159,212,0.85) 50%, rgba(58,111,216,0.45) 75%, transparent)',
+          boxShadow: '0 0 12px rgba(58,111,216,0.4)',
+          animation: 'nf-sweep 6s linear infinite',
         }}
       />
 
-      {/* Grid */}
+      {/* ── Content ──────────────────────────────────────────────────────────── */}
       <div
         style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          backgroundImage:
-            'linear-gradient(rgba(40,85,160,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(40,85,160,0.07) 1px, transparent 1px)',
-          backgroundSize: '60px 60px',
+          position: 'relative', zIndex: 3,
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', textAlign: 'center',
+          padding: '0 24px',
+          gap: 0,
         }}
-      />
-
-      {/* Corner brackets */}
-      {([
-        { top: 28, left: 28, borderTop: true, borderLeft: true },
-        { top: 28, right: 28, borderTop: true, borderRight: true },
-        { bottom: 28, left: 28, borderBottom: true, borderLeft: true },
-        { bottom: 28, right: 28, borderBottom: true, borderRight: true },
-      ] as const).map((corner, i) => (
-        <div
-          key={i}
-          style={{
-            position: 'absolute',
-            width: 36, height: 36,
-            top: 'top' in corner ? corner.top : undefined,
-            bottom: 'bottom' in corner ? corner.bottom : undefined,
-            left: 'left' in corner ? corner.left : undefined,
-            right: 'right' in corner ? corner.right : undefined,
-            borderTop: 'borderTop' in corner ? '1.5px solid #3a6fd8' : undefined,
-            borderBottom: 'borderBottom' in corner ? '1.5px solid #3a6fd8' : undefined,
-            borderLeft: 'borderLeft' in corner ? '1.5px solid #3a6fd8' : undefined,
-            borderRight: 'borderRight' in corner ? '1.5px solid #3a6fd8' : undefined,
-            opacity: 0.5,
-          }}
-        />
-      ))}
-
-      {/* Radial glow behind the 404 */}
-      <div
-        style={{
-          position: 'absolute',
-          width: 700, height: 450,
-          background: 'radial-gradient(ellipse at center, rgba(40,85,160,0.18) 0%, transparent 60%)',
-          pointerEvents: 'none',
-        }}
-      />
-
-      {/* Content */}
-      <div style={{ position: 'relative', zIndex: 3, textAlign: 'center', padding: '0 24px' }}>
-
+      >
         {/* Status badge */}
         <div
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '5px 14px',
-            border: '1px solid rgba(58,111,216,0.35)',
-            borderRadius: 4,
-            marginBottom: 20,
-            background: 'rgba(40,85,160,0.1)',
-            backdropFilter: 'blur(8px)',
+            padding: '5px 16px',
+            border: '1px solid rgba(58,111,216,0.3)',
+            background: 'rgba(40,85,160,0.09)',
+            backdropFilter: 'blur(10px)',
+            marginBottom: 24,
+            clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
           }}
         >
-          <div
-            style={{
-              width: 6, height: 6, borderRadius: '50%',
-              background: '#ef4444',
-              animation: 'blink 1.2s ease-in-out infinite',
-            }}
-          />
+          <Radio size={10} color="#6b9fd4" />
           <span
             style={{
               fontFamily: 'var(--font-sans)', fontSize: 10,
-              fontWeight: 700, letterSpacing: '0.18em', color: '#6b9fd4',
+              fontWeight: 700, letterSpacing: '0.2em', color: '#6b9fd4',
             }}
           >
-            ERROR_PAGE_NOT_FOUND
+            ERR_404 // SIGNAL_NOT_FOUND
           </span>
+          <div
+            style={{
+              width: 5, height: 5, borderRadius: '50%',
+              background: '#ef4444',
+              animation: 'nf-blink 1.1s ease-in-out infinite',
+            }}
+          />
         </div>
 
-        {/* 404 */}
+        {/* 404 — enormous, glitch-animated */}
         <div
           style={{
             fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(96px, 22vw, 260px)',
-            lineHeight: 0.85,
-            color: 'var(--text)',
+            fontSize: 'clamp(110px, 24vw, 300px)',
+            lineHeight: 0.82,
             letterSpacing: '-0.02em',
+            color: 'var(--text)',
             userSelect: 'none',
-            animation: 'glitch 7s ease-in-out infinite',
-            marginBottom: 20,
+            animation: 'nf-glitch 6s ease-in-out infinite',
+            marginBottom: 6,
           }}
         >
           404
+        </div>
+
+        {/* ── Decorative mini infinity SVG ─────────────────────────────────── */}
+        <div style={{ position: 'relative', margin: '18px 0', width: 200, height: 80 }}>
+          <svg
+            viewBox="0 0 200 80"
+            width="200"
+            height="80"
+            style={{ overflow: 'visible' }}
+          >
+            <defs>
+              <filter id="nf-glow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="4" />
+              </filter>
+            </defs>
+            {/* Glow layer */}
+            <path d={INF_PATH} fill="none" stroke="#3a6fd8" strokeWidth="14" opacity="0.12" filter="url(#nf-glow)" />
+            {/* Tube */}
+            <path d={INF_PATH} fill="none" stroke="#050d1a" strokeWidth="5" />
+            <path d={INF_PATH} fill="none" stroke="#1a3a6b" strokeWidth="3" opacity="0.8" />
+            {/* Animated core pulse */}
+            <path
+              d={INF_PATH}
+              fill="none"
+              stroke="#3a6fd8"
+              strokeWidth="1.5"
+              opacity="0.6"
+              style={{ animation: 'nf-core 3s ease-in-out infinite' }}
+            />
+            {/* Broken gap — "signal lost" — a white rectangle to erase part of the path */}
+            <rect x="88" y="30" width="24" height="20" fill="var(--bg)" />
+            {/* Break marks */}
+            <line x1="88" y1="33" x2="84" y2="28" stroke="#3a6fd8" strokeWidth="1.2" opacity="0.5" />
+            <line x1="112" y1="33" x2="116" y2="28" stroke="#3a6fd8" strokeWidth="1.2" opacity="0.5" />
+            <line x1="88" y1="47" x2="84" y2="52" stroke="#3a6fd8" strokeWidth="1.2" opacity="0.5" />
+            <line x1="112" y1="47" x2="116" y2="52" stroke="#3a6fd8" strokeWidth="1.2" opacity="0.5" />
+            {/* Center crossover node */}
+            <circle cx="100" cy="40" r="3.5" fill="#3a6fd8" opacity="0.3" filter="url(#nf-glow)" />
+            <circle cx="100" cy="40" r="2" fill="#3a6fd8" opacity="0.5" />
+          </svg>
         </div>
 
         {/* Subtitle */}
         <div
           style={{
             fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(16px, 3.5vw, 30px)',
+            fontSize: 'clamp(18px, 3.5vw, 32px)',
             letterSpacing: '0.28em',
             color: '#3a6fd8',
-            marginBottom: 20,
-            animation: 'glitch 7s ease-in-out infinite',
-            animationDelay: '0.06s',
+            marginBottom: 16,
+            animation: 'nf-glitch 6s ease-in-out infinite',
+            animationDelay: '0.08s',
           }}
         >
           SIGNAL PERDU
@@ -157,69 +244,99 @@ export default function NotFound() {
             fontSize: 14,
             lineHeight: 1.75,
             color: 'var(--text-muted)',
-            maxWidth: 360,
-            margin: '0 auto 40px',
+            maxWidth: 380,
+            margin: '0 auto 36px',
           }}
         >
-          La page que vous recherchez n&apos;existe pas ou a été déplacée vers une autre adresse.
+          La page que vous recherchez n&apos;existe pas ou a été déplacée.
+          <br />
+          La boucle continue — retrouvez votre chemin.
         </p>
 
-        {/* CTA */}
-        <Link
-          href={`/${locale}`}
+        {/* CTAs */}
+        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <Link href={`/${locale}`} className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
+            <ArrowLeft size={14} />
+            Retour à l&apos;accueil
+          </Link>
+          <Link href={`/${locale}#contact`} className="btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
+            Nous contacter
+          </Link>
+        </div>
+
+        {/* Coordinate readout */}
+        <div
           style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '12px 28px',
-            background: 'var(--primary)',
-            color: 'white',
-            textDecoration: 'none',
-            fontFamily: 'var(--font-sans)',
+            marginTop: 48,
+            display: 'flex', gap: 24, alignItems: 'center',
+            fontFamily: 'var(--font-sans)', fontSize: 10,
+            letterSpacing: '0.18em', color: 'rgba(107,159,212,0.4)',
             fontWeight: 600,
-            fontSize: 13,
-            letterSpacing: '0.05em',
-            borderRadius: 10,
-            transition: 'opacity 0.2s',
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
-          onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
         >
-          <ArrowLeft size={15} />
-          Retour à l&apos;accueil
-        </Link>
+          <span>X: 404.000</span>
+          <div style={{ width: 1, height: 12, background: 'rgba(58,111,216,0.25)' }} />
+          <span>Y: VOID</span>
+          <div style={{ width: 1, height: 12, background: 'rgba(58,111,216,0.25)' }} />
+          <span>∞ OVERBRAND</span>
+        </div>
       </div>
 
+      {/* ── Corner brackets ──────────────────────────────────────────────────── */}
+      <div style={{ position: 'absolute', top: 28,    left: 28,  width: 26, height: 26, borderTop: '1.5px solid rgba(58,111,216,0.55)', borderLeft:  '1.5px solid rgba(58,111,216,0.55)' }} />
+      <div style={{ position: 'absolute', top: 28,    right: 28, width: 26, height: 26, borderTop: '1.5px solid rgba(58,111,216,0.55)', borderRight: '1.5px solid rgba(58,111,216,0.55)' }} />
+      <div style={{ position: 'absolute', bottom: 28, left: 28,  width: 26, height: 26, borderBottom: '1.5px solid rgba(58,111,216,0.55)', borderLeft:  '1.5px solid rgba(58,111,216,0.55)' }} />
+      <div style={{ position: 'absolute', bottom: 28, right: 28, width: 26, height: 26, borderBottom: '1.5px solid rgba(58,111,216,0.55)', borderRight: '1.5px solid rgba(58,111,216,0.55)' }} />
+
       <style>{`
-        @keyframes sweep {
+        @keyframes nf-sweep {
           0%   { top: -1px; }
           100% { top: 100%; }
         }
-        @keyframes blink {
+        @keyframes nf-radar {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+        @keyframes nf-breathe {
+          0%, 100% { transform: scale(1);    opacity: 0.9; }
+          50%       { transform: scale(1.15); opacity: 1;   }
+        }
+        @keyframes nf-blink {
           0%, 100% { opacity: 1;   }
           50%       { opacity: 0.2; }
         }
-        @keyframes glitch {
-          0%, 80%, 100% {
+        @keyframes nf-core {
+          0%, 100% { opacity: 0.35; }
+          50%       { opacity: 0.9;  }
+        }
+        @keyframes nf-glitch {
+          0%, 78%, 100% {
             text-shadow: none;
             transform: translate(0, 0);
+            clip-path: none;
+          }
+          80% {
+            text-shadow: -4px 0 #3a6fd8, 4px 0 #ef4444;
+            transform: translate(-3px, 0);
+            clip-path: polygon(0 15%, 100% 15%, 100% 35%, 0 35%);
+          }
+          81% {
+            text-shadow: 4px 0 #6b9fd4, -4px 0 #ef4444;
+            transform: translate(3px, 0);
+            clip-path: none;
           }
           82% {
-            text-shadow: -3px 0 #3a6fd8, 3px 0 #ef4444;
-            transform: translate(-2px, 0);
+            text-shadow: -3px 0 #2855a0, 3px 0 #f59e0b;
+            transform: translate(0, 1px);
+            clip-path: polygon(0 55%, 100% 55%, 100% 75%, 0 75%);
           }
           84% {
-            text-shadow: 3px 0 #3a6fd8, -3px 0 #ef4444;
-            transform: translate(2px, 0);
+            text-shadow: 2px 0 #3a6fd8;
+            transform: translate(-1px, 0);
+            clip-path: none;
           }
           86% {
-            text-shadow: -2px 0 #6b9fd4, 2px 0 #f59e0b;
-            transform: translate(0, 1px);
-          }
-          88% {
             text-shadow: none;
-            transform: translate(-1px, 0);
-          }
-          90% {
-            text-shadow: 2px 0 #3a6fd8;
             transform: translate(0, 0);
           }
         }

@@ -19,7 +19,7 @@ export function CTASection() {
           transition={{ duration: 0.7 }}
           className="relative rounded-3xl overflow-hidden p-10 md:p-16 text-center"
           style={{
-            background: `linear-gradient(135deg, var(--primary) 0%, hsl(calc(var(--hue) + 50), 82%, 50%) 100%)`,
+            background: `linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--accent) 100%)`,
           }}
         >
           {/* Background patterns */}

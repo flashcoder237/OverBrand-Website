@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,12 +10,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
+    // Toujours sauvegarder dans Supabase (service_role bypasse RLS)
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+    const { error: dbError } = await supabase.from('contacts').insert({
+      name, email, phone: phone || null, company: company || null,
+      message, budget: budget || null,
+    })
+    if (dbError) {
+      console.error('[Contact DB Error]', dbError)
+      return NextResponse.json({ error: 'Database error' }, { status: 500 })
+    }
+
     const RESEND_API_KEY = process.env.RESEND_API_KEY
     const TO_EMAIL = process.env.CONTACT_EMAIL || 'contact@overbrand.fr'
 
     if (!RESEND_API_KEY) {
-      // Dev mode: just log and return success
-      console.log('[Contact Form]', { name, email, phone, company, message, budget })
+      console.log('[Contact Form] Saved to DB (no email — RESEND_API_KEY not set)')
       return NextResponse.json({ ok: true })
     }
 

@@ -53,7 +53,8 @@ export default function DevisPage() {
     })
 
     if (dbError) {
-      setError('Une erreur est survenue. Réessayez.')
+      console.error('[devis] insert error:', dbError)
+      setError(`Erreur: ${dbError.message}`)
       setLoading(false)
       return
     }
