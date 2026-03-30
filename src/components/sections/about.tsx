@@ -3,7 +3,7 @@
 import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion'
 import { CheckCircle, TrendingUp, Shield, Zap } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 
 const TIMELINE = [
   { year: '2019', label: 'Fondation',        desc: 'Création de l\'agence — première identité, premiers clients, premières ambitions.',    color: '#1a3a6b', stat: '3 clients' },
@@ -91,6 +91,53 @@ function StepCard({ item, active }: { item: typeof TIMELINE[0]; active: boolean 
         </p>
       </div>
     </motion.div>
+  )
+}
+
+// City dots that glow on scroll
+const MAP_DOTS = [
+  { cx: 203, cy: 186, label: 'New York',   threshold: 0.05 },
+  { cx: 218, cy: 162, label: 'Montréal',   threshold: 0.12 },
+  { cx: 462, cy: 143, label: 'Londres',    threshold: 0.22 },
+  { cx: 481, cy: 152, label: 'Paris',      threshold: 0.32 },
+  { cx: 453, cy: 203, label: 'Maroc',      threshold: 0.42 },
+  { cx: 618, cy: 232, label: 'Dubaï',      threshold: 0.54 },
+  { cx: 618, cy: 183, label: 'Istanbul',   threshold: 0.62 },
+  { cx: 800, cy: 185, label: 'Tokyo',      threshold: 0.74 },
+  { cx: 293, cy: 330, label: 'São Paulo',  threshold: 0.85 },
+  { cx: 808, cy: 385, label: 'Sydney',     threshold: 0.94 },
+]
+
+function MapDot({ cx, cy, threshold, progress }: { cx: number; cy: number; threshold: number; progress: ReturnType<typeof useSpring> }) {
+  const [active, setActive] = useState(false)
+  useEffect(() => {
+    return progress.on('change', (v) => setActive(v >= threshold))
+  }, [progress, threshold])
+
+  return (
+    <g>
+      {/* Pulse ring */}
+      {active && (
+        <motion.circle
+          cx={cx} cy={cy} r={6}
+          fill="none"
+          stroke="#3a6fd8"
+          strokeWidth={1.5}
+          initial={{ scale: 1, opacity: 0.7 }}
+          animate={{ scale: 3.5, opacity: 0 }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeOut' }}
+        />
+      )}
+      {/* Core dot */}
+      <motion.circle
+        cx={cx} cy={cy} r={3.5}
+        fill="#3a6fd8"
+        animate={active
+          ? { opacity: 1, scale: 1, filter: 'drop-shadow(0 0 4px #3a6fd8)' }
+          : { opacity: 0, scale: 0 }}
+        transition={{ duration: 0.4, type: 'spring', stiffness: 300 }}
+      />
+    </g>
   )
 }
 
@@ -326,6 +373,7 @@ function WorldMapBg() {
       <path d="M564 331L560 337L550 343L546 344L537 345L531 346L529 344L529 338L524 329L528 330L533 319L536 325L541 321L547 321L551 318L558 311L563 312L565 322L562 323L566 324L566 330L564 331Z"/>
       <path d="M567 276L568 282L569 289L557 295L552 300L547 299L542 299L544 286L544 281L546 281L552 282L557 287L556 283L556 275L562 273L567 276Z"/>
       <path d="M563 312L558 311L554 307L548 301L552 300L557 295L563 294L568 296L567 305L563 312Z"/>
+
     </svg>
   )
 }
@@ -357,6 +405,18 @@ function ScrollTimeline() {
           background: 'radial-gradient(ellipse 80% 70% at 50% 50%, transparent 20%, var(--bg) 75%)',
         }} />
       </div>
+
+      {/* Glowing city dots overlay — full opacity, separate layer */}
+      <svg
+        viewBox="0 0 960 500"
+        xmlns="http://www.w3.org/2000/svg"
+        className="absolute inset-0 w-full h-full pointer-events-none select-none"
+        aria-hidden
+      >
+        {MAP_DOTS.map((dot) => (
+          <MapDot key={dot.label} cx={dot.cx} cy={dot.cy} threshold={dot.threshold} progress={smoothProgress} />
+        ))}
+      </svg>
 
       {/* ── DESKTOP ── */}
       <div className="hidden lg:block relative">
@@ -415,9 +475,9 @@ function DesktopStep({
 
   // Active when line has reached this step
   const [active, setActive] = useState(false)
-  scrollProgress.on('change', (v) => {
-    setActive(v >= threshold - 0.05)
-  })
+  useEffect(() => {
+    return scrollProgress.on('change', (v) => setActive(v >= threshold - 0.05))
+  }, [scrollProgress, threshold])
 
   return (
     <div className="relative flex items-center" style={{ minHeight: '160px' }}>

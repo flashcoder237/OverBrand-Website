@@ -17,9 +17,10 @@ export function CTASection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="relative rounded-3xl overflow-hidden p-10 md:p-16 text-center"
+          className="relative overflow-hidden p-10 md:p-16 text-center"
           style={{
             background: `linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--accent) 100%)`,
+            clipPath: 'polygon(28px 0%, 100% 0%, calc(100% - 28px) 100%, 0% 100%)',
           }}
         >
           {/* Background patterns */}
@@ -34,7 +35,10 @@ export function CTASection() {
           />
 
           <div className="relative">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-6 bg-white/20 text-white">
+            <span
+              className="inline-flex items-center gap-2 px-4 py-1.5 text-sm font-semibold mb-6 bg-white/20 text-white"
+              style={{ clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)' }}
+            >
               <MessageCircle size={14} />
               {t('badge')}
             </span>
@@ -55,13 +59,28 @@ export function CTASection() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href={`/${locale}/auth/register`}>
-                <button data-magnetic data-magnetic-strength="0.3" className="flex items-center gap-2 bg-white font-bold px-8 py-4 rounded-full transition-all hover:shadow-2xl hover:-translate-y-1" style={{ color: 'var(--primary)' }}>
+                <button
+                  data-magnetic
+                  data-magnetic-strength="0.3"
+                  className="flex items-center gap-2 bg-white font-bold px-8 py-4 transition-all hover:shadow-2xl hover:-translate-y-1"
+                  style={{
+                    color: 'var(--primary)',
+                    clipPath: 'polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)',
+                  }}
+                >
                   {t('button_primary')}
                   <ArrowRight size={18} />
                 </button>
               </Link>
               <a href="mailto:contact@overbrand.net">
-                <button data-magnetic data-magnetic-strength="0.25" className="flex items-center gap-2 border-2 border-white/50 text-white font-semibold px-8 py-4 rounded-full transition-all hover:bg-white/10 hover:-translate-y-1">
+                <button
+                  data-magnetic
+                  data-magnetic-strength="0.25"
+                  className="flex items-center gap-2 border-2 border-white/50 text-white font-semibold px-8 py-4 transition-all hover:bg-white/10 hover:-translate-y-1"
+                  style={{
+                    clipPath: 'polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)',
+                  }}
+                >
                   {t('button_secondary')}
                 </button>
               </a>

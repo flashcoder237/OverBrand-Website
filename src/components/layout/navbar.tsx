@@ -7,7 +7,7 @@ import { Menu, X, LayoutDashboard } from 'lucide-react'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { useTheme } from 'next-themes'
 import { useTranslations, useLocale } from 'next-intl'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter } from '@/i18n/navigation'
 
 function LanguageSwitcher() {
   const locale = useLocale()
@@ -15,9 +15,7 @@ function LanguageSwitcher() {
   const pathname = usePathname()
 
   function switchLocale(newLocale: string) {
-    // Replace /fr/ or /en/ at start of path
-    const newPath = pathname.replace(/^\/(fr|en)/, `/${newLocale}`)
-    router.push(newPath)
+    router.replace(pathname, { locale: newLocale })
   }
 
   return (

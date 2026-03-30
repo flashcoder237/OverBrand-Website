@@ -14,6 +14,58 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { useTheme } from 'next-themes'
 import { useTranslations } from 'next-intl'
 
+const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+function useScramble(finalText: string, startDelay = 0) {
+  // Initialize with final text to avoid SSR/client hydration mismatch
+  const [displayText, setDisplayText] = useState(finalText)
+
+  useEffect(() => {
+    const FRAME_MS = 45
+    const TOTAL_FRAMES = 28
+    let frame = 0
+    let intervalId: ReturnType<typeof setInterval>
+
+    // Immediately scramble on client mount, then resolve after startDelay
+    setDisplayText(
+      finalText
+        .split('')
+        .map(c => (c === ' ' ? ' ' : SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]))
+        .join('')
+    )
+
+    const timeoutId = setTimeout(() => {
+      intervalId = setInterval(() => {
+        frame++
+        const nonSpaceCount = finalText.replace(/ /g, '').length
+        setDisplayText(
+          finalText
+            .split('')
+            .map((char, i) => {
+              if (char === ' ') return ' '
+              const charIndex = finalText.slice(0, i + 1).replace(/ /g, '').length - 1
+              const resolveAt = Math.floor((charIndex / Math.max(nonSpaceCount - 1, 1)) * TOTAL_FRAMES)
+              if (frame > resolveAt) return char
+              return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]
+            })
+            .join('')
+        )
+        if (frame >= TOTAL_FRAMES + 4) {
+          clearInterval(intervalId)
+          setDisplayText(finalText)
+        }
+      }, FRAME_MS)
+    }, startDelay * 1000)
+
+    return () => {
+      clearTimeout(timeoutId)
+      if (intervalId) clearInterval(intervalId)
+    }
+  }, [finalText, startDelay])
+
+  return displayText
+}
+
 const MARQUEE_ITEMS = [
   'BRANDING', 'DESIGN', 'IDENTITÉ VISUELLE', 'SITES WEB', 'SEO', 'MOTION', 'PUBLICITÉ', 'APPLICATIONS',
   'BRANDING', 'DESIGN', 'IDENTITÉ VISUELLE', 'SITES WEB', 'SEO', 'MOTION', 'PUBLICITÉ', 'APPLICATIONS',
@@ -91,6 +143,13 @@ export function HeroSection() {
     el.addEventListener('mousemove', handleMove)
     return () => el.removeEventListener('mousemove', handleMove)
   }, [mouseX, mouseY])
+
+  const line1Raw = t('line1')
+  const line2Raw = t('line2')
+  const line3Raw = t('line3')
+  const scramble1 = useScramble(line1Raw, 0.4)
+  const scramble2 = useScramble(line2Raw, 0.55)
+  const scramble3 = useScramble(line3Raw, 0.7)
 
   const heroLogoSrc = '/logo-bg.png'
 
@@ -180,7 +239,7 @@ export function HeroSection() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.7, delay: 0.15 }}
                 >
-                  {t('line1')}
+                  {scramble1}
                 </motion.span>
                 <motion.span
                   className="block"
@@ -189,7 +248,7 @@ export function HeroSection() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.7, delay: 0.25 }}
                 >
-                  {t('line2')}
+                  {scramble2}
                 </motion.span>
                 <motion.span
                   className="block"
@@ -198,7 +257,7 @@ export function HeroSection() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.7, delay: 0.35 }}
                 >
-                  {t('line3')}
+                  {scramble3}
                 </motion.span>
               </motion.h1>
 

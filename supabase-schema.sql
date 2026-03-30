@@ -46,6 +46,10 @@ BEGIN
   INSERT INTO profiles (id, role) VALUES (NEW.id, 'client')
   ON CONFLICT (id) DO NOTHING;
   RETURN NEW;
+EXCEPTION
+  WHEN OTHERS THEN
+    -- Ne jamais bloquer l'inscription même si profiles échoue
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
