@@ -1,4 +1,5 @@
 import { Bebas_Neue, Montserrat } from 'next/font/google'
+import { ThemeProvider } from '@/components/theme/theme-provider'
 
 const bebasNeue = Bebas_Neue({
   variable: '--font-display',
@@ -27,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`${bebasNeue.variable} ${montserrat.variable} antialiased`}
         suppressHydrationWarning
       >
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   )

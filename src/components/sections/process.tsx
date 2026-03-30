@@ -10,68 +10,172 @@ export function ProcessSection() {
   return (
     <section id="process" className="section" style={{ background: 'var(--bg-secondary)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="mb-20 lg:mb-24"
         >
-          <div className="flex items-center justify-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
             <span className="badge">{t('eyebrow')}</span>
-            <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
           </div>
-          <h2
-            className="font-display leading-none mb-4"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(3rem, 7vw, 6rem)',
-              color: 'var(--text)',
-            }}
-          >
-            {t('title_1')} <span style={{ color: 'var(--primary)' }}>{t('title_2')}</span>
-          </h2>
-          <p className="text-lg max-w-2xl mx-auto" style={{ color: 'var(--text-muted)' }}>
-            {t('subtitle')}
-          </p>
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+            <h2
+              className="font-display leading-none"
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(3rem, 7vw, 6rem)',
+                color: 'var(--text)',
+              }}
+            >
+              {t('title_1')}{' '}
+              <span style={{ color: 'var(--primary)' }}>{t('title_2')}</span>
+            </h2>
+            <p className="text-sm max-w-xs lg:text-right" style={{ color: 'var(--text-muted)' }}>
+              {t('subtitle')}
+            </p>
+          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {steps.map((step, i) => (
+        {/* ── Desktop: horizontal timeline ── */}
+        <div className="hidden lg:block relative">
+
+          {/* Connecting line */}
+          <div
+            className="absolute left-0 right-0 h-px pointer-events-none"
+            style={{ top: '1.5rem', background: 'var(--border)' }}
+          >
             <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              className="h-full"
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.07 }}
-              className="card card-glass p-7 relative overflow-hidden group"
-            >
-              {/* Number bg */}
-              <div
-                className="absolute top-4 right-4 text-6xl font-black opacity-5 group-hover:opacity-10 transition-opacity select-none"
-                style={{ color: 'var(--primary)' }}
-              >
-                {String(i + 1).padStart(2, '0')}
-              </div>
+              transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+              style={{ background: 'var(--primary)', transformOrigin: 'left center' }}
+            />
+          </div>
 
-              {/* Step badge */}
-              <div
-                className="inline-flex items-center justify-center w-10 h-10 rounded-xl text-sm font-black mb-4"
-                style={{ background: 'var(--primary-glow)', color: 'var(--primary)' }}
+          <div
+            className="grid gap-8"
+            style={{ gridTemplateColumns: `repeat(${steps.length}, 1fr)` }}
+          >
+            {steps.map((step, i) => (
+              <motion.div
+                key={i}
+                className="relative pt-0"
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
               >
-                {String(i + 1).padStart(2, '0')}
-              </div>
+                {/* Dot on the timeline */}
+                <motion.div
+                  className="w-3 h-3 rounded-full mb-8 relative z-10"
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.08 + 0.3, type: 'spring', stiffness: 300 }}
+                  style={{
+                    background: 'var(--primary)',
+                    boxShadow: '0 0 0 4px var(--bg-secondary)',
+                  }}
+                />
 
-              <h3 className="font-bold text-base mb-2" style={{ color: 'var(--text)' }}>
-                {step.title}
-              </h3>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-                {step.description}
-              </p>
-            </motion.div>
-          ))}
+                {/* Outlined number */}
+                <span
+                  className="block font-display leading-none mb-5 select-none"
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 'clamp(3.5rem, 5vw, 5rem)',
+                    WebkitTextStroke: '1.5px var(--primary)',
+                    color: 'transparent',
+                  }}
+                >
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+
+                <h3
+                  className="font-bold text-sm mb-2"
+                  style={{ color: 'var(--text)' }}
+                >
+                  {step.title}
+                </h3>
+                <p
+                  className="text-xs leading-relaxed"
+                  style={{ color: 'var(--text-muted)' }}
+                >
+                  {step.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
         </div>
+
+        {/* ── Mobile: vertical timeline ── */}
+        <div className="lg:hidden relative pl-8">
+
+          {/* Vertical line */}
+          <div
+            className="absolute left-[5px] top-0 bottom-0 w-px pointer-events-none"
+            style={{ background: 'var(--border)' }}
+          >
+            <motion.div
+              className="w-full"
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
+              style={{ background: 'var(--primary)', transformOrigin: 'top center', height: '100%' }}
+            />
+          </div>
+
+          <div className="space-y-10">
+            {steps.map((step, i) => (
+              <motion.div
+                key={i}
+                className="relative"
+                initial={{ opacity: 0, x: -16 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: i * 0.07 }}
+              >
+                {/* Dot */}
+                <div
+                  className="absolute -left-8 top-1 w-[11px] h-[11px] rounded-full"
+                  style={{
+                    background: 'var(--primary)',
+                    boxShadow: '0 0 0 3px var(--bg-secondary)',
+                  }}
+                />
+
+                {/* Outlined number */}
+                <span
+                  className="block font-display leading-none mb-3 select-none"
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: '3rem',
+                    WebkitTextStroke: '1.5px var(--primary)',
+                    color: 'transparent',
+                  }}
+                >
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+
+                <h3 className="font-bold text-sm mb-1.5" style={{ color: 'var(--text)' }}>
+                  {step.title}
+                </h3>
+                <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+                  {step.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
       </div>
     </section>
   )

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import '../globals.css'
-import { ThemeProvider } from '@/components/theme/theme-provider'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages, getTranslations } from 'next-intl/server'
 import { routing } from '@/i18n/routing'
@@ -68,21 +67,19 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <ThemeProvider>
-        {/* Cinematic loader (first visit only) */}
-        <Loader />
-        {/* Lenis smooth scroll */}
-        <LenisProvider />
-        {/* Global overlays */}
-        <MagneticCursor />
-        <ScrollProgress />
-        <Grain />
-        <FloatingButtons />
-        {/* Page content with transitions */}
-        <PageTransition>
-          {children}
-        </PageTransition>
-      </ThemeProvider>
+      {/* Cinematic loader (first visit only) */}
+      <Loader />
+      {/* Lenis smooth scroll */}
+      <LenisProvider />
+      {/* Global overlays */}
+      <MagneticCursor />
+      <ScrollProgress />
+      <Grain />
+      <FloatingButtons />
+      {/* Page content with transitions */}
+      <PageTransition>
+        {children}
+      </PageTransition>
     </NextIntlClientProvider>
   )
 }
