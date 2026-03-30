@@ -1,86 +1,116 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Star, Quote } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-
-const AVATARS = ['SM', 'JK', 'MN']
 
 export function TestimonialsSection() {
   const t = useTranslations('testimonials')
   const items = t.raw('items') as { name: string; role: string; text: string }[]
 
   return (
-    <section className="section">
+    <section className="section" style={{ background: 'var(--bg)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="mb-20"
         >
-          <div className="flex items-center justify-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
             <span className="badge">{t('eyebrow')}</span>
-            <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
           </div>
-          <h2
-            className="font-display leading-none mb-4"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(3rem, 7vw, 6rem)',
-              color: 'var(--text)',
-            }}
-          >
-            {t('title_1')} <span style={{ color: 'var(--primary)' }}>{t('title_2')}</span>
-          </h2>
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+            <h2
+              className="font-display leading-none"
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(3rem, 7vw, 6rem)',
+                color: 'var(--text)',
+              }}
+            >
+              {t('title_1')}{' '}
+              <span style={{ color: 'var(--primary)' }}>{t('title_2')}</span>
+            </h2>
+            <p className="text-sm max-w-xs lg:text-right" style={{ color: 'var(--text-muted)' }}>
+              {t('subtitle')}
+            </p>
+          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Stacked editorial quotes */}
+        <div className="space-y-0">
           {items.map((item, i) => (
             <motion.div
               key={item.name}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="card card-glass p-7 relative"
+              transition={{ duration: 0.55, delay: i * 0.1 }}
+              className="group relative py-10 lg:py-14"
+              style={{ borderTop: '1px solid var(--border)' }}
             >
-              <Quote
-                size={32}
-                className="absolute top-6 right-6 opacity-10"
-                style={{ color: 'var(--primary)' }}
-              />
+              <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr_auto] gap-6 lg:gap-16 items-start">
 
-              {/* Stars */}
-              <div className="flex gap-1 mb-4">
-                {Array.from({ length: 5 }).map((_, j) => (
-                  <Star key={j} size={14} fill="currentColor" style={{ color: '#f59e0b' }} />
-                ))}
-              </div>
-
-              {/* Text */}
-              <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-muted)' }}>
-                &ldquo;{item.text}&rdquo;
-              </p>
-
-              {/* Author */}
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white"
-                  style={{ background: 'var(--primary)' }}
+                {/* Number */}
+                <span
+                  className="font-display leading-none select-none flex-shrink-0"
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 'clamp(3rem, 5vw, 4.5rem)',
+                    WebkitTextStroke: '1.5px var(--accent-warm)',
+                    color: 'transparent',
+                    lineHeight: 1,
+                  }}
                 >
-                  {AVATARS[i]}
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+
+                {/* Quote text */}
+                <div className="flex-1">
+                  <p
+                    className="italic leading-relaxed"
+                    style={{
+                      fontSize: 'clamp(1.05rem, 2vw, 1.45rem)',
+                      color: 'var(--text)',
+                      fontFamily: 'var(--font-sans)',
+                    }}
+                  >
+                    &ldquo;{item.text}&rdquo;
+                  </p>
                 </div>
-                <div>
-                  <div className="font-semibold text-sm" style={{ color: 'var(--text)' }}>{item.name}</div>
-                  <div className="text-xs" style={{ color: 'var(--text-subtle)' }}>{item.role}</div>
+
+                {/* Author — right-aligned */}
+                <div className="lg:text-right flex-shrink-0 lg:pt-1">
+                  <div
+                    className="font-bold text-sm uppercase tracking-widest"
+                    style={{ color: 'var(--text)', letterSpacing: '0.1em' }}
+                  >
+                    {item.name}
+                  </div>
+                  <div className="text-xs mt-1" style={{ color: 'var(--text-subtle)' }}>
+                    {item.role}
+                  </div>
+                  {/* Accent line under author */}
+                  <motion.div
+                    className="h-[1.5px] mt-3 lg:ml-auto"
+                    style={{ background: 'var(--primary)', width: 0 }}
+                    whileInView={{ width: '100%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: i * 0.1 + 0.4 }}
+                  />
                 </div>
               </div>
             </motion.div>
           ))}
+
+          {/* Bottom border */}
+          <div style={{ borderTop: '1px solid var(--border)' }} />
         </div>
+
       </div>
     </section>
   )

@@ -142,6 +142,7 @@
     "eyebrow": "Testimonials",
     "title_1": "THEY",
     "title_2": "TRUST US",
+    "subtitle": "What our clients say about their experience with OverBrand.",
     "items": [
       {
         "name": "Sophie Mbeki",
@@ -165,6 +166,7 @@
     "title_1": "YOUR",
     "title_2": "QUESTIONS",
     "subtitle": "Everything you need to know before starting your project.",
+    "cta": "Start my project →",
     "items": [
       {
         "q": "How much does a website cost?",

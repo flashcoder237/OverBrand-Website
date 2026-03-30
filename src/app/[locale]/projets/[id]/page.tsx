@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { Navbar } from '@/components/layout/navbar'
@@ -6,24 +7,109 @@ import { ArrowLeft, ArrowUpRight, Tag, Calendar, User } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ProjectGallery } from './project-gallery'
+import { gqlClient } from '@/lib/graphql/client'
+import {
+  GET_PROJECT_BY_ID,
+  type GetProjectByIdRes,
+  type ShowcaseProject,
+  unwrapEdges,
+} from '@/lib/graphql/queries'
 
-type ShowcaseProject = {
-  id: string
-  title: string
-  category: string
-  description: string | null
-  long_description: string | null
-  gradient: string
-  accent: string
-  image_url: string | null
-  image_position: string | null
-  image_urls: string[] | null
-  tags: string[] | null
-  client: string | null
-  year: string | null
-  link_url: string | null
-  visible: boolean
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://overbrand.net'
+
+// ── Data fetcher (GraphQL → REST fallback) ────────────────────────────────────
+
+async function fetchProject(id: string): Promise<ShowcaseProject | null> {
+  try {
+    const data = await gqlClient.request<GetProjectByIdRes>(GET_PROJECT_BY_ID, { id })
+    return unwrapEdges(data.showcase_projectsCollection?.edges)[0] ?? null
+  } catch {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from('showcase_projects')
+      .select('*')
+      .eq('id', id)
+      .eq('visible', true)
+      .single<ShowcaseProject>()
+    return data ?? null
+  }
 }
+
+// ── generateStaticParams ──────────────────────────────────────────────────────
+
+export async function generateStaticParams() {
+  try {
+    // Direct Supabase client — no cookies/request context needed at build time
+    const { createClient: createSupabase } = await import('@supabase/supabase-js')
+    const sb = createSupabase(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    )
+    const { data } = await sb
+      .from('showcase_projects')
+      .select('id')
+      .eq('visible', true)
+
+    const locales = ['fr', 'en']
+    return (data ?? []).flatMap(p =>
+      locales.map(locale => ({ locale, id: p.id }))
+    )
+  } catch {
+    return []
+  }
+}
+
+// ── generateMetadata ──────────────────────────────────────────────────────────
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string }>
+}): Promise<Metadata> {
+  const { locale, id } = await params
+  const project = await fetchProject(id)
+
+  if (!project) {
+    return {
+      title: 'Projet introuvable',
+      robots: { index: false, follow: false },
+    }
+  }
+
+  const title = `${project.title} — OverBrand`
+  const description = project.description ?? `Projet ${project.category} réalisé par OverBrand.`
+  const ogImage = project.image_url
+    ? project.image_url
+    : `${SITE_URL}/api/og?title=${encodeURIComponent(project.title)}&description=${encodeURIComponent(description)}`
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `${SITE_URL}/${locale}/projets/${id}`,
+      languages: {
+        fr: `${SITE_URL}/fr/projets/${id}`,
+        en: `${SITE_URL}/en/projets/${id}`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      url: `${SITE_URL}/${locale}/projets/${id}`,
+      siteName: 'OverBrand',
+      images: [{ url: ogImage, width: 1200, height: 630, alt: project.title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [ogImage],
+    },
+  }
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
 
 export default async function ProjetDetailPage({
   params,
@@ -31,24 +117,66 @@ export default async function ProjetDetailPage({
   params: Promise<{ locale: string; id: string }>
 }) {
   const { locale, id } = await params
-  const supabase = await createClient()
-
-  const { data: project } = await supabase
-    .from('showcase_projects')
-    .select('*')
-    .eq('id', id)
-    .eq('visible', true)
-    .single<ShowcaseProject>()
-
+  const project = await fetchProject(id)
   if (!project) notFound()
 
   const allImages = [
     ...(project.image_url ? [project.image_url] : []),
     ...(project.image_urls ?? []),
-  ].filter(Boolean)
+  ].filter(Boolean) as string[]
+
+  // ── Structured data ─────────────────────────────────────────────────────
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'OverBrand',
+        item: `${SITE_URL}/${locale}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: locale === 'fr' ? 'Projets' : 'Projects',
+        item: `${SITE_URL}/${locale}#projects`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: project.title,
+        item: `${SITE_URL}/${locale}/projets/${id}`,
+      },
+    ],
+  }
+
+  const creativeWorkSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: project.title,
+    description: project.description ?? undefined,
+    creator: {
+      '@id': `${SITE_URL}/#organization`,
+    },
+    ...(project.client ? { author: { '@type': 'Organization', name: project.client } } : {}),
+    ...(project.year ? { dateCreated: project.year } : {}),
+    ...(allImages[0] ? { image: allImages[0] } : {}),
+    keywords: project.tags?.join(', ') ?? undefined,
+    url: `${SITE_URL}/${locale}/projets/${id}`,
+    genre: project.category,
+  }
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(creativeWorkSchema) }}
+      />
       <Navbar />
       <main style={{ background: 'var(--bg)', color: 'var(--text)' }}>
 
@@ -58,9 +186,7 @@ export default async function ProjetDetailPage({
           <div
             className="absolute inset-0"
             style={{
-              background: allImages[0]
-                ? 'var(--bg)'
-                : project.gradient,
+              background: allImages[0] ? 'var(--bg)' : project.gradient,
             }}
           />
           {allImages[0] && (
@@ -94,7 +220,7 @@ export default async function ProjetDetailPage({
               className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest mb-10 transition-opacity hover:opacity-60"
               style={{ color: allImages[0] ? 'rgba(255,255,255,0.7)' : 'var(--text-muted)' }}
             >
-              <ArrowLeft size={14} /> Retour aux projets
+              <ArrowLeft size={14} /> {locale === 'fr' ? 'Retour aux projets' : 'Back to projects'}
             </Link>
 
             <div className="flex items-center gap-3 mb-4">
@@ -152,7 +278,7 @@ export default async function ProjetDetailPage({
                 <div className="flex items-center gap-2">
                   <Calendar size={14} style={{ color: 'var(--primary)' }} />
                   <div>
-                    <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-subtle)', fontSize: '0.6rem' }}>Ann&eacute;e</div>
+                    <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-subtle)', fontSize: '0.6rem' }}>{locale === 'fr' ? 'Année' : 'Year'}</div>
                     <div className="text-sm font-semibold" style={{ color: 'var(--text)' }}>{project.year}</div>
                   </div>
                 </div>
@@ -191,7 +317,7 @@ export default async function ProjetDetailPage({
                   className="ml-auto flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-5 py-2.5 transition-all hover:opacity-80"
                   style={{ background: 'var(--primary)', color: 'white', clipPath: 'polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)' }}
                 >
-                  Voir le projet <ArrowUpRight size={14} />
+                  {locale === 'fr' ? 'Voir le projet' : 'View project'} <ArrowUpRight size={14} />
                 </a>
               )}
             </div>
@@ -208,7 +334,9 @@ export default async function ProjetDetailPage({
                 <div className="lg:col-span-2">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-1 h-5" style={{ background: 'var(--primary)' }} />
-                    <span className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: 'var(--text-subtle)' }}>A propos du projet</span>
+                    <span className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: 'var(--text-subtle)' }}>
+                      {locale === 'fr' ? 'À propos du projet' : 'About the project'}
+                    </span>
                   </div>
                   <div
                     className="text-base leading-relaxed whitespace-pre-wrap"
@@ -232,16 +360,16 @@ export default async function ProjetDetailPage({
                     className="font-display text-3xl mb-2"
                     style={{ fontFamily: 'var(--font-display)', color: 'var(--text)' }}
                   >
-                    UN PROJET SIMILAIRE ?
+                    {locale === 'fr' ? 'UN PROJET SIMILAIRE ?' : 'SIMILAR PROJECT?'}
                   </h3>
                   <p className="text-xs mb-6" style={{ color: 'var(--text-muted)' }}>
-                    Discutons de votre projet et voyons comment nous pouvons vous aider.
+                    {locale === 'fr'
+                      ? 'Discutons de votre projet et voyons comment nous pouvons vous aider.'
+                      : 'Let\'s discuss your project and see how we can help you.'}
                   </p>
                   <Link href={`/${locale}#contact`}>
-                    <button
-                      className="btn-primary text-xs px-6 py-3 w-full flex items-center justify-center gap-2"
-                    >
-                      Demander un devis <ArrowUpRight size={14} />
+                    <button className="btn-primary text-xs px-6 py-3 w-full flex items-center justify-center gap-2">
+                      {locale === 'fr' ? 'Demander un devis' : 'Request a quote'} <ArrowUpRight size={14} />
                     </button>
                   </Link>
                 </div>
@@ -257,7 +385,7 @@ export default async function ProjetDetailPage({
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-1 h-5" style={{ background: 'var(--primary)' }} />
                 <span className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: 'var(--text-subtle)' }}>
-                  {allImages.length > 1 ? 'Galerie' : 'Visuel'}
+                  {allImages.length > 1 ? (locale === 'fr' ? 'Galerie' : 'Gallery') : (locale === 'fr' ? 'Visuel' : 'Visual')}
                 </span>
               </div>
               <ProjectGallery images={allImages} title={project.title} position={project.image_position ?? 'center'} />

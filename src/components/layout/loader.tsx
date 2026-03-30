@@ -4,10 +4,57 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 
+const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+function useScramble(finalText: string, startDelay = 0) {
+  const [displayText, setDisplayText] = useState(finalText)
+
+  useEffect(() => {
+    // Immediately scramble on client mount
+    setDisplayText(
+      finalText.split('').map(c =>
+        c === ' ' ? ' ' : SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]
+      ).join('')
+    )
+
+    let intervalId: ReturnType<typeof setInterval>
+    const timeoutId = setTimeout(() => {
+      let frame = 0
+      const FRAME_MS = 45
+      const TOTAL_FRAMES = 28
+      intervalId = setInterval(() => {
+        frame++
+        const resolved = Math.floor((frame / TOTAL_FRAMES) * finalText.length)
+        setDisplayText(
+          finalText.split('').map((c, idx) => {
+            if (c === ' ') return ' '
+            if (idx < resolved) return c
+            return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]
+          }).join('')
+        )
+        if (frame >= TOTAL_FRAMES) {
+          clearInterval(intervalId)
+          setDisplayText(finalText)
+        }
+      }, FRAME_MS)
+    }, startDelay * 1000)
+
+    return () => {
+      clearTimeout(timeoutId)
+      clearInterval(intervalId)
+    }
+  }, [finalText, startDelay])
+
+  return displayText
+}
+
 export function Loader() {
   const [phase, setPhase] = useState<'counting' | 'reveal' | 'done'>('counting')
   const [count, setCount] = useState(0)
   const [visible, setVisible] = useState(true)
+  const [scrambleActive, setScrambleActive] = useState(false)
+
+  const scrambledName = useScramble('OVERBRAND', scrambleActive ? 0.1 : 9999)
 
   useEffect(() => {
     // Skip loader on subsequent navigations (only first visit)
@@ -16,6 +63,7 @@ export function Loader() {
       return
     }
     sessionStorage.setItem('ob-loaded', '1')
+    setScrambleActive(true)
 
     // Count 0 → 100 in ~1.6s
     let frame = 0
@@ -63,7 +111,7 @@ export function Loader() {
             <Image src="/logo-bg.png" alt="OverBrand" fill className="object-contain" priority />
           </motion.div>
 
-          {/* Brand name draw */}
+          {/* Brand name — scramble effect */}
           <motion.div
             className="overflow-hidden mb-6"
             initial={{ height: 0 }}
@@ -74,7 +122,8 @@ export function Loader() {
               className="font-display tracking-widest text-4xl select-none"
               style={{ fontFamily: 'var(--font-display)', color: 'var(--text)' }}
             >
-              Over<span style={{ color: 'var(--primary)' }}>Brand</span>
+              {scrambledName.slice(0, 4)}
+              <span style={{ color: 'var(--primary)' }}>{scrambledName.slice(4)}</span>
             </span>
           </motion.div>
 

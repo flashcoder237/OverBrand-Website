@@ -166,64 +166,84 @@ export function ContactSection() {
     <section id="contact" className="section" style={{ background: 'var(--bg-secondary)' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Header */}
+        {/* Header — left-aligned editorial */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="mb-16"
         >
-          <div className="flex items-center justify-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
             <span className="badge">{t('eyebrow')}</span>
-            <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
           </div>
-          <h2
-            className="font-display leading-none mb-4"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(3rem, 7vw, 6rem)', color: 'var(--text)' }}
-          >
-            {t('title_1')} <span style={{ color: 'var(--primary)' }}>{t('title_2')}</span>
-          </h2>
-          <p className="text-base max-w-xl mx-auto" style={{ color: 'var(--text-muted)' }}>
-            {t('subtitle')}
-          </p>
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+            <h2
+              className="font-display leading-none"
+              style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(3rem, 7vw, 6rem)', color: 'var(--text)' }}
+            >
+              {t('title_1')}{' '}
+              <span style={{ color: 'var(--primary)' }}>{t('title_2')}</span>
+            </h2>
+            <p className="text-sm max-w-xs lg:text-right" style={{ color: 'var(--text-muted)' }}>
+              {t('subtitle')}
+            </p>
+          </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16">
 
-          {/* Left info */}
+          {/* Left — typographic info panel */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-2 space-y-6"
+            className="lg:col-span-2 space-y-10"
           >
-            <div className="card card-glass p-6">
-              <h3 className="font-bold text-base mb-4" style={{ color: 'var(--text)' }}>{t('info_title')}</h3>
-              <div className="space-y-4">
+            {/* Contact details */}
+            <div>
+              <div
+                className="text-xs font-bold uppercase tracking-[0.2em] mb-6"
+                style={{ color: 'var(--text-subtle)' }}
+              >
+                {t('info_title')}
+              </div>
+              <div className="space-y-6">
                 {[
                   { icon: Mail, label: 'Email', value: 'contact@overbrand.net' },
                   { icon: Phone, label: t('info_phone'), value: '+237 652 761 931' },
                   { icon: MessageSquare, label: t('info_response'), value: t('info_response_time') },
-                ].map(({ icon: Icon, label, value }) => (
-                  <div key={label} className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'var(--primary-glow)' }}>
-                      <Icon size={16} style={{ color: 'var(--primary)' }} />
-                    </div>
+                ].map(({ icon: Icon, label, value }, idx) => (
+                  <motion.div
+                    key={label}
+                    className="flex items-start gap-4"
+                    initial={{ opacity: 0, x: -12 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: idx * 0.08 }}
+                  >
+                    <Icon size={15} style={{ color: 'var(--primary)', marginTop: '2px', flexShrink: 0 }} />
                     <div>
-                      <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-subtle)' }}>{label}</div>
+                      <div className="text-xs font-bold uppercase tracking-widest mb-0.5" style={{ color: 'var(--text-subtle)' }}>
+                        {label}
+                      </div>
                       <div className="text-sm font-semibold" style={{ color: 'var(--text)' }}>{value}</div>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
 
-            {/* Budget options visual */}
-            <div className="card card-glass p-6">
-              <h4 className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: 'var(--text-subtle)' }}>{t('budget_label')}</h4>
+            {/* Divider */}
+            <div style={{ height: '1px', background: 'var(--border)' }} />
+
+            {/* Budget selector */}
+            <div>
+              <div className="text-xs font-bold uppercase tracking-[0.2em] mb-4" style={{ color: 'var(--text-subtle)' }}>
+                {t('budget_label')}
+              </div>
               <div className="flex flex-wrap gap-2">
                 {BUDGETS.map(b => (
                   <button
@@ -232,7 +252,7 @@ export function ContactSection() {
                     onClick={() => set('budget')(form.budget === b ? '' : b)}
                     className="text-xs font-bold px-3 py-1.5 transition-all duration-200"
                     style={{
-                      background: form.budget === b ? 'var(--primary)' : 'var(--surface-2)',
+                      background: form.budget === b ? 'var(--primary)' : 'transparent',
                       color: form.budget === b ? 'white' : 'var(--text-muted)',
                       border: `1px solid ${form.budget === b ? 'var(--primary)' : 'var(--border)'}`,
                       clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
@@ -266,8 +286,12 @@ export function ContactSection() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }}
-                    className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
-                    style={{ background: 'rgba(34,197,94,0.15)', border: '2px solid rgba(34,197,94,0.4)' }}
+                    className="w-16 h-16 flex items-center justify-center mb-6"
+                    style={{
+                      background: 'rgba(34,197,94,0.15)',
+                      border: '2px solid rgba(34,197,94,0.4)',
+                      clipPath: 'polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%)',
+                    }}
                   >
                     <CheckCircle size={32} style={{ color: '#22c55e' }} />
                   </motion.div>
@@ -287,7 +311,7 @@ export function ContactSection() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="card card-glass p-7 space-y-4"
+                  className="space-y-4"
                 >
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <FloatingInput name="name" label={t('field_name')} icon={User} value={form.name} onChange={set('name')} error={errors.name} required />

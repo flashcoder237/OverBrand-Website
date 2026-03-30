@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Minus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
 export function FAQSection() {
@@ -20,7 +20,7 @@ export function FAQSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-16"
+          className="mb-20"
         >
           <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
@@ -28,14 +28,14 @@ export function FAQSection() {
           </div>
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <h2
-              className="font-display leading-none tracking-wide"
+              className="font-display leading-none"
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(3.5rem, 8vw, 7rem)',
+                fontSize: 'clamp(3rem, 7vw, 6rem)',
                 color: 'var(--text)',
               }}
             >
-              {t('title_1')}<br />
+              {t('title_1')}{' '}
               <span style={{ color: 'var(--primary)' }}>{t('title_2')}</span>
             </h2>
             <p className="text-sm leading-relaxed max-w-xs lg:text-right pb-2" style={{ color: 'var(--text-muted)' }}>
@@ -44,8 +44,8 @@ export function FAQSection() {
           </div>
         </motion.div>
 
-        {/* Accordion */}
-        <div className="space-y-3">
+        {/* Borderless numbered accordion */}
+        <div className="space-y-0">
           {items.map((item, i) => (
             <motion.div
               key={i}
@@ -53,61 +53,68 @@ export function FAQSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.05 }}
+              style={{ borderTop: '1px solid var(--border)' }}
             >
-              <div
-                className="overflow-hidden"
-                style={{
-                  border: '1px solid var(--border)',
-                  background: openIndex === i ? 'var(--surface)' : 'var(--card-bg)',
-                  transition: 'background 0.3s',
-                }}
+              <button
+                className="w-full flex items-start gap-6 py-7 text-left group"
+                onClick={() => setOpenIndex(openIndex === i ? null : i)}
               >
-                <button
-                  className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left group"
-                  onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                {/* Outlined number */}
+                <span
+                  className="font-display leading-none select-none flex-shrink-0 pt-0.5"
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: '2rem',
+                    WebkitTextStroke: `1.5px ${openIndex === i ? 'var(--primary)' : 'var(--border-strong)'}`,
+                    color: 'transparent',
+                    transition: 'all 0.3s',
+                  }}
                 >
-                  <span
-                    className="font-semibold text-sm lg:text-base transition-colors duration-200"
-                    style={{ color: openIndex === i ? 'var(--primary)' : 'var(--text)' }}
-                  >
-                    {item.q}
-                  </span>
-                  <span
-                    className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300"
-                    style={{
-                      background: openIndex === i ? 'var(--primary)' : 'var(--surface)',
-                      border: '1px solid var(--border)',
-                      color: openIndex === i ? 'white' : 'var(--text-muted)',
-                    }}
-                  >
-                    {openIndex === i ? <Minus size={14} /> : <Plus size={14} />}
-                  </span>
-                </button>
+                  {String(i + 1).padStart(2, '0')}
+                </span>
 
-                <AnimatePresence initial={false}>
-                  {openIndex === i && (
-                    <motion.div
-                      key="content"
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                    >
-                      <div className="px-6 pb-5">
-                        <div
-                          className="h-px mb-4"
-                          style={{ background: 'var(--border)' }}
-                        />
-                        <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-                          {item.a}
-                        </p>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+                {/* Question */}
+                <span
+                  className="flex-1 font-semibold text-sm lg:text-base transition-colors duration-200 pt-1"
+                  style={{ color: openIndex === i ? 'var(--primary)' : 'var(--text)' }}
+                >
+                  {item.q}
+                </span>
+
+                {/* Plus icon — rotates 45° when open */}
+                <motion.span
+                  className="flex-shrink-0 mt-1"
+                  animate={{ rotate: openIndex === i ? 45 : 0 }}
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  style={{ color: openIndex === i ? 'var(--primary)' : 'var(--text-subtle)' }}
+                >
+                  <Plus size={18} />
+                </motion.span>
+              </button>
+
+              <AnimatePresence initial={false}>
+                {openIndex === i && (
+                  <motion.div
+                    key="content"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+                    style={{ overflow: 'hidden' }}
+                  >
+                    <div className="pb-7 pl-[3.25rem]">
+                      <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+                        {item.a}
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           ))}
+
+          {/* Bottom border */}
+          <div style={{ borderTop: '1px solid var(--border)' }} />
         </div>
 
         {/* Bottom CTA */}
@@ -116,17 +123,15 @@ export function FAQSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-12 text-center"
+          className="mt-14"
         >
-          <p className="text-sm mb-4" style={{ color: 'var(--text-muted)' }}>
-            {/* Bilingual inline */}
-          </p>
           <a href="#contact">
             <button className="btn-primary text-xs px-8 py-3.5">
-              Démarrer →
+              {t('cta')}
             </button>
           </a>
         </motion.div>
+
       </div>
     </section>
   )

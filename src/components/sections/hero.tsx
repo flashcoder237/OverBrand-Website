@@ -470,7 +470,7 @@ export function HeroSection() {
       </div>
 
       {/* Marquee */}
-      <div className="relative z-10 py-3 overflow-hidden" style={{ background: 'var(--primary)', borderTop: '1px solid var(--primary-dark)' }}>
+      <div className="relative z-10 py-3 overflow-hidden" style={{ background: 'var(--accent-warm)', borderTop: '1px solid rgba(0,0,0,0.15)' }}>
         <div className="marquee-strip">
           <div className="inline-flex animate-marquee">
             {MARQUEE_ITEMS.map((item, i) => (

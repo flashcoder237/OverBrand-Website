@@ -1,5 +1,15 @@
+import type { Metadata } from 'next'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
+
+export const metadata: Metadata = {
+  title: 'Conditions Générales de Vente',
+  description: "Conditions générales de vente d'OverBrand — modalités de commande, de paiement et de livraison des prestations digitales.",
+  robots: { index: false, follow: false },
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://overbrand.net'}/fr/legal/cgv`,
+  },
+}
 
 export default function CGV() {
   return (

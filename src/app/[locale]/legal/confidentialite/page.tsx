@@ -1,5 +1,15 @@
+import type { Metadata } from 'next'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
+
+export const metadata: Metadata = {
+  title: 'Politique de Confidentialité',
+  description: "Politique de confidentialité d'OverBrand — comment nous collectons, utilisons et protégeons vos données personnelles.",
+  robots: { index: false, follow: false },
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://overbrand.net'}/fr/legal/confidentialite`,
+  },
+}
 
 export default function PolitiqueConfidentialite() {
   return (

@@ -1,5 +1,15 @@
+import type { Metadata } from 'next'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
+
+export const metadata: Metadata = {
+  title: 'Mentions Légales',
+  description: "Mentions légales d'OverBrand — agence digitale créative. Informations sur l'éditeur, l'hébergeur et les conditions d'utilisation du site.",
+  robots: { index: false, follow: false },
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://overbrand.net'}/fr/legal/mentions-legales`,
+  },
+}
 
 export default function MentionsLegales() {
   return (

@@ -10,6 +10,8 @@
   --primary-glow: rgba(40, 85, 160, 0.22);
   --accent: #3a6fd8;
   --accent-light: #6b9fd4;
+  --accent-warm: #FF4D00;
+  --accent-warm-glow: rgba(255, 77, 0, 0.13);
 
   /* Light mode */
   --bg: #f7f8fc;
@@ -39,6 +41,8 @@
   --text: #e8eef8;
   --text-muted: #8aa0c0;
   --text-subtle: #4d6585;
+  --accent-warm: #FF5A1A;
+  --accent-warm-glow: rgba(255, 90, 26, 0.10);
   --nav-bg: rgba(5, 13, 26, 0.90);
   --card-bg: #0d1a2e;
   --card-border: rgba(58, 111, 216, 0.12);

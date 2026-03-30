@@ -1,28 +1,23 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import Image from 'next/image'
 import { LayoutDashboard, X, Menu } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { useTheme } from 'next-themes'
 import { useTranslations, useLocale } from 'next-intl'
-import { usePathname, useRouter } from '@/i18n/navigation'
+import { Link, usePathname } from '@/i18n/navigation'
 
 function LanguageSwitcher() {
   const locale = useLocale()
-  const router = useRouter()
   const pathname = usePathname()
-
-  function switchLocale(newLocale: string) {
-    router.replace(pathname, { locale: newLocale })
-  }
 
   return (
     <div className="flex items-center gap-1 text-xs font-bold uppercase tracking-widest">
-      <button
-        onClick={() => switchLocale('fr')}
+      <Link
+        href={pathname}
+        locale="fr"
         className="px-2 py-1 transition-opacity"
         style={{
           color: locale === 'fr' ? 'var(--primary)' : 'var(--text-subtle)',
@@ -31,10 +26,11 @@ function LanguageSwitcher() {
         }}
       >
         FR
-      </button>
+      </Link>
       <span style={{ color: 'var(--border)' }}>|</span>
-      <button
-        onClick={() => switchLocale('en')}
+      <Link
+        href={pathname}
+        locale="en"
         className="px-2 py-1 transition-opacity"
         style={{
           color: locale === 'en' ? 'var(--primary)' : 'var(--text-subtle)',
@@ -43,7 +39,7 @@ function LanguageSwitcher() {
         }}
       >
         EN
-      </button>
+      </Link>
     </div>
   )
 }
