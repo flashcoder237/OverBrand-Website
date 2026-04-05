@@ -17,31 +17,33 @@ export function ProjectGallery({
 
   if (images.length === 1) {
     return (
-      <div
-        className="flex justify-center overflow-hidden cursor-pointer"
-        style={{ border: '1px solid var(--border)', background: 'var(--surface)' }}
-        onClick={() => setLightbox(0)}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={images[0]}
-          alt={title}
-          style={{
-            height: 'clamp(300px, 50vw, 600px)',
-            width: 'auto',
-            maxWidth: '100%',
-            display: 'block',
-            objectFit: 'contain',
-            objectPosition: position,
-            transition: 'transform 0.7s ease',
-          }}
-          onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.03)')}
-          onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
-        />
+      <>
+        <div
+          className="flex justify-center overflow-hidden cursor-pointer"
+          style={{ border: '1px solid var(--border)', background: 'var(--surface)' }}
+          onClick={() => setLightbox(0)}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={images[0]}
+            alt={title}
+            style={{
+              height: 'clamp(300px, 50vw, 600px)',
+              width: 'auto',
+              maxWidth: '100%',
+              display: 'block',
+              objectFit: 'contain',
+              objectPosition: position,
+              transition: 'transform 0.7s ease',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.03)')}
+            onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+          />
+        </div>
         {lightbox !== null && (
           <Lightbox images={images} index={lightbox} onClose={() => setLightbox(null)} position={position} />
         )}
-      </div>
+      </>
     )
   }
 
