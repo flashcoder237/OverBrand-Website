@@ -34,10 +34,17 @@ function getVideoEmbed(url: string): { type: 'youtube' | 'vimeo' | 'direct'; emb
 // ── Data fetcher (GraphQL → REST fallback) ────────────────────────────────────
 
 async function fetchProject(id: string): Promise<ShowcaseProject | null> {
+  // 1. Try GraphQL
   try {
     const data = await gqlClient.request<GetProjectByIdRes>(GET_PROJECT_BY_ID, { id })
-    return unwrapEdges(data.showcase_projectsCollection?.edges)[0] ?? null
+    const result = unwrapEdges(data.showcase_projectsCollection?.edges)[0] ?? null
+    if (result) return result
   } catch {
+    // fall through to REST
+  }
+
+  // 2. Fallback: REST
+  try {
     const supabase = await createClient()
     const { data } = await supabase
       .from('showcase_projects')
@@ -46,6 +53,8 @@ async function fetchProject(id: string): Promise<ShowcaseProject | null> {
       .eq('visible', true)
       .single<ShowcaseProject>()
     return data ?? null
+  } catch {
+    return null
   }
 }
 

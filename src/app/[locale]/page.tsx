@@ -53,13 +53,21 @@ export default async function HomePage({
     const data = await gqlClient.request<GetShowcaseProjectsRes>(GET_SHOWCASE_PROJECTS)
     showcaseProjects = unwrapEdges(data.showcase_projectsCollection?.edges)
   } catch {
-    const { data } = await supabase
-      .from('showcase_projects')
-      .select('*')
-      .eq('visible', true)
-      .order('display_order', { ascending: true })
-      .limit(5)
-    showcaseProjects = data
+    // fallback to REST
+  }
+
+  if (!showcaseProjects) {
+    try {
+      const { data } = await supabase
+        .from('showcase_projects')
+        .select('*')
+        .eq('visible', true)
+        .order('display_order', { ascending: true })
+        .limit(5)
+      showcaseProjects = data
+    } catch {
+      showcaseProjects = []
+    }
   }
 
   // ── FAQPage structured data ─────────────────────────────────────────────
