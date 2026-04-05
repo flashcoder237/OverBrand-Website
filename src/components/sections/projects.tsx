@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion'
-import { ArrowUpRight, ArrowRight } from 'lucide-react'
+import { ArrowUpRight, ArrowRight, Play } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useTranslations, useLocale } from 'next-intl'
@@ -17,6 +17,7 @@ type ShowcaseProject = {
   size: string
   image_url: string | null
   image_position: string | null
+  video_url?: string | null
 }
 
 const FALLBACK_PROJECTS: ShowcaseProject[] = [
@@ -112,6 +113,20 @@ function ProjectPreview({ project }: { project: ShowcaseProject }) {
           opacity: 0.15,
         }}
       />
+      {/* Video badge */}
+      {project.video_url && (
+        <div
+          className="absolute top-3 left-3 flex items-center gap-1.5 px-2 py-1"
+          style={{
+            background: 'rgba(0,0,0,0.55)',
+            backdropFilter: 'blur(6px)',
+            clipPath: 'polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%)',
+          }}
+        >
+          <Play size={9} fill="white" style={{ color: 'white' }} />
+          <span className="text-white font-bold uppercase tracking-widest" style={{ fontSize: '9px' }}>Vidéo</span>
+        </div>
+      )}
       {/* Category label */}
       <div
         className="absolute bottom-0 inset-x-0 p-4"
@@ -250,12 +265,27 @@ export function ProjectsSection({ projects: dbProjects }: { projects: ShowcasePr
                     {String(i + 1).padStart(2, '0')}
                   </span>
 
-                  {/* Category */}
+                  {/* Category + video badge */}
                   <span
-                    className="hidden xl:block flex-shrink-0 text-xs font-bold uppercase tracking-widest"
-                    style={{ color: 'var(--text-subtle)', width: '6.5rem' }}
+                    className="hidden xl:flex flex-shrink-0 items-center gap-2 text-xs font-bold uppercase tracking-widest"
+                    style={{ color: 'var(--text-subtle)', width: '7.5rem' }}
                   >
                     {project.category}
+                    {project.video_url && (
+                      <span
+                        className="inline-flex items-center gap-0.5 px-1.5 py-0.5"
+                        style={{
+                          background: 'var(--primary-glow)',
+                          color: 'var(--primary)',
+                          clipPath: 'polygon(3px 0%, 100% 0%, calc(100% - 3px) 100%, 0% 100%)',
+                          fontSize: '8px',
+                          letterSpacing: '0.12em',
+                        }}
+                      >
+                        <Play size={7} fill="currentColor" />
+                        VID
+                      </span>
+                    )}
                   </span>
 
                   {/* Title — the editorial centerpiece */}
@@ -347,14 +377,28 @@ export function ProjectsSection({ projects: dbProjects }: { projects: ShowcasePr
                       {project.title}
                     </h3>
                   </div>
-                  <div
-                    className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center"
-                    style={{
-                      background: 'rgba(255,255,255,0.15)',
-                      clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
-                    }}
-                  >
-                    <ArrowUpRight size={14} className="text-white" />
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                    {project.video_url && (
+                      <div
+                        className="flex items-center gap-1 px-2 py-1"
+                        style={{
+                          background: 'rgba(0,0,0,0.5)',
+                          backdropFilter: 'blur(6px)',
+                          clipPath: 'polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%)',
+                        }}
+                      >
+                        <Play size={10} fill="white" style={{ color: 'white' }} />
+                      </div>
+                    )}
+                    <div
+                      className="w-8 h-8 flex items-center justify-center"
+                      style={{
+                        background: 'rgba(255,255,255,0.15)',
+                        clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
+                      }}
+                    >
+                      <ArrowUpRight size={14} className="text-white" />
+                    </div>
                   </div>
                 </div>
               </Link>

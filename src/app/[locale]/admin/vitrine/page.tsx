@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Plus, Trash2, Eye, EyeOff, Loader2, Upload, ImageIcon, X } from 'lucide-react'
+import { Plus, Trash2, Eye, EyeOff, Loader2, Upload, ImageIcon, X, Play, Pencil, ChevronLeft } from 'lucide-react'
 import Image from 'next/image'
 
 type ShowcaseProject = {
@@ -22,19 +22,20 @@ type ShowcaseProject = {
   client: string | null
   year: string | null
   link_url: string | null
+  video_url: string | null
   long_description: string | null
 }
 
 const POSITION_OPTIONS = [
-  ['top left',    'top center',    'top right'],
-  ['center left', 'center',        'center right'],
+  ['top left', 'top center', 'top right'],
+  ['center left', 'center', 'center right'],
   ['bottom left', 'bottom center', 'bottom right'],
 ]
 
 const SIZE_OPTIONS = [
-  { value: 'large', label: 'Large (2 colonnes)' },
+  { value: 'large',  label: 'Large (2 colonnes)' },
   { value: 'medium', label: 'Medium' },
-  { value: 'small', label: 'Small' },
+  { value: 'small',  label: 'Small' },
 ]
 
 const GRADIENT_PRESETS = [
@@ -58,34 +59,67 @@ const EMPTY_FORM = {
   client: '',
   year: '',
   link_url: '',
+  video_url: '',
   tags: '',
 }
+
+type FormData = typeof EMPTY_FORM
+
+function formFromProject(p: ShowcaseProject): FormData {
+  return {
+    title: p.title,
+    category: p.category,
+    description: p.description ?? '',
+    gradient: p.gradient,
+    accent: p.accent,
+    size: p.size,
+    image_position: p.image_position ?? 'center',
+    long_description: p.long_description ?? '',
+    client: p.client ?? '',
+    year: p.year ?? '',
+    link_url: p.link_url ?? '',
+    video_url: p.video_url ?? '',
+    tags: p.tags?.join(', ') ?? '',
+  }
+}
+
+// ── Sub-components ────────────────────────────────────────────────────────────
+
+function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
+        {label}{hint && <span className="ml-1 font-normal" style={{ color: 'var(--text-subtle)' }}>{hint}</span>}
+      </label>
+      {children}
+    </div>
+  )
+}
+
+// ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function AdminVitrineePage() {
   const supabase = createClient()
   const [projects, setProjects] = useState<ShowcaseProject[]>([])
   const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState<string | null>(null)
-  const [showForm, setShowForm] = useState(false)
-  const [form, setForm] = useState(EMPTY_FORM)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  // Image upload state
+  // mode: 'list' | 'add' | 'edit'
+  const [mode, setMode] = useState<'list' | 'add' | 'edit'>('list')
+  const [editTarget, setEditTarget] = useState<ShowcaseProject | null>(null)
+  const [form, setForm] = useState<FormData>({ ...EMPTY_FORM })
+
+  // Image state (shared between add/edit)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
-  const [uploading, setUploading] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
-  // Additional images state
   const [additionalFiles, setAdditionalFiles] = useState<File[]>([])
   const [additionalPreviews, setAdditionalPreviews] = useState<string[]>([])
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const additionalInputRef = useRef<HTMLInputElement>(null)
 
-  // Edit mode
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [editImageFile, setEditImageFile] = useState<File | null>(null)
-  const [editImagePreview, setEditImagePreview] = useState<string | null>(null)
-  const [editPosition, setEditPosition] = useState<string>('center')
-  const editFileInputRef = useRef<HTMLInputElement>(null)
+  // Inline visibility toggle saving
+  const [togglingId, setTogglingId] = useState<string | null>(null)
 
   useEffect(() => { load() }, [])
 
@@ -98,28 +132,56 @@ export default function AdminVitrineePage() {
     setLoading(false)
   }
 
-  function handleFileChange(file: File | null, setFile: (f: File | null) => void, setPreview: (p: string | null) => void) {
-    if (!file) { setFile(null); setPreview(null); return }
-    setFile(file)
+  function openAdd() {
+    setForm({ ...EMPTY_FORM })
+    setImageFile(null)
+    setImagePreview(null)
+    setAdditionalFiles([])
+    setAdditionalPreviews([])
+    setEditTarget(null)
+    setError(null)
+    setMode('add')
+  }
+
+  function openEdit(project: ShowcaseProject) {
+    setForm(formFromProject(project))
+    setImageFile(null)
+    setImagePreview(project.image_url ?? null)
+    setAdditionalFiles([])
+    setAdditionalPreviews(project.image_urls ?? [])
+    setEditTarget(project)
+    setError(null)
+    setMode('edit')
+  }
+
+  function closeForm() {
+    setMode('list')
+    setEditTarget(null)
+    setError(null)
+  }
+
+  function handleFileChange(file: File | null) {
+    if (!file) { setImageFile(null); setImagePreview(null); return }
+    setImageFile(file)
     const reader = new FileReader()
-    reader.onload = (e) => setPreview(e.target?.result as string)
+    reader.onload = (e) => setImagePreview(e.target?.result as string)
     reader.readAsDataURL(file)
   }
 
   function handleAdditionalFiles(files: FileList | null) {
     if (!files) return
     const newFiles = Array.from(files)
-    setAdditionalFiles((prev) => [...prev, ...newFiles])
-    newFiles.forEach((file) => {
+    setAdditionalFiles(prev => [...prev, ...newFiles])
+    newFiles.forEach(file => {
       const reader = new FileReader()
-      reader.onload = (e) => setAdditionalPreviews((prev) => [...prev, e.target?.result as string])
+      reader.onload = (e) => setAdditionalPreviews(prev => [...prev, e.target?.result as string])
       reader.readAsDataURL(file)
     })
   }
 
   function removeAdditional(index: number) {
-    setAdditionalFiles((prev) => prev.filter((_, i) => i !== index))
-    setAdditionalPreviews((prev) => prev.filter((_, i) => i !== index))
+    setAdditionalFiles(prev => prev.filter((_, i) => i !== index))
+    setAdditionalPreviews(prev => prev.filter((_, i) => i !== index))
   }
 
   async function uploadImage(file: File): Promise<string | null> {
@@ -131,49 +193,17 @@ export default function AdminVitrineePage() {
     return publicUrl
   }
 
-  async function deleteOldImage(imageUrl: string | null) {
-    if (!imageUrl) return
+  async function deleteOldImage(url: string | null) {
+    if (!url) return
     try {
-      const url = new URL(imageUrl)
-      const pathParts = url.pathname.split('/object/public/media/')
-      if (pathParts[1]) {
-        await supabase.storage.from('media').remove([pathParts[1]])
-      }
+      const pathParts = new URL(url).pathname.split('/object/public/media/')
+      if (pathParts[1]) await supabase.storage.from('media').remove([pathParts[1]])
     } catch {}
   }
 
-  async function toggleVisible(project: ShowcaseProject) {
-    setSaving(project.id)
-    await supabase.from('showcase_projects').update({ visible: !project.visible }).eq('id', project.id)
-    setProjects((prev) => prev.map((p) => p.id === project.id ? { ...p, visible: !p.visible } : p))
-    setSaving(null)
-  }
-
-  async function deleteProject(id: string) {
-    const project = projects.find(p => p.id === id)
-    await deleteOldImage(project?.image_url ?? null)
-    await supabase.from('showcase_projects').delete().eq('id', id)
-    setProjects((prev) => prev.filter((p) => p.id !== id))
-  }
-
-  async function handleAdd(e: React.FormEvent) {
-    e.preventDefault()
-    setUploading(true)
-    let image_url: string | null = null
-    if (imageFile) {
-      image_url = await uploadImage(imageFile)
-    }
-    const uploadedAdditional: string[] = []
-    for (const file of additionalFiles) {
-      const url = await uploadImage(file)
-      if (url) uploadedAdditional.push(url)
-    }
-    setUploading(false)
-
+  function buildPayload(existingImageUrl?: string | null, existingImageUrls?: string[] | null) {
     const tagsArray = form.tags ? form.tags.split(',').map(t => t.trim()).filter(Boolean) : []
-    const nextOrder = projects.length + 1
-
-    const { data } = await supabase.from('showcase_projects').insert({
+    return {
       title: form.title,
       category: form.category,
       description: form.description || null,
@@ -185,52 +215,113 @@ export default function AdminVitrineePage() {
       client: form.client || null,
       year: form.year || null,
       link_url: form.link_url || null,
+      video_url: form.video_url || null,
       tags: tagsArray,
-      image_url,
-      image_urls: uploadedAdditional,
-      display_order: nextOrder,
-      visible: true,
-    }).select().single()
-    if (data) setProjects((prev) => [...prev, data])
-    setForm(EMPTY_FORM)
-    setImageFile(null)
-    setImagePreview(null)
-    setAdditionalFiles([])
-    setAdditionalPreviews([])
-    setShowForm(false)
-  }
-
-  async function startEdit(project: ShowcaseProject) {
-    setEditingId(project.id)
-    setEditImagePreview(project.image_url ?? null)
-    setEditImageFile(null)
-    setEditPosition(project.image_position ?? 'center')
-  }
-
-  async function handleEditSave(project: ShowcaseProject, position?: string) {
-    setSaving(project.id)
-    let image_url = project.image_url
-    if (editImageFile) {
-      await deleteOldImage(project.image_url)
-      image_url = await uploadImage(editImageFile)
+      image_url: existingImageUrl ?? null,
+      image_urls: existingImageUrls ?? [],
     }
-    await supabase.from('showcase_projects').update({ image_url, image_position: position ?? project.image_position ?? 'center' }).eq('id', project.id)
-    const pos = position ?? project.image_position ?? 'center'
-    setProjects((prev) => prev.map((p) => p.id === project.id ? { ...p, image_url: image_url ?? null, image_position: pos } : p))
-    setEditingId(null)
-    setEditImageFile(null)
-    setEditImagePreview(null)
-    setSaving(null)
   }
 
-  async function removeImage(project: ShowcaseProject) {
-    setSaving(project.id)
-    await deleteOldImage(project.image_url)
-    await supabase.from('showcase_projects').update({ image_url: null }).eq('id', project.id)
-    setProjects((prev) => prev.map((p) => p.id === project.id ? { ...p, image_url: null } : p))
-    setSaving(null)
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setError(null)
+    setSaving(true)
+
+    try {
+      // Upload new main image if changed
+      let finalImageUrl = editTarget?.image_url ?? null
+      if (imageFile) {
+        if (editTarget?.image_url) await deleteOldImage(editTarget.image_url)
+        finalImageUrl = await uploadImage(imageFile)
+      } else if (mode === 'add') {
+        finalImageUrl = null
+      }
+
+      // Upload new additional images (existing ones kept by URL in additionalPreviews for edit)
+      const existingUrls = mode === 'edit'
+        ? additionalPreviews.filter(p => p.startsWith('http'))
+        : []
+      const newAdditional: string[] = []
+      for (const file of additionalFiles) {
+        const url = await uploadImage(file)
+        if (url) newAdditional.push(url)
+      }
+      const finalImageUrls = [...existingUrls, ...newAdditional]
+
+      const payload = buildPayload(finalImageUrl, finalImageUrls)
+
+      if (mode === 'add') {
+        const { data, error: insertError } = await supabase
+          .from('showcase_projects')
+          .insert({ ...payload, display_order: projects.length + 1, visible: true })
+          .select()
+          .single()
+
+        if (insertError) {
+          // Retry without video_url in case column doesn't exist yet
+          if (insertError.message?.includes('video_url')) {
+            const { video_url, ...payloadWithoutVideo } = payload
+            const { data: data2, error: err2 } = await supabase
+              .from('showcase_projects')
+              .insert({ ...payloadWithoutVideo, display_order: projects.length + 1, visible: true })
+              .select()
+              .single()
+            if (err2) throw new Error(err2.message)
+            if (data2) setProjects(prev => [...prev, data2])
+          } else {
+            throw new Error(insertError.message)
+          }
+        } else {
+          if (data) setProjects(prev => [...prev, data])
+        }
+      } else if (mode === 'edit' && editTarget) {
+        const { error: updateError } = await supabase
+          .from('showcase_projects')
+          .update(payload)
+          .eq('id', editTarget.id)
+
+        if (updateError) {
+          if (updateError.message?.includes('video_url')) {
+            const { video_url, ...payloadWithoutVideo } = payload
+            const { error: err2 } = await supabase
+              .from('showcase_projects')
+              .update(payloadWithoutVideo)
+              .eq('id', editTarget.id)
+            if (err2) throw new Error(err2.message)
+          } else {
+            throw new Error(updateError.message)
+          }
+        }
+        setProjects(prev => prev.map(p => p.id === editTarget.id
+          ? { ...p, ...payload }
+          : p
+        ))
+      }
+
+      closeForm()
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Une erreur est survenue')
+    } finally {
+      setSaving(false)
+    }
   }
 
+  async function toggleVisible(project: ShowcaseProject) {
+    setTogglingId(project.id)
+    await supabase.from('showcase_projects').update({ visible: !project.visible }).eq('id', project.id)
+    setProjects(prev => prev.map(p => p.id === project.id ? { ...p, visible: !p.visible } : p))
+    setTogglingId(null)
+  }
+
+  async function deleteProject(id: string) {
+    if (!confirm('Supprimer ce projet ?')) return
+    const project = projects.find(p => p.id === id)
+    await deleteOldImage(project?.image_url ?? null)
+    await supabase.from('showcase_projects').delete().eq('id', id)
+    setProjects(prev => prev.filter(p => p.id !== id))
+  }
+
+  // ── Loading ───────────────────────────────────────────────────────────────
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -239,6 +330,217 @@ export default function AdminVitrineePage() {
     )
   }
 
+  // ── Form (add or edit) ────────────────────────────────────────────────────
+  if (mode === 'add' || mode === 'edit') {
+    const isEdit = mode === 'edit'
+    return (
+      <div className="max-w-3xl mx-auto">
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-8">
+          <button
+            onClick={closeForm}
+            className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest transition-opacity hover:opacity-60"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            <ChevronLeft size={14} /> Retour
+          </button>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', color: 'var(--text)', lineHeight: 1 }}>
+            {isEdit ? 'MODIFIER' : 'AJOUTER'} UN PROJET
+          </h1>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="grid grid-cols-2 gap-4 p-6" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
+            <div className="col-span-2">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] mb-4" style={{ color: 'var(--text-subtle)' }}>
+                Informations principales
+              </p>
+            </div>
+
+            <Field label="Titre *">
+              <input className="input" required value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} />
+            </Field>
+            <Field label="Catégorie *">
+              <input className="input" required placeholder="Branding, Site Web…" value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} />
+            </Field>
+            <div className="col-span-2">
+              <Field label="Description courte">
+                <textarea className="input resize-none h-16" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
+              </Field>
+            </div>
+            <div className="col-span-2">
+              <Field label="Description longue" hint="(page détail)">
+                <textarea className="input resize-none h-28" value={form.long_description} onChange={e => setForm({ ...form, long_description: e.target.value })} />
+              </Field>
+            </div>
+            <Field label="Client">
+              <input className="input" placeholder="Nom du client" value={form.client} onChange={e => setForm({ ...form, client: e.target.value })} />
+            </Field>
+            <Field label="Année">
+              <input className="input" placeholder="2024" value={form.year} onChange={e => setForm({ ...form, year: e.target.value })} />
+            </Field>
+            <Field label="URL du projet" hint="(lien externe)">
+              <input className="input" placeholder="https://..." value={form.link_url} onChange={e => setForm({ ...form, link_url: e.target.value })} />
+            </Field>
+            <Field label="Vidéo" hint="(YouTube, Vimeo ou .mp4)">
+              <input className="input" placeholder="https://youtube.com/watch?v=..." value={form.video_url} onChange={e => setForm({ ...form, video_url: e.target.value })} />
+            </Field>
+            <div className="col-span-2">
+              <Field label="Tags" hint="(séparés par des virgules)">
+                <input className="input" placeholder="Branding, UI/UX, Motion" value={form.tags} onChange={e => setForm({ ...form, tags: e.target.value })} />
+              </Field>
+            </div>
+            <Field label="Taille">
+              <select className="input" value={form.size} onChange={e => setForm({ ...form, size: e.target.value })}>
+                {SIZE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+              </select>
+            </Field>
+            <Field label="Couleur accent">
+              <div className="flex items-center gap-2">
+                <input type="color" value={form.accent} onChange={e => setForm({ ...form, accent: e.target.value })} className="w-10 h-10 cursor-pointer border-0" style={{ background: 'none' }} />
+                <input className="input flex-1 font-mono text-xs" value={form.accent} onChange={e => setForm({ ...form, accent: e.target.value })} />
+              </div>
+            </Field>
+          </div>
+
+          {/* Images */}
+          <div className="p-6 space-y-5" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
+            <p className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: 'var(--text-subtle)' }}>
+              Visuels
+            </p>
+
+            {/* Main image */}
+            <Field label="Image principale" hint="(remplace le gradient)">
+              <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={e => handleFileChange(e.target.files?.[0] ?? null)} />
+              {imagePreview ? (
+                <div className="relative w-full h-44">
+                  <Image src={imagePreview} alt="Aperçu" fill className="object-cover" style={{ border: '1px solid var(--border)' }} />
+                  <button
+                    type="button"
+                    onClick={() => { setImageFile(null); setImagePreview(null) }}
+                    className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center"
+                    style={{ background: '#ef444490', color: 'white' }}
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full h-28 flex flex-col items-center justify-center gap-2 transition-all hover:opacity-80"
+                  style={{ border: '2px dashed var(--border)', background: 'var(--surface)', color: 'var(--text-subtle)' }}
+                >
+                  <Upload size={18} />
+                  <span className="text-xs">Cliquez pour uploader une image</span>
+                  <span style={{ fontSize: '0.65rem', color: 'var(--text-subtle)' }}>JPG, PNG, WebP</span>
+                </button>
+              )}
+            </Field>
+
+            {/* Position picker */}
+            {imagePreview && (
+              <Field label="Cadrage">
+                <div className="flex items-center gap-4">
+                  <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(3, 28px)' }}>
+                    {POSITION_OPTIONS.flat().map(pos => (
+                      <button
+                        key={pos}
+                        type="button"
+                        onClick={() => setForm({ ...form, image_position: pos })}
+                        className="w-7 h-7 transition-all"
+                        style={{
+                          background: form.image_position === pos ? 'var(--primary)' : 'var(--surface)',
+                          border: `1px solid ${form.image_position === pos ? 'var(--primary)' : 'var(--border)'}`,
+                        }}
+                        title={pos}
+                      />
+                    ))}
+                  </div>
+                  <div className="relative flex-1 h-20 overflow-hidden" style={{ border: '1px solid var(--border)' }}>
+                    <Image src={imagePreview} alt="preview" fill className="object-cover" style={{ objectPosition: form.image_position }} />
+                  </div>
+                  <span className="text-xs" style={{ color: 'var(--text-subtle)' }}>{form.image_position}</span>
+                </div>
+              </Field>
+            )}
+
+            {/* Additional images */}
+            <Field label="Images supplémentaires" hint="(galerie page détail)">
+              <input ref={additionalInputRef} type="file" accept="image/*" multiple className="hidden" onChange={e => handleAdditionalFiles(e.target.files)} />
+              {additionalPreviews.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {additionalPreviews.map((src, i) => (
+                    <div key={i} className="relative w-20 h-14">
+                      <Image src={src} alt={`extra-${i}`} fill className="object-cover" style={{ border: '1px solid var(--border)' }} />
+                      <button
+                        type="button"
+                        onClick={() => removeAdditional(i)}
+                        className="absolute top-0.5 right-0.5 w-5 h-5 flex items-center justify-center"
+                        style={{ background: '#ef444490', color: 'white' }}
+                      >
+                        <X size={10} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={() => additionalInputRef.current?.click()}
+                className="w-full h-14 flex items-center justify-center gap-2 transition-all hover:opacity-80"
+                style={{ border: '2px dashed var(--border)', background: 'var(--surface)', color: 'var(--text-subtle)' }}
+              >
+                <Upload size={14} />
+                <span className="text-xs">Ajouter des images (sélection multiple possible)</span>
+              </button>
+            </Field>
+
+            {/* Gradient */}
+            <Field label="Gradient de fond" hint="(affiché si pas d'image)">
+              <div className="flex gap-2 flex-wrap">
+                {GRADIENT_PRESETS.map(g => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => setForm({ ...form, gradient: g })}
+                    className="w-10 h-10 transition-transform hover:scale-110"
+                    style={{
+                      background: g,
+                      outline: form.gradient === g ? '2px solid var(--primary)' : '2px solid transparent',
+                      outlineOffset: '2px',
+                    }}
+                  />
+                ))}
+              </div>
+            </Field>
+          </div>
+
+          {/* Error */}
+          {error && (
+            <div className="p-3 text-xs" style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#ef4444' }}>
+              {error.includes('video_url')
+                ? '⚠ La colonne "video_url" n\'existe pas encore dans la base. Le projet a été enregistré sans la vidéo. Ajoutez la colonne dans Supabase pour activer cette fonctionnalité.'
+                : `Erreur : ${error}`}
+            </div>
+          )}
+
+          {/* Submit */}
+          <div className="flex gap-3 justify-end pb-10">
+            <button type="button" onClick={closeForm} className="btn-outline px-6 py-2.5 text-xs">
+              Annuler
+            </button>
+            <button type="submit" disabled={saving} className="btn-primary px-6 py-2.5 text-xs flex items-center gap-2">
+              {saving && <Loader2 size={12} className="animate-spin" />}
+              {isEdit ? 'Enregistrer les modifications' : 'Ajouter le projet'}
+            </button>
+          </div>
+        </form>
+      </div>
+    )
+  }
+
+  // ── List ──────────────────────────────────────────────────────────────────
   return (
     <div className="max-w-5xl mx-auto">
       <div className="flex items-end justify-between mb-8">
@@ -247,213 +549,22 @@ export default function AdminVitrineePage() {
             VITRINE
           </h1>
           <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
-            Projets affich&eacute;s sur la page d&apos;accueil
+            Projets affichés sur la page d&apos;accueil
           </p>
         </div>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="btn-primary flex items-center gap-2 px-5 py-2.5 text-xs"
-        >
-          <Plus size={14} />
-          Ajouter
+        <button onClick={openAdd} className="btn-primary flex items-center gap-2 px-5 py-2.5 text-xs">
+          <Plus size={14} /> Ajouter
         </button>
       </div>
 
-      {/* Add form */}
-      {showForm && (
-        <form onSubmit={handleAdd} className="mb-6 p-6 grid grid-cols-2 gap-4" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
-          <div>
-            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>Titre *</label>
-            <input className="input" required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-          </div>
-          <div>
-            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>Cat&eacute;gorie *</label>
-            <input className="input" required placeholder="Branding, Site Web…" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
-          </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>Description courte</label>
-            <textarea className="input resize-none h-16" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-          </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>Description longue</label>
-            <textarea className="input resize-none h-32" value={form.long_description} onChange={(e) => setForm({ ...form, long_description: e.target.value })} />
-          </div>
-          <div>
-            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>Client</label>
-            <input className="input" placeholder="Nom du client" value={form.client} onChange={(e) => setForm({ ...form, client: e.target.value })} />
-          </div>
-          <div>
-            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>Ann&eacute;e</label>
-            <input className="input" placeholder="2024" value={form.year} onChange={(e) => setForm({ ...form, year: e.target.value })} />
-          </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>URL du projet</label>
-            <input className="input" placeholder="https://..." value={form.link_url} onChange={(e) => setForm({ ...form, link_url: e.target.value })} />
-          </div>
-          <div className="col-span-2">
-            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-              Tags <span style={{ color: 'var(--text-subtle)' }}>(s&eacute;par&eacute;s par des virgules)</span>
-            </label>
-            <input className="input" placeholder="Branding, UI/UX, Motion" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
-          </div>
-          <div>
-            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>Taille</label>
-            <select className="input" value={form.size} onChange={(e) => setForm({ ...form, size: e.target.value })}>
-              {SIZE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>Couleur accent</label>
-            <div className="flex items-center gap-2">
-              <input type="color" value={form.accent} onChange={(e) => setForm({ ...form, accent: e.target.value })} className="w-10 h-10 cursor-pointer border-0" style={{ background: 'none' }} />
-              <input className="input flex-1" value={form.accent} onChange={(e) => setForm({ ...form, accent: e.target.value })} />
-            </div>
-          </div>
-
-          {/* Main image upload */}
-          <div className="col-span-2">
-            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-              Image principale <span style={{ color: 'var(--text-subtle)' }}>(optionnel — remplace le gradient)</span>
-            </label>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => handleFileChange(e.target.files?.[0] ?? null, setImageFile, setImagePreview)}
-            />
-            {imagePreview ? (
-              <div className="relative w-full h-40">
-                <Image src={imagePreview} alt="Apercu" fill className="object-cover" style={{ border: '1px solid var(--border)' }} />
-                <button
-                  type="button"
-                  onClick={() => { setImageFile(null); setImagePreview(null) }}
-                  className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center"
-                  style={{ background: '#ef444490', color: 'white' }}
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full h-32 flex flex-col items-center justify-center gap-2 transition-all hover:opacity-80"
-                style={{ border: '2px dashed var(--border)', background: 'var(--surface)', color: 'var(--text-subtle)' }}
-              >
-                <Upload size={20} />
-                <span className="text-xs">Cliquez pour uploader une image</span>
-                <span className="text-xs" style={{ color: 'var(--text-subtle)', fontSize: '0.65rem' }}>JPG, PNG, WebP — max 5MB</span>
-              </button>
-            )}
-          </div>
-
-          {/* Image position */}
-          {imagePreview && (
-            <div className="col-span-2">
-              <label className="block text-xs font-medium mb-2" style={{ color: 'var(--text-muted)' }}>Position du cadrage</label>
-              <div className="flex items-center gap-4">
-                <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(3, 28px)' }}>
-                  {POSITION_OPTIONS.flat().map((pos) => (
-                    <button
-                      key={pos}
-                      type="button"
-                      onClick={() => setForm({ ...form, image_position: pos })}
-                      className="w-7 h-7 transition-all"
-                      style={{
-                        background: form.image_position === pos ? 'var(--primary)' : 'var(--surface)',
-                        border: `1px solid ${form.image_position === pos ? 'var(--primary)' : 'var(--border)'}`,
-                      }}
-                      title={pos}
-                    />
-                  ))}
-                </div>
-                <div className="relative flex-1 h-20 overflow-hidden" style={{ border: '1px solid var(--border)' }}>
-                  <Image src={imagePreview} alt="preview" fill className="object-cover" style={{ objectPosition: form.image_position }} />
-                </div>
-                <span className="text-xs" style={{ color: 'var(--text-subtle)' }}>{form.image_position}</span>
-              </div>
-            </div>
-          )}
-
-          {/* Additional images */}
-          <div className="col-span-2">
-            <label className="block text-xs font-medium mb-1.5" style={{ color: 'var(--text-muted)' }}>
-              Images suppl&eacute;mentaires <span style={{ color: 'var(--text-subtle)' }}>(galerie sur la page detail)</span>
-            </label>
-            <input
-              ref={additionalInputRef}
-              type="file"
-              accept="image/*"
-              multiple
-              className="hidden"
-              onChange={(e) => handleAdditionalFiles(e.target.files)}
-            />
-            {additionalPreviews.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-2">
-                {additionalPreviews.map((src, i) => (
-                  <div key={i} className="relative w-20 h-14">
-                    <Image src={src} alt={`extra-${i}`} fill className="object-cover" style={{ border: '1px solid var(--border)' }} />
-                    <button
-                      type="button"
-                      onClick={() => removeAdditional(i)}
-                      className="absolute top-0.5 right-0.5 w-5 h-5 flex items-center justify-center"
-                      style={{ background: '#ef444490', color: 'white' }}
-                    >
-                      <X size={10} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-            <button
-              type="button"
-              onClick={() => additionalInputRef.current?.click()}
-              className="w-full h-16 flex flex-col items-center justify-center gap-1 transition-all hover:opacity-80"
-              style={{ border: '2px dashed var(--border)', background: 'var(--surface)', color: 'var(--text-subtle)' }}
-            >
-              <Upload size={16} />
-              <span className="text-xs">Ajouter des images (s&eacute;lection multiple possible)</span>
-            </button>
-          </div>
-
-          <div className="col-span-2">
-            <label className="block text-xs font-medium mb-2" style={{ color: 'var(--text-muted)' }}>Gradient de fond (affich&eacute; si pas d&apos;image)</label>
-            <div className="flex gap-2 flex-wrap">
-              {GRADIENT_PRESETS.map((g) => (
-                <button
-                  key={g}
-                  type="button"
-                  onClick={() => setForm({ ...form, gradient: g })}
-                  className="w-10 h-10 transition-transform hover:scale-110"
-                  style={{
-                    background: g,
-                    outline: form.gradient === g ? '2px solid var(--primary)' : '2px solid transparent',
-                    outlineOffset: '2px',
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="col-span-2 flex gap-3 justify-end">
-            <button type="button" onClick={() => setShowForm(false)} className="btn-outline px-5 py-2 text-xs">Annuler</button>
-            <button type="submit" disabled={uploading} className="btn-primary px-5 py-2 text-xs flex items-center gap-2">
-              {uploading && <Loader2 size={12} className="animate-spin" />}
-              Ajouter le projet
-            </button>
-          </div>
-        </form>
-      )}
-
-      {/* Projects list */}
       <div className="space-y-3">
-        {projects.map((project) => (
+        {projects.map(project => (
           <div
             key={project.id}
             className="p-4 flex items-center gap-4"
-            style={{ opacity: project.visible ? 1 : 0.5, background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}
+            style={{ opacity: project.visible ? 1 : 0.55, background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}
           >
-            {/* Preview thumbnail */}
+            {/* Thumbnail */}
             <div className="w-20 h-14 flex-shrink-0 relative overflow-hidden" style={{ background: project.gradient }}>
               {project.image_url && (
                 <Image src={project.image_url} alt={project.title} fill className="object-cover" style={{ objectPosition: project.image_position ?? 'center' }} />
@@ -463,12 +574,18 @@ export default function AdminVitrineePage() {
                   style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px)', backgroundSize: '8px 8px' }}
                 />
               )}
+              {project.video_url && (
+                <div className="absolute bottom-1 right-1 flex items-center justify-center w-5 h-5"
+                  style={{ background: 'rgba(0,0,0,0.6)', borderRadius: '50%' }}>
+                  <Play size={8} fill="white" style={{ color: 'white' }} />
+                </div>
+              )}
             </div>
 
             {/* Info */}
             <div className="flex-1 min-w-0">
               <div className="font-semibold text-sm truncate" style={{ color: 'var(--text)' }}>{project.title}</div>
-              <div className="flex items-center gap-2 mt-0.5">
+              <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                 <span
                   className="text-xs px-2 py-0.5 font-medium"
                   style={{
@@ -481,115 +598,52 @@ export default function AdminVitrineePage() {
                 </span>
                 <span className="text-xs" style={{ color: 'var(--text-subtle)' }}>{project.size}</span>
                 {project.image_url
-                  ? <span className="text-xs flex items-center gap-1" style={{ color: '#22c55e' }}><ImageIcon size={10} /> Image</span>
+                  ? <span className="text-xs flex items-center gap-1" style={{ color: '#22c55e' }}><ImageIcon size={9} /> Image</span>
                   : <span className="text-xs" style={{ color: 'var(--text-subtle)' }}>Gradient</span>
                 }
-                {project.client && (
-                  <span className="text-xs" style={{ color: 'var(--text-subtle)' }}>{project.client}</span>
+                {project.video_url && (
+                  <span className="text-xs flex items-center gap-1" style={{ color: '#a78bfa' }}>
+                    <Play size={9} fill="currentColor" /> Vidéo
+                  </span>
                 )}
-                {project.year && (
-                  <span className="text-xs" style={{ color: 'var(--text-subtle)' }}>{project.year}</span>
-                )}
+                {project.client && <span className="text-xs" style={{ color: 'var(--text-subtle)' }}>{project.client}</span>}
+                {project.year && <span className="text-xs" style={{ color: 'var(--text-subtle)' }}>{project.year}</span>}
               </div>
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-2 flex-shrink-0">
-              {/* Edit image inline */}
-              {editingId === project.id ? (
-                <div className="flex items-center gap-2">
-                  <input
-                    ref={editFileInputRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => handleFileChange(e.target.files?.[0] ?? null, setEditImageFile, setEditImagePreview)}
-                  />
-                  {editImagePreview && (
-                    <div className="relative w-14 h-10">
-                      <Image src={editImagePreview} alt="preview" fill className="object-cover" />
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => editFileInputRef.current?.click()}
-                    className="flex items-center gap-1 text-xs px-3 py-1.5 font-bold uppercase tracking-widest"
-                    style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}
-                  >
-                    <Upload size={12} /> Choisir
-                  </button>
-                  {/* Position picker inline */}
-                  <div className="grid gap-0.5" style={{ gridTemplateColumns: 'repeat(3, 18px)' }}>
-                    {POSITION_OPTIONS.flat().map((pos) => (
-                      <button
-                        key={pos}
-                        type="button"
-                        onClick={() => setEditPosition(pos)}
-                        className="w-[18px] h-[18px] transition-all"
-                        style={{
-                          background: editPosition === pos ? 'var(--primary)' : 'var(--surface)',
-                          border: `1px solid ${editPosition === pos ? 'var(--primary)' : 'var(--border)'}`,
-                        }}
-                        title={pos}
-                      />
-                    ))}
-                  </div>
-                  <button
-                    onClick={() => handleEditSave(project, editPosition)}
-                    disabled={saving === project.id}
-                    className="text-xs px-3 py-1.5 font-bold uppercase tracking-widest"
-                    style={{ background: 'var(--primary)', color: 'white' }}
-                  >
-                    {saving === project.id ? <Loader2 size={12} className="animate-spin" /> : 'OK'}
-                  </button>
-                  <button
-                    onClick={() => { setEditingId(null); setEditImageFile(null); setEditImagePreview(null) }}
-                    className="text-xs px-2 py-1.5"
-                    style={{ color: 'var(--text-subtle)' }}
-                  >
-                    <X size={14} />
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => startEdit(project)}
-                  className="flex items-center gap-1 text-xs px-3 py-1.5 font-bold uppercase tracking-widest transition-all hover:opacity-80"
-                  style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}
-                  title="Changer l'image"
-                >
-                  <ImageIcon size={12} /> Image
-                </button>
-              )}
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              {/* Edit full */}
+              <button
+                onClick={() => openEdit(project)}
+                className="flex items-center gap-1.5 text-xs px-3 py-1.5 font-bold uppercase tracking-widest transition-all hover:opacity-80"
+                style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}
+                title="Modifier le projet"
+              >
+                <Pencil size={12} /> Éditer
+              </button>
 
-              {/* Remove image if has one */}
-              {project.image_url && editingId !== project.id && (
-                <button
-                  onClick={() => removeImage(project)}
-                  disabled={saving === project.id}
-                  className="w-8 h-8 flex items-center justify-center transition-all hover:opacity-80"
-                  style={{ background: '#ef444418', color: '#ef4444' }}
-                  title="Supprimer l'image"
-                >
-                  <X size={13} />
-                </button>
-              )}
-
+              {/* Toggle visible */}
               <button
                 onClick={() => toggleVisible(project)}
-                disabled={saving === project.id}
+                disabled={togglingId === project.id}
                 className="w-8 h-8 flex items-center justify-center transition-all hover:opacity-80"
-                style={{ background: 'var(--surface)', color: project.visible ? 'var(--primary)' : 'var(--text-subtle)' }}
+                style={{ background: 'var(--surface)', color: project.visible ? 'var(--primary)' : 'var(--text-subtle)', border: '1px solid var(--border)' }}
                 title={project.visible ? 'Masquer' : 'Afficher'}
               >
-                {saving === project.id ? <Loader2 size={14} className="animate-spin" /> : project.visible ? <Eye size={14} /> : <EyeOff size={14} />}
+                {togglingId === project.id
+                  ? <Loader2 size={13} className="animate-spin" />
+                  : project.visible ? <Eye size={13} /> : <EyeOff size={13} />}
               </button>
+
+              {/* Delete */}
               <button
                 onClick={() => deleteProject(project.id)}
                 className="w-8 h-8 flex items-center justify-center transition-all hover:opacity-80"
-                style={{ background: '#ef444418', color: '#ef4444' }}
-                title="Supprimer le projet"
+                style={{ background: '#ef444418', color: '#ef4444', border: '1px solid #ef444430' }}
+                title="Supprimer"
               >
-                <Trash2 size={14} />
+                <Trash2 size={13} />
               </button>
             </div>
           </div>

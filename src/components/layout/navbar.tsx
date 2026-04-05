@@ -9,44 +9,10 @@ import { useTheme } from 'next-themes'
 import { useTranslations, useLocale } from 'next-intl'
 import { Link, usePathname } from '@/i18n/navigation'
 
-function LanguageSwitcher() {
-  const locale = useLocale()
-  const pathname = usePathname()
-
-  return (
-    <div className="flex items-center gap-1 text-xs font-bold uppercase tracking-widest">
-      <Link
-        href={pathname}
-        locale="fr"
-        className="px-2 py-1 transition-opacity"
-        style={{
-          color: locale === 'fr' ? 'var(--primary)' : 'var(--text-subtle)',
-          opacity: locale === 'fr' ? 1 : 0.5,
-          borderBottom: locale === 'fr' ? '1.5px solid var(--primary)' : '1.5px solid transparent',
-        }}
-      >
-        FR
-      </Link>
-      <span style={{ color: 'var(--border)' }}>|</span>
-      <Link
-        href={pathname}
-        locale="en"
-        className="px-2 py-1 transition-opacity"
-        style={{
-          color: locale === 'en' ? 'var(--primary)' : 'var(--text-subtle)',
-          opacity: locale === 'en' ? 1 : 0.5,
-          borderBottom: locale === 'en' ? '1.5px solid var(--primary)' : '1.5px solid transparent',
-        }}
-      >
-        EN
-      </Link>
-    </div>
-  )
-}
-
 export function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
   const t = useTranslations('nav')
   const locale = useLocale()
+  const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -67,7 +33,6 @@ export function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Lock body scroll when menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
@@ -90,7 +55,7 @@ export function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
           <div className="flex items-center justify-between h-16 md:h-20">
 
             {/* Logo */}
-            <Link href={`/${locale}`} className="flex items-center gap-3 group">
+            <Link href="/" className="flex items-center gap-3 group">
               <div className="relative w-9 h-9 transition-transform group-hover:scale-105">
                 <Image src={logoSrc} alt="OverBrand Logo" fill className="object-contain" priority />
               </div>
@@ -102,7 +67,7 @@ export function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
               </span>
             </Link>
 
-            {/* Desktop links */}
+            {/* Desktop nav links (md+) */}
             <div className="hidden md:flex items-center gap-8">
               {NAV_LINKS.map((link) => (
                 <a
@@ -116,39 +81,33 @@ export function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
               ))}
             </div>
 
-            {/* Actions */}
-            <div className="flex items-center gap-2">
-              <div className="hidden sm:flex items-center gap-2">
-                <LanguageSwitcher />
-                <ThemeToggle />
-              </div>
+            {/* Desktop actions (md+) */}
+            <div className="hidden md:flex items-center gap-2">
+              <ThemeToggle />
               {isLoggedIn ? (
-                <Link href={`/${locale}/dashboard`} className="hidden md:block">
-                  <button
-                    className="btn-outline text-xs px-5 py-2.5 flex items-center gap-2"
-                    style={!scrolled ? { color: 'white', borderColor: 'rgba(255,255,255,0.5)' } : {}}
-                  >
+                <Link href="/dashboard">
+                  <button className="btn-outline text-xs px-5 py-2.5 flex items-center gap-2">
                     <LayoutDashboard size={14} />
                     {t('dashboard')}
                   </button>
                 </Link>
               ) : (
-                <Link href={`/${locale}/auth/login`} className="hidden md:block">
-                  <button
-                    className="btn-outline text-xs px-5 py-2.5"
-                    style={!scrolled ? { color: 'white', borderColor: 'rgba(255,255,255,0.5)' } : {}}
-                  >
+                <Link href="/auth/login">
+                  <button className="btn-outline text-xs px-5 py-2.5">
                     {t('login')}
                   </button>
                 </Link>
               )}
-              <a href="#contact" data-magnetic data-magnetic-strength="0.3" className="hidden md:block">
+              <a href="#contact" data-magnetic data-magnetic-strength="0.3">
                 <button className="btn-primary text-xs px-5 py-2.5">
                   {t('quote')}
                 </button>
               </a>
+            </div>
 
-              {/* Hamburger — all sizes */}
+            {/* Mobile: theme toggle + hamburger */}
+            <div className="flex md:hidden items-center gap-2">
+              <ThemeToggle />
               <button
                 className="w-10 h-10 flex items-center justify-center transition-opacity hover:opacity-60"
                 style={{ color: 'var(--text)' }}
@@ -162,11 +121,11 @@ export function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
         </div>
       </nav>
 
-      {/* ── Full-screen overlay menu ── */}
+      {/* ── Full-screen overlay menu (mobile only) ── */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            className="fixed inset-0 z-[9998] flex flex-col"
+            className="fixed inset-0 z-[9998] flex flex-col md:hidden"
             style={{ background: 'var(--bg)' }}
             initial={{ clipPath: 'inset(0 0 100% 0)' }}
             animate={{ clipPath: 'inset(0 0 0% 0)' }}
@@ -184,7 +143,7 @@ export function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
 
             {/* Top bar */}
             <div className="relative flex items-center justify-between px-6 sm:px-10 py-5 flex-shrink-0">
-              <Link href={`/${locale}`} onClick={() => setMenuOpen(false)}>
+              <Link href="/" onClick={() => setMenuOpen(false)}>
                 <span
                   className="text-xl font-black tracking-tight"
                   style={{ fontFamily: 'var(--font-sans)', color: 'var(--text)' }}
@@ -206,7 +165,6 @@ export function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
               </button>
             </div>
 
-            {/* Separator */}
             <div className="flex-shrink-0 mx-6 sm:mx-10" style={{ height: '1px', background: 'var(--border)' }} />
 
             {/* Nav links */}
@@ -228,7 +186,6 @@ export function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
                   onClick={() => setMenuOpen(false)}
                   whileHover={{ x: 16, color: 'var(--primary)' }}
                 >
-                  {/* Number prefix */}
                   <span
                     className="text-sm font-sans mr-3 align-middle"
                     style={{ color: 'var(--text-subtle)', fontFamily: 'var(--font-sans)' }}
@@ -240,7 +197,6 @@ export function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
               ))}
             </nav>
 
-            {/* Separator */}
             <div className="flex-shrink-0 mx-6 sm:mx-10" style={{ height: '1px', background: 'var(--border)' }} />
 
             {/* Bottom bar */}
@@ -271,17 +227,45 @@ export function Navbar({ isLoggedIn = false }: { isLoggedIn?: boolean }) {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4, delay: 0.6 }}
               >
-                <LanguageSwitcher />
-                <ThemeToggle />
+                {/* Language switcher in mobile overlay */}
+                <div className="flex items-center gap-1 text-xs font-bold uppercase tracking-widest">
+                  <Link
+                    href={pathname}
+                    locale="fr"
+                    onClick={() => setMenuOpen(false)}
+                    className="px-2 py-1 transition-opacity"
+                    style={{
+                      color: locale === 'fr' ? 'var(--primary)' : 'var(--text-subtle)',
+                      opacity: locale === 'fr' ? 1 : 0.5,
+                      borderBottom: locale === 'fr' ? '1.5px solid var(--primary)' : '1.5px solid transparent',
+                    }}
+                  >
+                    FR
+                  </Link>
+                  <span style={{ color: 'var(--border)' }}>|</span>
+                  <Link
+                    href={pathname}
+                    locale="en"
+                    onClick={() => setMenuOpen(false)}
+                    className="px-2 py-1 transition-opacity"
+                    style={{
+                      color: locale === 'en' ? 'var(--primary)' : 'var(--text-subtle)',
+                      opacity: locale === 'en' ? 1 : 0.5,
+                      borderBottom: locale === 'en' ? '1.5px solid var(--primary)' : '1.5px solid transparent',
+                    }}
+                  >
+                    EN
+                  </Link>
+                </div>
                 {isLoggedIn ? (
-                  <Link href={`/${locale}/dashboard`} onClick={() => setMenuOpen(false)}>
+                  <Link href="/dashboard" onClick={() => setMenuOpen(false)}>
                     <button className="btn-outline text-xs px-4 py-2 flex items-center gap-1.5">
                       <LayoutDashboard size={13} />
                       {t('dashboard')}
                     </button>
                   </Link>
                 ) : (
-                  <Link href={`/${locale}/auth/login`} onClick={() => setMenuOpen(false)}>
+                  <Link href="/auth/login" onClick={() => setMenuOpen(false)}>
                     <button className="btn-outline text-xs px-4 py-2">
                       {t('login')}
                     </button>

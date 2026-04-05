@@ -15,6 +15,7 @@ export type ShowcaseProject = {
   client: string | null
   year: string | null
   link_url: string | null
+  video_url: string | null
   visible: boolean
   display_order: number | null
 }
@@ -80,6 +81,7 @@ export const GET_SHOWCASE_PROJECTS = /* GraphQL */ `
           client
           year
           link_url
+          video_url
           visible
           display_order
         }
@@ -110,6 +112,7 @@ export const GET_PROJECT_BY_ID = /* GraphQL */ `
           client
           year
           link_url
+          video_url
           visible
           display_order
         }

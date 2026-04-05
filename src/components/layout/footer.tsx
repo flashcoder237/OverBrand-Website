@@ -1,10 +1,45 @@
 'use client'
 
-import Link from 'next/link'
 import { Mail, Phone, MapPin, ArrowUpRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
+import { Link, usePathname } from '@/i18n/navigation'
+
+function LanguageSwitcher() {
+  const locale = useLocale()
+  const pathname = usePathname()
+
+  return (
+    <div className="flex items-center gap-1 text-xs font-bold uppercase tracking-widest">
+      <Link
+        href={pathname}
+        locale="fr"
+        className="px-2 py-1 transition-opacity"
+        style={{
+          color: locale === 'fr' ? 'var(--primary)' : 'var(--text-subtle)',
+          opacity: locale === 'fr' ? 1 : 0.5,
+          borderBottom: locale === 'fr' ? '1.5px solid var(--primary)' : '1.5px solid transparent',
+        }}
+      >
+        FR
+      </Link>
+      <span style={{ color: 'var(--border)' }}>|</span>
+      <Link
+        href={pathname}
+        locale="en"
+        className="px-2 py-1 transition-opacity"
+        style={{
+          color: locale === 'en' ? 'var(--primary)' : 'var(--text-subtle)',
+          opacity: locale === 'en' ? 1 : 0.5,
+          borderBottom: locale === 'en' ? '1.5px solid var(--primary)' : '1.5px solid transparent',
+        }}
+      >
+        EN
+      </Link>
+    </div>
+  )
+}
 
 export function Footer() {
   const t = useTranslations('footer')
@@ -13,9 +48,9 @@ export function Footer() {
 
   const legalLinks = t.raw('legal_links') as string[]
   const legalHrefs = [
-    `/${locale}/legal/mentions-legales`,
-    `/${locale}/legal/confidentialite`,
-    `/${locale}/legal/cgv`,
+    '/legal/mentions-legales',
+    '/legal/confidentialite',
+    '/legal/cgv',
   ]
 
   const navLinks = [
@@ -32,7 +67,7 @@ export function Footer() {
       {/* ── Giant brand name ── */}
       <div style={{ borderBottom: '1px solid var(--border)', overflow: 'hidden' }}>
         <Link
-          href={`/${locale}`}
+          href="/"
           className="block"
           onMouseEnter={() => setNameHovered(true)}
           onMouseLeave={() => setNameHovered(false)}
@@ -147,10 +182,14 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div
-          className="mt-14 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3"
+          className="mt-14 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4"
           style={{ borderTop: '1px solid var(--border)' }}
         >
           <p className="text-xs" style={{ color: 'var(--text-subtle)' }}>{t('copyright')}</p>
+
+          {/* Language switcher */}
+          <LanguageSwitcher />
+
           <p className="text-xs" style={{ color: 'var(--text-subtle)' }}>{t('made_by')}</p>
         </div>
       </div>

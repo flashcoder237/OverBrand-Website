@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
-import { ArrowLeft, ArrowUpRight, Tag, Calendar, User } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Tag, Calendar, User, Play } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ProjectGallery } from './project-gallery'
@@ -16,6 +16,20 @@ import {
 } from '@/lib/graphql/queries'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://overbrand.net'
+
+// ── Video URL parser ──────────────────────────────────────────────────────────
+
+function getVideoEmbed(url: string): { type: 'youtube' | 'vimeo' | 'direct'; embedUrl: string } | null {
+  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/)
+  if (ytMatch) return { type: 'youtube', embedUrl: `https://www.youtube-nocookie.com/embed/${ytMatch[1]}?rel=0` }
+
+  const vimeoMatch = url.match(/(?:vimeo\.com\/)(\d+)/)
+  if (vimeoMatch) return { type: 'vimeo', embedUrl: `https://player.vimeo.com/video/${vimeoMatch[1]}` }
+
+  if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(url)) return { type: 'direct', embedUrl: url }
+
+  return null
+}
 
 // ── Data fetcher (GraphQL → REST fallback) ────────────────────────────────────
 
@@ -377,6 +391,63 @@ export default async function ProjetDetailPage({
             </div>
           </div>
         </section>
+
+        {/* Video embed */}
+        {project.video_url && (() => {
+          const videoEmbed = getVideoEmbed(project.video_url)
+          return (
+            <section className="pb-16">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="w-1 h-5" style={{ background: 'var(--primary)' }} />
+                  <span className="text-xs font-bold uppercase tracking-[0.18em] flex items-center gap-2" style={{ color: 'var(--text-subtle)' }}>
+                    <Play size={11} fill="currentColor" />
+                    {locale === 'fr' ? 'Vidéo' : 'Video'}
+                  </span>
+                </div>
+                <div
+                  className="relative w-full overflow-hidden"
+                  style={{
+                    aspectRatio: '16/9',
+                    background: 'var(--surface)',
+                    border: '1px solid var(--border)',
+                  }}
+                >
+                  {videoEmbed?.type === 'direct' ? (
+                    <video
+                      src={videoEmbed.embedUrl}
+                      controls
+                      className="w-full h-full"
+                      style={{ objectFit: 'contain' }}
+                    />
+                  ) : videoEmbed ? (
+                    <iframe
+                      src={videoEmbed.embedUrl}
+                      title={project.title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="absolute inset-0 w-full h-full"
+                      style={{ border: 0 }}
+                    />
+                  ) : (
+                    <a
+                      href={project.video_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute inset-0 flex flex-col items-center justify-center gap-4"
+                      style={{ background: 'var(--surface)', color: 'var(--text-muted)' }}
+                    >
+                      <Play size={40} style={{ color: 'var(--primary)' }} />
+                      <span className="text-xs font-bold uppercase tracking-widest">
+                        {locale === 'fr' ? 'Voir la vidéo' : 'Watch the video'}
+                      </span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            </section>
+          )
+        })()}
 
         {/* Gallery */}
         {allImages.length > 0 && (

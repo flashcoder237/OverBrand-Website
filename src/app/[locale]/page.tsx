@@ -1,15 +1,11 @@
+import dynamic from 'next/dynamic'
+import { Suspense } from 'react'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
+// Above-the-fold — loaded immediately
 import { HeroSection } from '@/components/sections/hero'
 import { ServicesSection } from '@/components/sections/services'
 import { ProjectsSection } from '@/components/sections/projects'
-import { StatsSection } from '@/components/sections/stats'
-import { AboutSection } from '@/components/sections/about'
-import { ProcessSection } from '@/components/sections/process'
-import { TestimonialsSection } from '@/components/sections/testimonials'
-import { FAQSection } from '@/components/sections/faq'
-import { CTASection } from '@/components/sections/cta'
-import { ContactSection } from '@/components/sections/contact'
 import { createClient } from '@/lib/supabase/server'
 import { getTranslations } from 'next-intl/server'
 import { gqlClient } from '@/lib/graphql/client'
@@ -19,7 +15,27 @@ import {
   unwrapEdges,
 } from '@/lib/graphql/queries'
 
+// Below-the-fold — lazy loaded (reduces initial JS bundle)
+const StatsSection       = dynamic(() => import('@/components/sections/stats').then(m => ({ default: m.StatsSection })))
+const AboutSection       = dynamic(() => import('@/components/sections/about').then(m => ({ default: m.AboutSection })))
+const ProcessSection     = dynamic(() => import('@/components/sections/process').then(m => ({ default: m.ProcessSection })))
+const TestimonialsSection = dynamic(() => import('@/components/sections/testimonials').then(m => ({ default: m.TestimonialsSection })))
+const FAQSection         = dynamic(() => import('@/components/sections/faq').then(m => ({ default: m.FAQSection })))
+const ContactSection     = dynamic(() => import('@/components/sections/contact').then(m => ({ default: m.ContactSection })))
+const CTASection         = dynamic(() => import('@/components/sections/cta').then(m => ({ default: m.CTASection })))
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://overbrand.net'
+
+// Minimal skeleton used while a section's JS chunk loads
+function SectionSkeleton() {
+  return (
+    <div
+      className="section"
+      style={{ background: 'var(--bg)', minHeight: '200px' }}
+      aria-hidden
+    />
+  )
+}
 
 export default async function HomePage({
   params,
@@ -37,7 +53,6 @@ export default async function HomePage({
     const data = await gqlClient.request<GetShowcaseProjectsRes>(GET_SHOWCASE_PROJECTS)
     showcaseProjects = unwrapEdges(data.showcase_projectsCollection?.edges)
   } catch {
-    // GraphQL unavailable — fall back to Supabase REST
     const { data } = await supabase
       .from('showcase_projects')
       .select('*')
@@ -49,7 +64,8 @@ export default async function HomePage({
 
   // ── FAQPage structured data ─────────────────────────────────────────────
   const tFaq = await getTranslations({ locale, namespace: 'faq' })
-  const faqItems = tFaq.raw('items') as { q: string; a: string }[]
+  const rawFaqItems = tFaq.raw('items')
+  const faqItems: { q: string; a: string }[] = Array.isArray(rawFaqItems) ? rawFaqItems : []
 
   const faqSchema = {
     '@context': 'https://schema.org',
@@ -67,7 +83,10 @@ export default async function HomePage({
 
   // ── Services structured data ────────────────────────────────────────────
   const tServices = await getTranslations({ locale, namespace: 'services' })
-  const serviceItems = tServices.raw('items') as { title: string; description: string }[]
+  const rawServiceItems = tServices.raw('items')
+  const serviceItems: { title: string; description: string }[] = Array.isArray(rawServiceItems)
+    ? rawServiceItems
+    : Object.values(rawServiceItems ?? {})
 
   const servicesSchema = {
     '@context': 'https://schema.org',
@@ -98,16 +117,33 @@ export default async function HomePage({
       />
       <Navbar isLoggedIn={!!user} />
       <main>
+        {/* ── Above the fold — immediate ── */}
         <HeroSection />
         <ServicesSection />
         <ProjectsSection projects={showcaseProjects ?? []} />
-        <StatsSection />
-        <AboutSection />
-        <ProcessSection />
-        <TestimonialsSection />
-        <FAQSection />
-        <ContactSection />
-        <CTASection />
+
+        {/* ── Below the fold — lazy loaded ── */}
+        <Suspense fallback={<SectionSkeleton />}>
+          <StatsSection />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton />}>
+          <AboutSection />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton />}>
+          <ProcessSection />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton />}>
+          <TestimonialsSection />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton />}>
+          <FAQSection />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton />}>
+          <ContactSection />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton />}>
+          <CTASection />
+        </Suspense>
       </main>
       <Footer />
     </>
