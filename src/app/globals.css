@@ -13,6 +13,10 @@
   --accent-warm: #FF4D00;
   --accent-warm-glow: rgba(255, 77, 0, 0.13);
 
+  /* Hairline line tokens — used by editorial dividers */
+  --line: rgba(13, 26, 48, 0.10);
+  --line-strong: rgba(13, 26, 48, 0.22);
+
   /* Light mode */
   --bg: #f7f8fc;
   --bg-secondary: #eef1f8;
@@ -28,6 +32,7 @@
   --card-border: rgba(40, 85, 160, 0.10);
   --glass-bg: rgba(255, 255, 255, 0.75);
   --glass-border: rgba(40, 85, 160, 0.15);
+  --outline-stroke: rgba(13, 26, 48, 0.85);
 }
 
 .dark {
@@ -48,6 +53,9 @@
   --card-border: rgba(58, 111, 216, 0.12);
   --glass-bg: rgba(13, 26, 46, 0.75);
   --glass-border: rgba(58, 111, 216, 0.15);
+  --line: rgba(232, 238, 248, 0.10);
+  --line-strong: rgba(232, 238, 248, 0.22);
+  --outline-stroke: rgba(232, 238, 248, 0.85);
 }
 
 /* ===== BASE ===== */
@@ -529,4 +537,109 @@ html.lenis {
   0% { transform: scaleX(0); }
   40% { transform: scaleX(1); }
   100% { transform: scaleX(0); }
+}
+
+/* ===== EDITORIAL UTILITIES (aidesigner direction) ===== */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--outline-stroke);
+}
+.text-outline-primary {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--primary);
+}
+.text-outline-accent {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--accent-warm);
+}
+
+.hairline {
+  height: 1px;
+  background: var(--line);
+}
+.hairline-strong {
+  height: 1px;
+  background: var(--line-strong);
+}
+.v-hairline {
+  width: 1px;
+  background: var(--line);
+}
+
+.rotate-writing {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-orientation: mixed;
+  letter-spacing: 0.3em;
+}
+
+/* Giant display numbers / wordmarks */
+.display-xl {
+  font-family: var(--font-display, 'Bebas Neue', 'Anton', sans-serif);
+  line-height: 0.85;
+  letter-spacing: -0.01em;
+}
+
+/* Polygon clip presets — sharp editorial buttons/tags */
+.clip-sharp {
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+}
+.clip-sharp-sm {
+  clip-path: polygon(5px 0%, 100% 0%, calc(100% - 5px) 100%, 0% 100%);
+}
+
+/* Accent warm (orange) subtle hover underline */
+.accent-underline {
+  position: relative;
+}
+.accent-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: var(--accent-warm);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.accent-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* Editorial side rail — rotated caption */
+.side-rail {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+/* Zigzag rotations (subtle) for testimonial wall */
+.zig-rot-1 { transform: rotate(-1.5deg); }
+.zig-rot-2 { transform: rotate(1.5deg); }
+.zig-rot-3 { transform: rotate(-0.8deg); }
+
+/* Hero 3D canvas wrapper — absolute fill */
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Italic serif accent (used sparingly) */
+.serif-italic {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+}
+
+/* Blend typographic moments with bg */
+.mix-luminosity {
+  mix-blend-mode: luminosity;
+}
+.mix-overlay {
+  mix-blend-mode: overlay;
 }

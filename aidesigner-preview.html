@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="fr" class="bg-[#050D1A] text-white antialiased overflow-x-hidden scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OverBrand — Votre vision réalisée</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: '#050D1A',
+                        primary: '#2855A0',
+                        electric: '#3A6FD8',
+                        accent: '#FF4D00',
+                        line: 'rgba(255, 255, 255, 0.1)',
+                        linehover: 'rgba(255, 255, 255, 0.25)',
+                    },
+                    fontFamily: {
+                        display: ['Anton', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    spacing: {
+                        'vw': '1vw',
+                        'vh': '1vh',
+                    },
+                    backgroundImage: {
+                        'duotone': 'linear-gradient(to bottom right, rgba(40, 85, 160, 0.8), rgba(5, 13, 26, 0.9))',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Reset & Utilities */
+        ::selection { background: #FF4D00; color: #fff; }
+        ::-webkit-scrollbar { display: none; }
+        html { -ms-overflow-style: none; scrollbar-width: none; cursor: none; }
+        
+        /* Grain Overlay */
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 9999; opacity: 0.04; mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Typography Modifiers */
+        .text-outline {
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.8);
+        }
+        .text-outline-accent:hover {
+            color: transparent;
+            -webkit-text-stroke: 1px #FF4D00;
+        }
+        
+        /* Custom Cursor */
+        #cursor-dot {
+            position: fixed; top: 0; left: 0; width: 6px; height: 6px; background: #FF4D00; border-radius: 50%;
+            pointer-events: none; z-index: 10000; transform: translate(-50%, -50%); transition: opacity 0.2s;
+        }
+        #cursor-ring {
+            position: fixed; top: 0; left: 0; width: 40px; height: 40px; border: 1px solid rgba(255,77,0,0.5);
+            border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+        }
+        #cursor-ring.hovered {
+            width: 80px; height: 80px; background: rgba(255,77,0,0.1); border-color: #FF4D00; backdrop-filter: blur(4px);
+        }
+        #cursor-ring .cursor-text {
+            font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 1px; color: #fff; opacity: 0; transition: opacity 0.3s;
+        }
+        #cursor-ring.hovered .cursor-text { opacity: 1; }
+
+        /* Animations */
+        @keyframes marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
+        .animate-marquee { display: flex; width: max-content; animation: marquee 20s linear infinite; }
+        
+        @keyframes spin-slow { 100% { transform: rotate(360deg); } }
+        .spin-geo { animation: spin-slow 20s linear infinite; }
+
+        .reveal-up { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal-up.is-visible { opacity: 1; transform: translateY(0); }
+
+        .line-grow { transform-origin: left; transform: scaleX(0); transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        .line-grow.is-visible { transform: scaleX(1); }
+
+        /* Clip Paths */
+        .clip-button { clip-path: polygon(0 0, 100% 0, 100% 70%, 90% 100%, 0 100%); }
+        .clip-diagonal { clip-path: polygon(0 0, 100% 5vw, 100% 100%, 0 100%); }
+
+        /* Project Grid Helpers */
+        .project-card:hover .project-img { transform: scale(1.05); }
+        .project-card:hover .project-overlay { opacity: 0.8; }
+        
+        /* Floating Form Labels */
+        .cool-input:focus ~ .cool-label, .cool-input:not(:placeholder-shown) ~ .cool-label {
+            transform: translateY(-140%) scale(0.85); color: #FF4D00;
+        }
+
+        /* Radio Pills */
+        input[type="radio"]:checked + label { background: #FF4D00; color: white; border-color: #FF4D00; }
+        
+        /* Services Accordion Hover Image */
+        .service-row:hover .service-arrow { transform: translateX(10px); color: #FF4D00; }
+        .service-img { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%); transition: clip-path 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .service-img.active { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+
+    </style>
+</head>
+<body class="text-white bg-base border-x border-line max-w-[1920px] mx-auto relative cursor-none sm:px-12 px-4 selection:bg-accent selection:text-white">
+
+    <!-- Global Elements -->
+    <div class="noise-overlay"></div>
+    <div id="cursor-dot" class="hidden md:block"></div>
+    <div id="cursor-ring" class="hidden md:block"><span class="cursor-text"></span></div>
+    
+    <!-- Scroll Progress -->
+    <div class="fixed top-0 left-0 h-[2px] bg-accent z-50 transition-all duration-75 origin-left" id="scroll-progress" style="width: 0%;"></div>
+
+    <!-- Side Rail (Desktop) -->
+    <div class="fixed left-0 top-0 h-full w-12 border-r border-line hidden lg:flex flex-col items-center justify-between py-12 z-40 bg-base/80 backdrop-blur-sm">
+        <div class="transform -rotate-90 origin-center whitespace-nowrap text-[10px] uppercase tracking-widest font-sans text-white/50 tracking-[0.2em] mt-24">
+            Depuis 2020 — Yaoundé · Paris
+        </div>
+        <div class="flex flex-col gap-4 text-white/50 pb-8">
+            <i class="ph ph-sun text-lg hover:text-accent transition-colors cursor-pointer" data-cursor="THEME"></i>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-40 border-b border-line bg-base/60 backdrop-blur-md px-4 sm:px-12 lg:pl-24 lg:pr-12 py-4 flex items-center justify-between transition-transform duration-300" id="navbar">
+        <div class="flex items-center gap-2">
+            <i class="ph-bold ph-hexagon text-accent text-2xl"></i>
+            <span class="font-display tracking-wide text-xl uppercase">OverBrand.</span>
+        </div>
+        <div class="hidden md:flex gap-8 text-xs font-sans tracking-widest uppercase font-semibold text-white/70">
+            <a href="#services" class="hover:text-white transition-colors" data-cursor="ALLER">Services</a>
+            <a href="#projets" class="hover:text-white transition-colors" data-cursor="ALLER">Projets</a>
+            <a href="#agence" class="hover:text-white transition-colors" data-cursor="ALLER">L'Agence</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="text-xs font-sans tracking-widest text-white/50 hidden sm:inline">FR / EN</span>
+            <a href="#contact" class="px-5 py-2.5 bg-white text-base font-display uppercase tracking-wider text-black clip-button hover:bg-accent hover:text-white transition-colors duration-300" data-cursor="PROJET">
+                Devis Gratuit <i class="ph-bold ph-arrow-right inline-block ml-1"></i>
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO SCENE -->
+    <header class="relative w-full h-[100svh] flex flex-col justify-center border-b border-line lg:pl-12 pt-16">
+        <!-- Floating Stats -->
+        <div class="absolute top-32 right-8 md:right-24 border border-line p-3 text-right bg-base/50 backdrop-blur z-10 reveal-up">
+            <div class="font-display text-4xl text-accent">50+</div>
+            <div class="text-[9px] uppercase tracking-widest font-sans text-white/60">Projets livrés</div>
+        </div>
+        <div class="absolute bottom-40 left-8 md:left-32 border border-line p-3 bg-base/50 backdrop-blur z-10 reveal-up" style="transition-delay: 0.1s;">
+            <div class="font-display text-4xl text-white">7+</div>
+            <div class="text-[9px] uppercase tracking-widest font-sans text-white/60">Experts in-house</div>
+        </div>
+
+        <!-- Central spinning element -->
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0 opacity-20 pointer-events-none">
+            <svg class="w-[40vw] h-[40vw] spin-geo" viewBox="0 0 100 100" fill="none" stroke="url(#grad1)" stroke-width="0.5">
+                <defs>
+                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#3A6FD8" />
+                        <stop offset="100%" stop-color="#FF4D00" />
+                    </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="45" stroke-dasharray="2 4"/>
+                <polygon points="50,5 95,75 5,75" stroke-dasharray="1 3"/>
+                <polygon points="50,95 5,25 95,25" stroke-dasharray="1 3"/>
+            </svg>
+        </div>
+
+        <!-- Massive Typography -->
+        <div class="relative z-10 flex flex-col uppercase font-display text-[15vw] leading-[0.8] tracking-tight w-full pointer-events-none">
+            <div class="pl-[5vw] reveal-up">Votre</div>
+            <div class="text-right pr-[5vw] text-outline text-outline-accent transition-colors duration-500 reveal-up" style="transition-delay: 0.1s;">Vision</div>
+            <div class="flex items-center pl-[15vw] reveal-up" style="transition-delay: 0.2s;">
+                <span class="mr-4 sm:mr-8 w-12 h-12 sm:w-24 sm:h-24 rounded-full border border-line flex items-center justify-center animate-[spin_4s_linear_infinite]">
+                    <i class="ph ph-asterisk text-accent text-2xl sm:text-5xl"></i>
+                </span>
+                <span id="scramble-text">Réalisée.</span>
+            </div>
+        </div>
+
+        <!-- Bottom Marquee -->
+        <div class="absolute bottom-0 left-0 w-full overflow-hidden border-t border-line py-3 bg-base/80 backdrop-blur z-20">
+            <div class="animate-marquee flex gap-8 items-center text-xs font-sans uppercase tracking-[0.3em] text-white/50">
+                <span>Branding</span><span class="text-accent">•</span>
+                <span>Design UI/UX</span><span class="text-accent">•</span>
+                <span>Développement Web</span><span class="text-accent">•</span>
+                <span>Applications Mobiles</span><span class="text-accent">•</span>
+                <span>SEO & Visibilité</span><span class="text-accent">•</span>
+                <span>Motion Design</span><span class="text-accent">•</span>
+                <span>Publicité Digitale</span><span class="text-accent">•</span>
+                <!-- Duplicate for loop -->
+                <span>Branding</span><span class="text-accent">•</span>
+                <span>Design UI/UX</span><span class="text-accent">•</span>
+                <span>Développement Web</span><span class="text-accent">•</span>
+                <span>Applications Mobiles</span><span class="text-accent">•</span>
+                <span>SEO & Visibilité</span><span class="text-accent">•</span>
+                <span>Motion Design</span><span class="text-accent">•</span>
+                <span>Publicité Digitale</span><span class="text-accent">•</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- INTRO / ABOUT SPLIT -->
+    <section id="agence" class="w-full border-b border-line lg:pl-12 py-24 sm:py-32 relative">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-0">
+            <!-- Left: Visual -->
+            <div class="lg:col-span-4 px-4 sm:px-12 border-r border-line relative group">
+                <div class="aspect-[3/4] w-full relative overflow-hidden bg-electric/20 mix-blend-luminosity">
+                    <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80" alt="Équipe OverBrand Studio" class="w-full h-full object-cover filter grayscale contrast-125 transition-transform duration-1000 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-duotone opacity-60 mix-blend-multiply"></div>
+                    <!-- Crosshairs -->
+                    <div class="absolute top-4 left-4 w-4 h-4 border-t border-l border-white/30"></div>
+                    <div class="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-white/30"></div>
+                </div>
+            </div>
+            
+            <!-- Right: Copy -->
+            <div class="lg:col-span-8 px-4 sm:px-12 flex flex-col justify-center">
+                <h2 class="font-display uppercase text-5xl sm:text-7xl lg:text-[6vw] leading-[0.9] tracking-tight mb-8 reveal-up">
+                    L'Agence qui fait <br> <span class="text-outline">la différence.</span>
+                </h2>
+                <div class="w-full h-[1px] bg-line mb-8 line-grow"></div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div>
+                        <p class="font-sans text-lg text-white/70 leading-relaxed font-light reveal-up">
+                            Nous ne faisons pas que des sites web. Nous architecturons des <span class="font-serif italic text-accent font-normal text-xl">expériences digitales</span> premium. Basés entre Yaoundé et Paris, nous fusionnons esthétique avant-gardiste et performance technique absolue.
+                        </p>
+                    </div>
+                    <ul class="space-y-4 font-sans text-sm tracking-wide uppercase text-white/80 reveal-up" style="transition-delay: 0.2s;">
+                        <li class="flex items-center gap-3 border-b border-line pb-3"><i class="ph-bold ph-check text-accent"></i> Design Stratégique</li>
+                        <li class="flex items-center gap-3 border-b border-line pb-3"><i class="ph-bold ph-check text-accent"></i> Développement Sur-Mesure</li>
+                        <li class="flex items-center gap-3 border-b border-line pb-3"><i class="ph-bold ph-check text-accent"></i> Optimisation Conversion</li>
+                        <li class="flex items-center gap-3"><i class="ph-bold ph-check text-accent"></i> Accompagnement Continu</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS (Typographic Moment) -->
+    <section class="w-full border-b border-line lg:pl-12 py-12 bg-electric/5">
+        <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-line border-y border-line">
+            <div class="flex flex-col items-center justify-center py-12 px-4 group reveal-up">
+                <div class="font-display text-[12vw] md:text-[8vw] leading-none text-white group-hover:text-accent transition-colors duration-300 stat-num" data-target="50">0</div>
+                <div class="font-sans text-[10px] uppercase tracking-[0.2em] text-white/50 mt-2">Plus de Projets</div>
+            </div>
+            <div class="flex flex-col items-center justify-center py-12 px-4 group reveal-up" style="transition-delay: 0.1s;">
+                <div class="font-display text-[12vw] md:text-[8vw] leading-none text-white text-outline group-hover:-webkit-text-stroke-accent transition-colors duration-300"><span class="stat-num" data-target="40">0</span>+</div>
+                <div class="font-sans text-[10px] uppercase tracking-[0.2em] text-white/50 mt-2">Clients Satisfaits</div>
+            </div>
+            <div class="flex flex-col items-center justify-center py-12 px-4 group reveal-up" style="transition-delay: 0.2s;">
+                <div class="font-display text-[12vw] md:text-[8vw] leading-none text-white group-hover:text-accent transition-colors duration-300 stat-num" data-target="5">0</div>
+                <div class="font-sans text-[10px] uppercase tracking-[0.2em] text-white/50 mt-2">Années d'Expertise</div>
+            </div>
+            <div class="flex flex-col items-center justify-center py-12 px-4 group reveal-up" style="transition-delay: 0.3s;">
+                <div class="font-display text-[12vw] md:text-[8vw] leading-none text-white text-outline group-hover:-webkit-text-stroke-accent transition-colors duration-300 stat-num" data-target="7">0</div>
+                <div class="font-sans text-[10px] uppercase tracking-[0.2em] text-white/50 mt-2">Domaines Maîtrisés</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES (Editorial Accordion) -->
+    <section id="services" class="w-full border-b border-line lg:pl-12 py-24 sm:py-32 relative">
+        <div class="px-4 sm:px-12 mb-16 flex flex-col md:flex-row justify-between items-end gap-8 reveal-up">
+            <h2 class="font-display uppercase text-5xl sm:text-7xl leading-[0.9]">
+                Notre <span class="font-serif italic text-accent lowercase text-6xl sm:text-8xl">arsenal</span><br>Créatif.
+            </h2>
+            <div class="text-xs font-sans uppercase tracking-[0.2em] text-white/40 border p-3 border-line max-w-[250px]">
+                Des solutions taillées sur mesure pour dominer votre marché.
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 relative">
+            <!-- Interative List -->
+            <div class="lg:col-span-7 flex flex-col border-t border-line">
+                <!-- Row 1 -->
+                <div class="service-row border-b border-line py-8 px-4 sm:px-12 flex items-center justify-between cursor-pointer group" data-img="serv1" data-cursor="EXPLORER">
+                    <div class="flex items-center gap-8">
+                        <span class="font-display text-white/30 text-2xl group-hover:text-accent transition-colors">01</span>
+                        <h3 class="font-display uppercase text-3xl sm:text-5xl group-hover:pl-4 transition-all duration-300">Création de Sites Web</h3>
+                    </div>
+                    <i class="ph ph-arrow-right text-2xl text-white/30 service-arrow transition-all duration-300"></i>
+                </div>
+                <!-- Row 2 -->
+                <div class="service-row border-b border-line py-8 px-4 sm:px-12 flex items-center justify-between cursor-pointer group" data-img="serv2" data-cursor="EXPLORER">
+                    <div class="flex items-center gap-8">
+                        <span class="font-display text-white/30 text-2xl group-hover:text-accent transition-colors">02</span>
+                        <h3 class="font-display uppercase text-3xl sm:text-5xl group-hover:pl-4 transition-all duration-300 text-outline">Identité & Branding</h3>
+                    </div>
+                    <i class="ph ph-arrow-right text-2xl text-white/30 service-arrow transition-all duration-300"></i>
+                </div>
+                <!-- Row 3 -->
+                <div class="service-row border-b border-line py-8 px-4 sm:px-12 flex items-center justify-between cursor-pointer group" data-img="serv3" data-cursor="EXPLORER">
+                    <div class="flex items-center gap-8">
+                        <span class="font-display text-white/30 text-2xl group-hover:text-accent transition-colors">03</span>
+                        <h3 class="font-display uppercase text-3xl sm:text-5xl group-hover:pl-4 transition-all duration-300">Logiciels & Apps</h3>
+                    </div>
+                    <i class="ph ph-arrow-right text-2xl text-white/30 service-arrow transition-all duration-300"></i>
+                </div>
+                <!-- Row 4 -->
+                <div class="service-row border-b border-line py-8 px-4 sm:px-12 flex items-center justify-between cursor-pointer group" data-img="serv4" data-cursor="EXPLORER">
+                    <div class="flex items-center gap-8">
+                        <span class="font-display text-white/30 text-2xl group-hover:text-accent transition-colors">04</span>
+                        <h3 class="font-display uppercase text-3xl sm:text-5xl group-hover:pl-4 transition-all duration-300 text-outline">Visibilité & SEO</h3>
+                    </div>
+                    <i class="ph ph-arrow-right text-2xl text-white/30 service-arrow transition-all duration-300"></i>
+                </div>
+                 <!-- Row 5 -->
+                 <div class="service-row border-b border-line py-8 px-4 sm:px-12 flex items-center justify-between cursor-pointer group" data-img="serv5" data-cursor="EXPLORER">
+                    <div class="flex items-center gap-8">
+                        <span class="font-display text-white/30 text-2xl group-hover:text-accent transition-colors">05</span>
+                        <h3 class="font-display uppercase text-3xl sm:text-5xl group-hover:pl-4 transition-all duration-300">Marketing Digital</h3>
+                    </div>
+                    <i class="ph ph-arrow-right text-2xl text-white/30 service-arrow transition-all duration-300"></i>
+                </div>
+            </div>
+
+            <!-- Sticky Image Preview (Desktop) -->
+            <div class="hidden lg:block lg:col-span-5 relative h-[600px] border-l border-line p-8">
+                <div class="sticky top-32 w-full h-full w-[calc(100%-4rem)] aspect-[4/5] bg-line overflow-hidden clip-diagonal relative">
+                    <!-- Default state / Img 1 -->
+                    <img id="serv1" src="https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80" alt="Web Design" class="service-img active absolute inset-0 w-full h-full object-cover filter grayscale contrast-125 z-10">
+                    <img id="serv2" src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=800&q=80" alt="Branding" class="service-img absolute inset-0 w-full h-full object-cover filter grayscale sepia z-20">
+                    <img id="serv3" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="Apps" class="service-img absolute inset-0 w-full h-full object-cover filter brightness-50 contrast-150 z-30">
+                    <img id="serv4" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" alt="SEO" class="service-img absolute inset-0 w-full h-full object-cover filter hue-rotate-180 z-40">
+                    <img id="serv5" src="https://images.unsplash.com/photo-1557838923-2985c318be48?auto=format&fit=crop&w=800&q=80" alt="Marketing" class="service-img absolute inset-0 w-full h-full object-cover filter invert z-50">
+                    
+                    <div class="absolute inset-0 bg-primary/20 mix-blend-color z-50 pointer-events-none"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECTS (Masonry Grid) -->
+    <section id="projets" class="w-full border-b border-line lg:pl-12 py-24 sm:py-32">
+        <div class="px-4 sm:px-12 mb-16 flex flex-col items-center text-center reveal-up">
+            <h2 class="font-display uppercase text-5xl sm:text-7xl leading-[0.9]">
+                Sélection <span class="text-outline">Récents</span>.
+            </h2>
+            <div class="w-12 h-[2px] bg-accent mt-8 mb-4"></div>
+            <p class="font-sans text-sm text-white/50 tracking-widest uppercase">La preuve par l'image</p>
+        </div>
+
+        <!-- Asymmetric CSS Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-px bg-line border-y border-line">
+            
+            <!-- Project 1 (Large) -->
+            <a href="#" class="project-card relative block group md:col-span-8 aspect-video md:aspect-auto bg-base overflow-hidden" data-cursor="VOIR">
+                <img src="https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=1200&q=80" alt="Projet E-commerce" class="project-img w-full h-full object-cover filter grayscale transition-all duration-700">
+                <div class="project-overlay absolute inset-0 bg-duotone opacity-0 transition-opacity duration-500"></div>
+                <div class="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-base to-transparent translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <h3 class="font-display text-4xl uppercase tracking-wide">Lumina E-Shop</h3>
+                    <div class="flex items-center gap-4 mt-2 font-sans text-[10px] uppercase tracking-widest text-accent">
+                        <span>Web Design</span><span>—</span><span>2023</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Project 2 (Tall) -->
+            <a href="#" class="project-card relative block group md:col-span-4 md:row-span-2 aspect-square md:aspect-auto bg-base overflow-hidden" data-cursor="VOIR">
+                <img src="https://images.unsplash.com/photo-1545239351-ef35f43d514b?auto=format&fit=crop&w=600&q=80" alt="Brand Identity" class="project-img w-full h-full object-cover filter grayscale transition-all duration-700">
+                <div class="project-overlay absolute inset-0 bg-accent/80 mix-blend-multiply opacity-0 transition-opacity duration-500"></div>
+                <div class="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-base to-transparent translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <h3 class="font-display text-3xl uppercase tracking-wide">Arch+ Studio</h3>
+                    <div class="flex items-center gap-4 mt-2 font-sans text-[10px] uppercase tracking-widest text-[#050d1a]">
+                        <span>Identité Visuelle</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Project 3 (Small) -->
+            <a href="#" class="project-card relative block group md:col-span-4 aspect-square bg-base overflow-hidden" data-cursor="VOIR">
+                <img src="https://images.unsplash.com/photo-1618761714954-0b8cd0026356?auto=format&fit=crop&w=600&q=80" alt="App Mobile" class="project-img w-full h-full object-cover filter grayscale transition-all duration-700">
+                <div class="project-overlay absolute inset-0 bg-electric/80 mix-blend-multiply opacity-0 transition-opacity duration-500"></div>
+                <div class="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-base to-transparent translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <h3 class="font-display text-2xl uppercase tracking-wide">FinTech App</h3>
+                    <div class="flex items-center gap-4 mt-2 font-sans text-[10px] uppercase tracking-widest text-white/50">
+                        <span>UI/UX</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Project 4 (Small) -->
+            <a href="#" class="project-card relative block group md:col-span-4 aspect-square bg-base overflow-hidden" data-cursor="VOIR">
+                <img src="https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=600&q=80" alt="Corporate Website" class="project-img w-full h-full object-cover filter grayscale transition-all duration-700">
+                <div class="project-overlay absolute inset-0 bg-primary/80 mix-blend-multiply opacity-0 transition-opacity duration-500"></div>
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center w-full translate-y-8 group-hover:-translate-y-1/2 transition-transform duration-500 opacity-0 group-hover:opacity-100">
+                    <i class="ph ph-play-circle text-6xl text-white font-light"></i>
+                    <h3 class="font-display text-2xl uppercase mt-4">Motion Reel</h3>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- View All Button -->
+        <div class="flex justify-center mt-16 px-4">
+            <a href="#" class="group relative px-12 py-6 border border-line overflow-hidden font-display uppercase tracking-widest text-xl inline-flex items-center gap-4" data-cursor="ALLER">
+                <span class="relative z-10">Tous les projets</span>
+                <i class="ph-bold ph-arrow-right relative z-10 group-hover:translate-x-2 transition-transform"></i>
+                <div class="absolute inset-0 bg-accent transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out z-0"></div>
+            </a>
+        </div>
+    </section>
+
+    <!-- PROCESS (Sticky Timeline) -->
+    <section class="w-full border-b border-line lg:pl-12 py-24 relative bg-[#030811]">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 px-4 sm:px-12 relative min-h-[150vh]">
+            
+            <!-- Left Sticky Guide -->
+            <div class="lg:col-span-4 hidden lg:block relative">
+                <div class="sticky top-32">
+                    <h2 class="font-display uppercase text-5xl leading-tight mb-8">Notre <br><span class="text-accent">Méthode.</span></h2>
+                    <p class="font-sans text-sm text-white/50 pr-12">Un processus chirurgical, de l'idée à la mise en orbite.</p>
+                    
+                    <!-- Progress UI -->
+                    <div class="mt-16 relative h-64 w-[1px] bg-line ml-4 group">
+                        <div class="absolute top-0 left-0 w-full bg-accent transition-all duration-200" id="process-progress" style="height: 0%;"></div>
+                        <div class="absolute -left-[5px] top-0 w-3 h-3 bg-base border border-accent rounded-full transition-all duration-200" id="process-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Scrollable Steps -->
+            <div class="lg:col-span-8 flex flex-col gap-32 py-32" id="process-steps">
+                
+                <div class="process-step group flex flex-col md:flex-row gap-8 reveal-up">
+                    <div class="font-display text-6xl md:text-8xl text-outline group-hover:text-white group-hover:-webkit-text-stroke-0 transition-colors w-24">01</div>
+                    <div class="flex-1 mt-4 md:mt-0 pt-4 border-t border-line group-hover:border-accent transition-colors">
+                        <h3 class="font-display text-3xl uppercase mb-4">Consultation & Audit</h3>
+                        <p class="font-sans text-white/60 leading-relaxed max-w-lg">Nous plongeons dans votre univers. Analyse de marché, identification des cibles et définition des KPIs. Pas de devinettes, que de la donnée.</p>
+                    </div>
+                </div>
+
+                <div class="process-step group flex flex-col md:flex-row gap-8 reveal-up">
+                    <div class="font-display text-6xl md:text-8xl text-outline group-hover:text-white group-hover:-webkit-text-stroke-0 transition-colors w-24">02</div>
+                    <div class="flex-1 mt-4 md:mt-0 pt-4 border-t border-line group-hover:border-accent transition-colors">
+                        <h3 class="font-display text-3xl uppercase mb-4">Stratégie & Design</h3>
+                        <p class="font-sans text-white/60 leading-relaxed max-w-lg">Création des wireframes, direction artistique et maquettes haute-fidélité. Validation de chaque pixel avant d'écrire une seule ligne de code.</p>
+                    </div>
+                </div>
+
+                <div class="process-step group flex flex-col md:flex-row gap-8 reveal-up">
+                    <div class="font-display text-6xl md:text-8xl text-outline group-hover:text-white group-hover:-webkit-text-stroke-0 transition-colors w-24">03</div>
+                    <div class="flex-1 mt-4 md:mt-0 pt-4 border-t border-line group-hover:border-accent transition-colors">
+                        <h3 class="font-display text-3xl uppercase mb-4">Développement Dev</h3>
+                        <p class="font-sans text-white/60 leading-relaxed max-w-lg">Architecture technique robuste, code propre, animations fluides. Nous utilisons les stacks les plus performantes (React, Tailwind, WebGL).</p>
+                    </div>
+                </div>
+
+                <div class="process-step group flex flex-col md:flex-row gap-8 reveal-up">
+                    <div class="font-display text-6xl md:text-8xl text-outline group-hover:text-white group-hover:-webkit-text-stroke-0 transition-colors w-24">04</div>
+                    <div class="flex-1 mt-4 md:mt-0 pt-4 border-t border-line group-hover:border-accent transition-colors">
+                        <h3 class="font-display text-3xl uppercase mb-4">QA & Livraison</h3>
+                        <p class="font-sans text-white/60 leading-relaxed max-w-lg">Tests intensifs cross-browser, optimisation SEO technique, sécurité et déploiement. Votre produit sort parfait.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS (Quote Wall) -->
+    <section class="w-full border-b border-line lg:pl-12 py-32 overflow-hidden relative" data-cursor="LIRE">
+        <h2 class="sr-only">Témoignages</h2>
+        
+        <div class="relative max-w-5xl mx-auto px-4 z-10 flex flex-col gap-24">
+            
+            <!-- Quote 1 -->
+            <div class="relative self-start w-full md:w-2/3 reveal-up">
+                <i class="ph-fill ph-quotes text-[150px] text-accent/20 absolute -top-16 -left-12 -z-10"></i>
+                <p class="font-serif italic text-2xl md:text-4xl leading-snug">"OverBrand n'a pas seulement refait notre site, ils ont redéfini notre standard. L'impact sur notre taux de conversion a été immédiat et brutal."</p>
+                <div class="mt-8 border-t border-line pt-4 inline-block">
+                    <div class="font-display uppercase tracking-widest text-sm">Marc D.</div>
+                    <div class="font-sans text-[10px] text-white/50 uppercase">CEO, TechCore Afrique</div>
+                </div>
+            </div>
+
+            <!-- Quote 2 -->
+            <div class="relative self-end w-full md:w-2/3 text-right reveal-up">
+                <i class="ph-fill ph-quotes text-[150px] text-line absolute -top-16 -right-12 -z-10 transform scale-x-[-1]"></i>
+                <p class="font-serif italic text-2xl md:text-4xl leading-snug text-white/70">"Une précision chirurgicale dans le design, une communication transparente. Enfin une agence qui comprend les enjeux business post-lancement."</p>
+                <div class="mt-8 border-t border-line pt-4 inline-block text-right">
+                    <div class="font-display uppercase tracking-widest text-sm text-accent">Sophie L.</div>
+                    <div class="font-sans text-[10px] text-white/50 uppercase">Directrice Marketing, Paris</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Marquee Logos -->
+        <div class="mt-32 border-y border-line py-6 overflow-hidden bg-white/5 mix-blend-screen">
+            <div class="animate-marquee flex gap-24 items-center opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+                <!-- SVGs placeholders for logos -->
+                <h4 class="font-display text-xl">ACME CORP</h4>
+                <h4 class="font-display text-xl text-outline">GLOBAL IND.</h4>
+                <h4 class="font-display text-xl">STARTUP X</h4>
+                <h4 class="font-display text-xl text-outline">VISIONARY</h4>
+                <h4 class="font-display text-xl">NEXUS</h4>
+                <!-- Duplicate -->
+                <h4 class="font-display text-xl">ACME CORP</h4>
+                <h4 class="font-display text-xl text-outline">GLOBAL IND.</h4>
+                <h4 class="font-display text-xl">STARTUP X</h4>
+                <h4 class="font-display text-xl text-outline">VISIONARY</h4>
+                <h4 class="font-display text-xl">NEXUS</h4>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT (Aggressive CTA & Form) -->
+    <section id="contact" class="w-full border-b border-line lg:pl-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2">
+            
+            <!-- Left CTA Typo -->
+            <div class="p-8 sm:p-16 border-r border-line flex flex-col justify-between bg-electric/5 min-h-[60vh]">
+                <div>
+                    <h2 class="font-display uppercase text-[10vw] lg:text-[8vw] leading-[0.85] tracking-tight group cursor-crosshair">
+                        Démarrons <br>
+                        <span class="relative inline-block text-outline group-hover:text-accent group-hover:-webkit-text-stroke-0 transition-colors duration-300">
+                            Ensemble.
+                            <svg class="absolute w-full h-[15px] -bottom-2 left-0 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                <path d="M0 5 Q 50 10 100 0" stroke="#FF4D00" stroke-width="3" fill="transparent"/>
+                            </svg>
+                        </span>
+                    </h2>
+                </div>
+                <div class="mt-16 space-y-4 font-sans text-sm tracking-widest uppercase text-white/60">
+                    <p class="flex items-center gap-3"><i class="ph ph-envelope text-lg text-accent"></i> hello@overbrand.agency</p>
+                    <p class="flex items-center gap-3"><i class="ph ph-phone text-lg text-accent"></i> +33 1 00 00 00 00</p>
+                    <p class="flex items-center gap-3"><i class="ph ph-map-pin text-lg text-accent"></i> Yaoundé, CMR — Paris, FR</p>
+                </div>
+            </div>
+
+            <!-- Right Form -->
+            <div class="p-8 sm:p-16 relative">
+                <div class="absolute inset-0 bg-duotone opacity-10 pointer-events-none"></div>
+                
+                <form class="flex flex-col gap-8 relative z-10">
+                    <p class="font-sans text-xs uppercase tracking-[0.2em] mb-4 text-accent border-b border-accent pb-2 inline-block self-start">Formulaire de Projet</p>
+                    
+                    <!-- Floating Input -->
+                    <div class="relative group">
+                        <input type="text" id="nom" class="cool-input peer w-full bg-transparent border-b border-line py-3 text-lg font-sans text-white focus:outline-none focus:border-accent transition-colors placeholder-transparent" placeholder="Nom">
+                        <label for="nom" class="cool-label absolute left-0 top-3 text-white/50 font-sans text-lg transition-all duration-300 pointer-events-none group-hover:text-white">Votre Nom</label>
+                    </div>
+
+                    <div class="relative group mt-4">
+                        <input type="email" id="email" class="cool-input peer w-full bg-transparent border-b border-line py-3 text-lg font-sans text-white focus:outline-none focus:border-accent transition-colors placeholder-transparent" placeholder="Email">
+                        <label for="email" class="cool-label absolute left-0 top-3 text-white/50 font-sans text-lg transition-all duration-300 pointer-events-none group-hover:text-white">Email Pro</label>
+                    </div>
+
+                    <!-- Pilles Radio -->
+                    <div class="mt-8">
+                        <label class="block text-xs font-sans uppercase tracking-widest text-white/50 mb-4">Budget Estimé (EUR)</label>
+                        <div class="flex flex-wrap gap-3">
+                            <div class="relative">
+                                <input type="radio" name="budget" id="b1" class="peer sr-only" checked>
+                                <label for="b1" class="px-4 py-2 border border-line text-xs font-sans cursor-pointer hover:border-white transition-colors uppercase select-none rounded-[1px]"> < 1k </label>
+                            </div>
+                            <div class="relative">
+                                <input type="radio" name="budget" id="b2" class="peer sr-only">
+                                <label for="b2" class="px-4 py-2 border border-line text-xs font-sans cursor-pointer hover:border-white transition-colors uppercase select-none rounded-[1px]"> 1k - 5k </label>
+                            </div>
+                            <div class="relative">
+                                <input type="radio" name="budget" id="b3" class="peer sr-only">
+                                <label for="b3" class="px-4 py-2 border border-line text-xs font-sans cursor-pointer hover:border-white transition-colors uppercase select-none rounded-[1px]"> 5k - 15k </label>
+                            </div>
+                            <div class="relative">
+                                <input type="radio" name="budget" id="b4" class="peer sr-only">
+                                <label for="b4" class="px-4 py-2 border border-line text-xs font-sans cursor-pointer hover:border-white transition-colors uppercase select-none rounded-[1px]"> 15k+ </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative group mt-8">
+                        <textarea id="message" rows="3" class="cool-input peer w-full bg-transparent border-b border-line py-3 text-lg font-sans text-white focus:outline-none focus:border-accent transition-colors placeholder-transparent resize-none" placeholder="Projet"></textarea>
+                        <label for="message" class="cool-label absolute left-0 top-3 text-white/50 font-sans text-lg transition-all duration-300 pointer-events-none group-hover:text-white">Détails du projet</label>
+                    </div>
+
+                    <button type="button" class="mt-8 self-start px-12 py-5 bg-white text-base font-display uppercase tracking-wider text-black clip-button hover:bg-accent hover:text-white transition-all duration-300 flex items-center gap-3 group" data-cursor="ENVOYER">
+                        Envoyer la demande <i class="ph-bold ph-paper-plane-right group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="w-full relative overflow-hidden bg-base pt-24 lg:pl-12">
+        <div class="px-4 sm:px-12 grid grid-cols-1 md:grid-cols-4 gap-12 mb-24 z-10 relative">
+            <div class="col-span-1 md:col-span-2">
+                <i class="ph-bold ph-hexagon text-accent text-4xl mb-4"></i>
+                <p class="font-sans text-sm text-white/60 max-w-sm leading-relaxed">Agence Digitale Créative.<br>Nous architecturons le web de demain avec audace et précision technique.</p>
+            </div>
+            <div class="flex flex-col gap-3 font-sans text-sm uppercase tracking-widest text-white/70">
+                <h5 class="text-white font-bold mb-2">Navigation</h5>
+                <a href="#services" class="hover:text-accent transition-colors w-max">Services</a>
+                <a href="#projets" class="hover:text-accent transition-colors w-max">Projets</a>
+                <a href="#agence" class="hover:text-accent transition-colors w-max">L'Agence</a>
+                <a href="#contact" class="hover:text-accent transition-colors w-max">Contact</a>
+            </div>
+            <div class="flex flex-col gap-3 font-sans text-sm uppercase tracking-widest text-white/70">
+                <h5 class="text-white font-bold mb-2">Réseaux</h5>
+                <a href="#" class="hover:text-accent transition-colors flex items-center gap-2 w-max"><i class="ph ph-instagram-logo"></i> Instagram</a>
+                <a href="#" class="hover:text-accent transition-colors flex items-center gap-2 w-max"><i class="ph ph-linkedin-logo"></i> LinkedIn</a>
+                <a href="#" class="hover:text-accent transition-colors flex items-center gap-2 w-max"><i class="ph ph-twitter-logo"></i> Twitter (X)</a>
+            </div>
+        </div>
+
+        <div class="w-full border-t border-line py-6 px-4 sm:px-12 flex flex-col sm:flex-row justify-between items-center z-10 relative text-[10px] font-sans uppercase tracking-[0.2em] text-white/40">
+            <span>&copy; 2024 OverBrand. Tous droits réservés.</span>
+            <span class="mt-2 sm:mt-0">Conçu avec <i class="ph-fill ph-heart text-accent"></i> par l'équipe interne.</span>
+        </div>
+
+        <!-- Giant Clipped Wordmark -->
+        <div class="w-full flex justify-center overflow-hidden translate-y-[30%] pointer-events-none select-none opacity-30 mt-[-10vw]">
+            <h1 class="font-display text-[22vw] leading-none text-transparent -webkit-text-stroke-2 border-white/20 m-0 p-0 text-outline">OVERBRAND</h1>
+        </div>
+    </footer>
+
+    <!-- INTERACTION LOGIC (Vanilla JS) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Custom Cursor Logic
+            const cursorDot = document.getElementById('cursor-dot');
+            const cursorRing = document.getElementById('cursor-ring');
+            const cursorText = cursorRing.querySelector('.cursor-text');
+            
+            let mouseX = 0, mouseY = 0;
+            let ringX = 0, ringY = 0;
+
+            if (window.innerWidth > 768) {
+                document.addEventListener('mousemove', (e) => {
+                    mouseX = e.clientX;
+                    mouseY = e.clientY;
+                    
+                    // Dot follows instantly
+                    cursorDot.style.left = mouseX + 'px';
+                    cursorDot.style.top = mouseY + 'px';
+                });
+
+                // Spring animation for ring
+                const renderCursor = () => {
+                    ringX += (mouseX - ringX) * 0.15;
+                    ringY += (mouseY - ringY) * 0.15;
+                    cursorRing.style.left = ringX + 'px';
+                    cursorRing.style.top = ringY + 'px';
+                    requestAnimationFrame(renderCursor);
+                };
+                renderCursor();
+
+                // Hover states
+                document.querySelectorAll('a, button, input, textarea, [data-cursor]').forEach(el => {
+                    el.addEventListener('mouseenter', () => {
+                        cursorRing.classList.add('hovered');
+                        const text = el.getAttribute('data-cursor');
+                        if (text) {
+                            cursorText.innerText = text;
+                        }
+                    });
+                    el.addEventListener('mouseleave', () => {
+                        cursorRing.classList.remove('hovered');
+                        cursorText.innerText = '';
+                    });
+                });
+            }
+
+            // 2. Scroll Progress & Navbar styling
+            const scrollProgress = document.getElementById('scroll-progress');
+            const navbar = document.getElementById('navbar');
+            
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.body.scrollHeight - window.innerHeight;
+                const scrollPercent = (scrollTop / docHeight) * 100;
+                scrollProgress.style.width = scrollPercent + '%';
+
+                if (scrollTop > 50) {
+                    navbar.classList.add('py-2', 'bg-base/90');
+                    navbar.classList.remove('py-4', 'bg-base/60');
+                } else {
+                    navbar.classList.add('py-4', 'bg-base/60');
+                    navbar.classList.remove('py-2', 'bg-base/90');
+                }
+            });
+
+            // 3. Intersection Observer for Reveals
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.2 };
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        
+                        // Counter animation trigger
+                        if(entry.target.querySelector('.stat-num')) {
+                            const numEl = entry.target.querySelector('.stat-num');
+                            if(!numEl.classList.contains('counted')) {
+                                numEl.classList.add('counted');
+                                const target = parseInt(numEl.getAttribute('data-target'));
+                                let count = 0;
+                                const speed = 2000 / target; // 2 seconds total
+                                const updateCount = () => {
+                                    count++;
+                                    numEl.innerText = count;
+                                    if(count < target) { setTimeout(updateCount, speed); }
+                                };
+                                updateCount();
+                            }
+                        }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal-up, .line-grow').forEach(el => revealObserver.observe(el));
+
+            // 4. Scramble Text Effect in Hero
+            const scrambleEl = document.getElementById('scramble-text');
+            const finalWord = "Réalisée.";
+            const chars = "!<>-_\\/[]{}—=+*^?#_";
+            let iteration = 0;
+            
+            const scrambleInterval = setInterval(() => {
+                scrambleEl.innerText = scrambleEl.innerText.split("").map((letter, index) => {
+                    if(index < iteration) { return finalWord[index]; }
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join("");
+                
+                if(iteration >= finalWord.length) { clearInterval(scrambleInterval); }
+                iteration += 1/3; // Speed control
+            }, 50);
+
+            // 5. Services Hover Logic
+            const serviceRows = document.querySelectorAll('.service-row');
+            const serviceImgs = document.querySelectorAll('.service-img');
+            
+            serviceRows.forEach(row => {
+                row.addEventListener('mouseenter', () => {
+                    const targetId = row.getAttribute('data-img');
+                    
+                    // Reset all images
+                    serviceImgs.forEach(img => {
+                        img.style.zIndex = '1';
+                        img.classList.remove('active');
+                    });
+                    
+                    // Bring target to front and animate clip-path
+                    const targetImg = document.getElementById(targetId);
+                    if(targetImg) {
+                        targetImg.style.zIndex = '10';
+                        targetImg.classList.add('active');
+                    }
+                });
+            });
+
+            // 6. Process Sticky Timeline logic
+            const processSteps = document.querySelectorAll('.process-step');
+            const processIndicator = document.getElementById('process-progress');
+            const processDot = document.getElementById('process-dot');
+            const processContainer = document.getElementById('process-steps');
+
+            if(processContainer && window.innerWidth > 1024) {
+                 window.addEventListener('scroll', () => {
+                    const containerRect = processContainer.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+                    
+                    // Simple estimation based on container position relative to viewport
+                    if(containerRect.top < windowHeight / 2 && containerRect.bottom > 0) {
+                        let scrolledPx = (windowHeight / 2) - containerRect.top;
+                        let totalScroll = containerRect.height - windowHeight/2;
+                        let percentage = (scrolledPx / totalScroll) * 100;
+                        percentage = Math.max(0, Math.min(100, percentage));
+                        
+                        processIndicator.style.height = `${percentage}%`;
+                        processDot.style.top = `calc(${percentage}% - 6px)`; // center dot visually
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
