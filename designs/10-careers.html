@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="fr" class="antialiased scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrières - OverBrand</title>
+    <!-- 
+      aesthetic_dna: Editorial Brutalism & Swiss Grid
+      ui_paradigm: Fixed Left-Rail Agency Profile with Persistent Architecture
+      palette: Paper (#F4F4F0) / Ink (#0A0A0A) / Accents: Blue (#2855A0), Orange (#FF4D00)
+    -->
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Config Additions -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        paper: '#F4F4F0',
+                        ink: '#0A0A0A',
+                        bblue: '#2855A0',
+                        borange: '#FF4D00',
+                    },
+                    fontFamily: {
+                        display: ['Anton', 'sans-serif'],
+                        body: ['Outfit', 'sans-serif'],
+                    },
+                    transitionTimingFunction: {
+                        'spring': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                        'reveal': 'cubic-bezier(0.16, 1, 0.3, 1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Logic & Native Reset Overrides */
+        :root {
+            --hairline: rgba(10, 10, 10, 0.15);
+        }
+        
+        body {
+            background-color: theme('colors.paper');
+            color: theme('colors.ink');
+            overflow-x: hidden;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Typography Sub-Systems */
+        .text-outline {
+            color: transparent;
+            -webkit-text-stroke: 1.5px theme('colors.ink');
+        }
+        
+        .text-outline-paper {
+            color: transparent;
+            -webkit-text-stroke: 1.5px theme('colors.paper');
+        }
+
+        .text-outline-accent {
+            color: transparent;
+            -webkit-text-stroke: 1.5px theme('colors.borange');
+        }
+
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+        }
+
+        /* Texture / Grain (Fixed & Performant) */
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.25;
+            mix-blend-mode: multiply;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Scrollbar Architecture */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: theme('colors.paper');
+            border-left: 1px solid var(--hairline);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.ink');
+        }
+
+        /* Motion Engine Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* Structural Grid Classes for Hairlines */
+        .hairline-grid {
+            border: 1px solid var(--hairline);
+            background-color: var(--hairline);
+            gap: 1px;
+        }
+        .hairline-grid > * {
+            background-color: theme('colors.paper');
+        }
+
+        /* Custom Hover Physics */
+        .button-press:active {
+            transform: scale(0.98);
+        }
+        
+        /* Grid Asymmetry definitions */
+        .photo-grid-layout {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, minmax(250px, auto));
+            gap: 1px;
+            background-color: var(--hairline);
+            border-top: 1px solid var(--hairline);
+            border-bottom: 1px solid var(--hairline);
+        }
+        .photo-grid-layout > div { background: theme('colors.paper'); }
+        
+        @media (max-width: 768px) {
+            .photo-grid-layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row relative selection:bg-bblue selection:text-paper min-h-[100dvh]">
+
+    <!-- Post-Processing Noise Layer -->
+    <div class="grain-overlay"></div>
+
+    <!-- MACRO ARCHITECTURE: Fixed Side Rail (Responsive) -->
+    <aside class="fixed w-full h-16 top-0 left-0 z-50 md:w-16 md:h-screen flex flex-row md:flex-col md:justify-between items-center border-b md:border-b-0 md:border-r border-ink/15 bg-paper px-4 md:px-0 md:py-8">
+        <a href="#" class="font-display text-2xl leading-none flex-shrink-0 group">
+            O<span class="text-outline group-hover:text-ink transition-colors duration-300">/</span>B
+        </a>
+        
+        <div class="hidden md:flex flex-col items-center gap-12">
+            <span class="vertical-text font-display text-xl text-ink/40 tracking-widest uppercase">OverBrand</span>
+            <div class="w-[1px] h-24 bg-ink/15"></div>
+            <span class="vertical-text text-xs font-bold tracking-[0.2em] text-borange pt-4 flex items-center gap-4">
+                <i class="ph ph-circle-notch animate-spin text-sm"></i>
+                RECRUTEMENT EN COURS
+            </span>
+        </div>
+
+        <button class="md:hidden flex flex-col justify-center gap-1.5 w-8 h-8 opacity-70">
+            <span class="block w-full h-[1.5px] bg-ink"></span>
+            <span class="block w-2/3 h-[1.5px] bg-ink"></span>
+        </button>
+    </aside>
+
+    <!-- MACRO ARCHITECTURE: Main Scroll Context -->
+    <main class="w-full md:pl-16 pt-16 md:pt-0 max-w-none flex-1 flex flex-col">
+
+        <!-- 1. HERO SECTION -->
+        <section class="min-h-[85vh] lg:min-h-[100dvh] flex flex-col justify-center p-6 md:p-12 lg:p-24 border-b border-ink/15 relative overflow-hidden">
+            <!-- Background typographic element for tension -->
+            <div class="absolute -right-24 top-24 font-display text-[20vw] text-outline opacity-5 pointer-events-none select-none leading-none z-0">
+                25<br>O/B
+            </div>
+
+            <div class="relative z-10 w-full max-w-[1200px]">
+                <div class="flex items-center gap-4 mb-6 md:mb-12 reveal">
+                    <span class="h-[1px] w-12 bg-borange"></span>
+                    <span class="text-sm font-bold tracking-[0.15em] text-borange uppercase">Carrières · 2025</span>
+                </div>
+                
+                <h1 class="font-display text-6xl md:text-8xl lg:text-[11rem] leading-[0.85] tracking-tight uppercase reveal delay-100 mb-12">
+                    <span class="block">Construisez</span>
+                    <span class="block text-outline ml-0 lg:ml-24">Les Meilleurs</span>
+                    <span class="block ml-0 lg:ml-12">Projets du</span>
+                    <span class="block text-bblue">Continent.</span>
+                </h1>
+                
+                <div class="flex flex-col md:flex-row gap-8 md:gap-16 items-start reveal delay-200">
+                    <div class="w-12 h-12 rounded-full border border-ink/20 flex items-center justify-center flex-shrink-0 animate-[spin_10s_linear_infinite]">
+                        <i class="ph ph-arrow-down-right text-xl"></i>
+                    </div>
+                    <p class="text-xl md:text-2xl lg:text-3xl font-light leading-snug max-w-3xl text-ink/90">
+                        L'équipe OverBrand grandit. Rejoignez 12 créatifs et ingénieurs qui livrent pour les marques ambitieuses d'Afrique et d'Europe. <span class="font-bold underline decoration-ink/20 underline-offset-4">Pas de bullshit, juste de l'exécution.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. WHY US STRIP (Meso-Architecture Density) -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-b border-ink/15 divide-y md:divide-y-0 md:divide-x divide-ink/15">
+            <!-- Card 01 -->
+            <div class="p-8 lg:p-12 group reveal hover:bg-ink hover:text-paper transition-colors duration-500">
+                <span class="font-display text-4xl lg:text-5xl text-ink/10 group-hover:text-borange group-hover:text-outline-accent transition-colors duration-500 mb-12 block">01</span>
+                <h3 class="text-xl font-bold mb-3 uppercase tracking-wide">Projets Ambitieux</h3>
+                <p class="text-sm border-l-2 border-ink/15 group-hover:border-paper/20 pl-4 py-1 text-ink/70 group-hover:text-paper/70 font-light transition-colors">Sortez de l'ennui corporatif. Nous bâtissons des plateformes qui redéfinissent des industries entières.</p>
+            </div>
+            <!-- Card 02 -->
+            <div class="p-8 lg:p-12 group reveal delay-100 hover:bg-ink hover:text-paper transition-colors duration-500">
+                <span class="font-display text-4xl lg:text-5xl text-ink/10 group-hover:text-bblue transition-colors duration-500 mb-12 block">02</span>
+                <h3 class="text-xl font-bold mb-3 uppercase tracking-wide">Rémunération Transparente</h3>
+                <p class="text-sm border-l-2 border-ink/15 group-hover:border-paper/20 pl-4 py-1 text-ink/70 group-hover:text-paper/70 font-light transition-colors">Pas de surprise ni de "selon le profil". Les fourchettes sont publiques et basées sur l'impact.</p>
+            </div>
+            <!-- Card 03 -->
+            <div class="p-8 lg:p-12 group reveal delay-200 hover:bg-ink hover:text-paper transition-colors duration-500">
+                <span class="font-display text-4xl lg:text-5xl text-ink/10 group-hover:text-borange group-hover:text-outline-accent transition-colors duration-500 mb-12 block">03</span>
+                <h3 class="text-xl font-bold mb-3 uppercase tracking-wide">4 Jours / Semaine</h3>
+                <p class="text-sm border-l-2 border-ink/15 group-hover:border-paper/20 pl-4 py-1 text-ink/70 group-hover:text-paper/70 font-light transition-colors">Une vraie flexibilité asynchrone pour recharger ses batteries créatives. Les vendredis vous appartiennent.</p>
+            </div>
+            <!-- Card 04 -->
+            <div class="p-8 lg:p-12 group reveal delay-300 hover:bg-ink hover:text-paper transition-colors duration-500">
+                <span class="font-display text-4xl lg:text-5xl text-ink/10 group-hover:text-bblue transition-colors duration-500 mb-12 block">04</span>
+                <h3 class="text-xl font-bold mb-3 uppercase tracking-wide">Budget Formation</h3>
+                <p class="text-sm border-l-2 border-ink/15 group-hover:border-paper/20 pl-4 py-1 text-ink/70 group-hover:text-paper/70 font-light transition-colors">2000€/an pour des cours, conférences ou matériel hybride. La stagnation est interdite.</p>
+            </div>
+        </section>
+
+        <!-- 3. OPEN POSITIONS TABLE (Micro-Architecture Focus) -->
+        <section class="border-b border-ink/15 bg-paper pb-24" id="positions">
+            <!-- Header section of table -->
+            <div class="p-6 md:p-12 lg:px-24 lg:py-20 border-b border-ink/15 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
+                <div>
+                    <h2 class="font-display text-5xl md:text-7xl lg:text-[7rem] leading-none uppercase tracking-tight reveal">
+                        Postes <span class="text-outline">Ouverts</span>
+                    </h2>
+                </div>
+                <div class="flex items-center gap-3 px-4 py-2 border border-ink/20 rounded-full text-xs font-bold uppercase tracking-widest reveal delay-100">
+                    <span class="w-2.5 h-2.5 bg-borange rounded-full animate-pulse"></span>
+                    5 Rôles Majeurs
+                </div>
+            </div>
+
+            <!-- Table Rows Engine -->
+            <div class="flex flex-col">
+                
+                <!-- Row 1 -->
+                <a href="#apply" class="group block border-b border-ink/15 hover:bg-ink transition-colors duration-500 ease-spring cursor-pointer">
+                    <div class="p-6 md:px-12 lg:px-24 py-10 flex flex-col xl:flex-row xl:items-center justify-between gap-6 reveal">
+                        <div class="flex-1 flex flex-col md:flex-row md:items-center gap-4 md:gap-12">
+                            <h3 class="font-display text-3xl md:text-5xl group-hover:text-paper transition-colors duration-500 w-full xl:w-2/5">Senior React/Next.js Developer</h3>
+                            <div class="flex flex-wrap gap-2 md:gap-4 flex-1">
+                                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest bg-ink text-paper group-hover:bg-paper group-hover:text-ink px-3 py-1 rounded-full transition-colors border border-transparent group-hover:border-ink">Douala / Remote</span>
+                                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest border border-ink/20 group-hover:border-paper/30 group-hover:text-paper px-3 py-1 rounded-full transition-colors">CDI</span>
+                                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest border border-ink/20 group-hover:border-paper/30 group-hover:text-paper px-3 py-1 rounded-full transition-colors">35-55K EUR/an</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 opacity-50 group-hover:opacity-100 group-hover:text-borange transform translate-x-[-10px] group-hover:translate-x-0 transition-all duration-500 font-bold uppercase text-sm tracking-widest mt-4 xl:mt-0">
+                            Voir l'offre <i class="ph ph-arrow-right text-xl"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Row 2 -->
+                <a href="#apply" class="group block border-b border-ink/15 hover:bg-ink transition-colors duration-500 ease-spring cursor-pointer">
+                    <div class="p-6 md:px-12 lg:px-24 py-8 flex flex-col xl:flex-row xl:items-center justify-between gap-6 reveal">
+                        <div class="flex-1 flex flex-col md:flex-row md:items-center gap-4 md:gap-12">
+                            <h3 class="font-display text-3xl md:text-4xl group-hover:text-paper transition-colors duration-500 w-full xl:w-2/5">Brand Designer</h3>
+                            <div class="flex flex-wrap gap-2 md:gap-4 flex-1">
+                                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest bg-ink text-paper group-hover:bg-paper group-hover:text-ink px-3 py-1 rounded-full transition-colors">Douala</span>
+                                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest border border-ink/20 group-hover:border-paper/30 group-hover:text-paper px-3 py-1 rounded-full transition-colors">CDI</span>
+                                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest border border-ink/20 group-hover:border-paper/30 group-hover:text-paper px-3 py-1 rounded-full transition-colors">25-40K EUR/an</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 opacity-50 group-hover:opacity-100 group-hover:text-borange transform translate-x-[-10px] group-hover:translate-x-0 transition-all duration-500 font-bold uppercase text-sm tracking-widest mt-4 xl:mt-0">
+                            Voir l'offre <i class="ph ph-arrow-right text-xl"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Row 3 -->
+                <a href="#apply" class="group block border-b border-ink/15 hover:bg-ink transition-colors duration-500 ease-spring cursor-pointer">
+                    <div class="p-6 md:px-12 lg:px-24 py-8 flex flex-col xl:flex-row xl:items-center justify-between gap-6 reveal">
+                        <div class="flex-1 flex flex-col md:flex-row md:items-center gap-4 md:gap-12">
+                            <h3 class="font-display text-3xl md:text-4xl group-hover:text-paper transition-colors duration-500 w-full xl:w-2/5">Growth Lead</h3>
+                            <div class="flex flex-wrap gap-2 md:gap-4 flex-1">
+                                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest bg-ink text-paper group-hover:bg-paper group-hover:text-ink px-3 py-1 rounded-full transition-colors">Remote</span>
+                                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest border border-ink/20 group-hover:border-paper/30 group-hover:text-paper px-3 py-1 rounded-full transition-colors">CDI</span>
+                                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest border border-ink/20 group-hover:border-paper/30 group-hover:text-paper px-3 py-1 rounded-full transition-colors">30-45K EUR/an</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 opacity-50 group-hover:opacity-100 group-hover:text-borange transform translate-x-[-10px] group-hover:translate-x-0 transition-all duration-500 font-bold uppercase text-sm tracking-widest mt-4 xl:mt-0">
+                            Voir l'offre <i class="ph ph-arrow-right text-xl"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Row 4 -->
+                <a href="#apply" class="group block border-b border-ink/15 hover:bg-ink transition-colors duration-500 ease-spring cursor-pointer">
+                    <div class="p-6 md:px-12 lg:px-24 py-8 flex flex-col xl:flex-row xl:items-center justify-between gap-6 reveal">
+                        <div class="flex-1 flex flex-col md:flex-row md:items-center gap-4 md:gap-12">
+                            <h3 class="font-display text-3xl md:text-4xl group-hover:text-paper transition-colors duration-500 w-full xl:w-2/5">Motion Designer</h3>
+                            <div class="flex flex-wrap gap-2 md:gap-4 flex-1">
+                                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest bg-ink text-paper group-hover:bg-paper group-hover:text-ink px-3 py-1 rounded-full transition-colors">Douala</span>
+                                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest border border-ink/20 group-hover:border-paper/30 group-hover:text-paper px-3 py-1 rounded-full transition-colors">CDI</span>
+                                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest border border-ink/20 group-hover:border-paper/30 group-hover:text-paper px-3 py-1 rounded-full transition-colors">22-35K EUR/an</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 opacity-50 group-hover:opacity-100 group-hover:text-borange transform translate-x-[-10px] group-hover:translate-x-0 transition-all duration-500 font-bold uppercase text-sm tracking-widest mt-4 xl:mt-0">
+                            Voir l'offre <i class="ph ph-arrow-right text-xl"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Row 5 -->
+                <a href="#apply" class="group block hover:bg-ink transition-colors duration-500 ease-spring cursor-pointer">
+                    <div class="p-6 md:px-12 lg:px-24 py-8 flex flex-col xl:flex-row xl:items-center justify-between gap-6 reveal">
+                        <div class="flex-1 flex flex-col md:flex-row md:items-center gap-4 md:gap-12">
+                            <h3 class="font-display text-3xl md:text-4xl group-hover:text-paper transition-colors duration-500 w-full xl:w-2/5 text-ink/70">Stagiaire Front-end</h3>
+                            <div class="flex flex-wrap gap-2 md:gap-4 flex-1">
+                                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest bg-ink text-paper group-hover:bg-paper group-hover:text-ink px-3 py-1 rounded-full transition-colors">Douala</span>
+                                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest border border-ink/20 group-hover:border-paper/30 group-hover:text-paper px-3 py-1 rounded-full transition-colors">Stage 6 Mois</span>
+                                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest border border-ink/20 group-hover:border-paper/30 group-hover:text-paper px-3 py-1 rounded-full transition-colors text-borange group-hover:text-borange border-borange/50">Gratifié + Bonus</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 opacity-50 group-hover:opacity-100 group-hover:text-borange transform translate-x-[-10px] group-hover:translate-x-0 transition-all duration-500 font-bold uppercase text-sm tracking-widest mt-4 xl:mt-0">
+                            Voir l'offre <i class="ph ph-arrow-right text-xl"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- 4. LIFE AT OVERBRAND (Asymmetric Photo Grid) -->
+        <section class="bg-paper flex flex-col">
+            <div class="p-6 md:p-12 lg:px-24 py-16 text-center border-b border-ink/15 max-w-4xl mx-auto">
+                <i class="ph-fill ph-camera text-4xl mb-6 text-ink/20 mx-auto"></i>
+                <h2 class="font-display text-4xl md:text-6xl uppercase leading-none reveal">La Vie Chez <br><span class="text-outline">OverBrand</span></h2>
+            </div>
+            
+            <div class="photo-grid-layout">
+                <!-- Item 1: Large Span -->
+                <div class="col-span-1 md:col-span-2 row-span-2 relative group overflow-hidden h-[40vh] md:h-auto">
+                    <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1200&q=80" alt="Equipe en workshop stratégie" class="w-full h-full object-cover filter grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out">
+                    <div class="absolute bottom-0 left-0 w-full p-4 md:p-8 bg-gradient-to-t from-ink/90 to-transparent">
+                        <p class="text-paper text-sm font-bold uppercase tracking-widest">Workshop Stratégie / Lundi Matin</p>
+                    </div>
+                </div>
+                <!-- Item 2 -->
+                <div class="relative group overflow-hidden min-h-[300px]">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Bureau setup" class="w-full h-full object-cover filter grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out">
+                    <div class="absolute bottom-4 left-4 bg-paper/90 backdrop-blur px-3 py-1">
+                        <span class="text-xs font-bold uppercase text-ink">Setups Hybrides</span>
+                    </div>
+                </div>
+                <!-- Item 3 -->
+                <div class="relative group overflow-hidden min-h-[300px]">
+                    <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=800&q=80" alt="Machine a cafe" class="w-full h-full object-cover filter grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out">
+                    <div class="absolute top-4 right-4 bg-ink/90 px-3 py-1">
+                        <span class="text-xs font-bold uppercase text-paper tracking-widest">Carburant</span>
+                    </div>
+                </div>
+                <!-- Item 4: Wide -->
+                <div class="col-span-1 md:col-span-2 relative group overflow-hidden min-h-[300px]">
+                    <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1200&q=80" alt="Equipe photo de groupe" class="w-full h-full object-cover filter grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out object-top">
+                    <div class="absolute bottom-0 left-0 w-full p-4 md:p-8 bg-gradient-to-t from-ink/90 to-transparent">
+                        <p class="text-paper text-sm font-bold uppercase tracking-widest">Offsite Annuel 2024</p>
+                    </div>
+                </div>
+                <!-- Item 5 -->
+                <div class="relative group overflow-hidden min-h-[300px]">
+                    <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80" alt="Whiteboard architecture" class="w-full h-full object-cover filter grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out">
+                    <div class="absolute bottom-4 left-4 bg-paper/90 backdrop-blur px-3 py-1">
+                        <span class="text-xs font-bold uppercase text-ink">Architecture Système</span>
+                    </div>
+                </div>
+                <!-- Item 6: Window -->
+                <div class="col-span-1 md:col-span-2 relative group overflow-hidden min-h-[300px]">
+                    <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1200&q=80" alt="Vue du bureau" class="w-full h-full object-cover filter grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out">
+                     <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-ink/30 backdrop-blur-sm">
+                        <p class="text-paper text-xl font-display uppercase tracking-widest">Douala HQ</p>
+                    </div>
+                </div>
+                <!-- Item 7 -->
+                <div class="relative group overflow-hidden min-h-[300px]">
+                    <img src="https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?auto=format&fit=crop&w=800&q=80" alt="Apres work" class="w-full h-full object-cover filter grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out">
+                    <div class="absolute bottom-4 right-4 bg-borange/90 px-3 py-1">
+                        <span class="text-xs font-bold uppercase text-paper">Après-Work</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. HIRING PROCESS (Timeline Horizontal) -->
+        <section class="border-b border-ink/15 overflow-hidden">
+            <div class="p-6 md:p-12 lg:px-24 py-16 bg-ink text-paper">
+                <h2 class="font-display text-4xl md:text-6xl uppercase mb-4 reveal">Le Processus</h2>
+                <p class="text-paper/60 font-light max-w-xl reveal delay-100">Pas de détours. Nous vous donnons un feedback transparent, promettant une décision dans les 5 jours ouvrés suivant le test.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-ink/15">
+                <!-- Step 1 -->
+                <div class="p-8 lg:p-12 bg-paper group relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-[10rem] font-display text-ink/[0.03] leading-none select-none group-hover:scale-110 group-hover:text-borange/[0.05] transition-transform duration-500">1</div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 border border-ink/30 rounded-full flex items-center justify-center mb-6 font-display text-xl group-hover:bg-ink group-hover:text-paper transition-colors duration-300">01</div>
+                        <h4 class="text-xl font-bold mb-2 uppercase">Candidature</h4>
+                        <p class="text-sm font-light text-ink/70">Envoyez votre portfolio/GitHub. Oubliez la lettre de motivation corporate générique.</p>
+                    </div>
+                </div>
+                <!-- Step 2 -->
+                <div class="p-8 lg:p-12 bg-paper group relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-[10rem] font-display text-ink/[0.03] leading-none select-none group-hover:scale-110 group-hover:text-bblue/[0.05] transition-transform duration-500">2</div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 border border-ink/30 rounded-full flex items-center justify-center mb-6 font-display text-xl group-hover:bg-ink group-hover:text-paper transition-colors duration-300">02</div>
+                        <h4 class="text-xl font-bold mb-2 uppercase">Appel 30 min</h4>
+                        <p class="text-sm font-light text-ink/70">Un premier échange axé sur l'alignement culturel et vos attentes. Rapide et honnête.</p>
+                    </div>
+                </div>
+                <!-- Step 3 -->
+                <div class="p-8 lg:p-12 bg-paper group relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-[10rem] font-display text-ink/[0.03] leading-none select-none group-hover:scale-110 group-hover:text-borange/[0.05] transition-transform duration-500">3</div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 border border-ink/30 bg-ink text-paper rounded-full flex items-center justify-center mb-6 font-display text-xl group-hover:bg-borange group-hover:border-borange transition-colors duration-300">03</div>
+                        <h4 class="text-xl font-bold mb-2 uppercase text-borange">Test Technique</h4>
+                        <p class="text-sm font-light text-ink/70">Un cas pratique, asynchrone, représentatif du travail réel. <span class="font-bold underline">Ce test est rémunéré.</span></p>
+                    </div>
+                </div>
+                <!-- Step 4 -->
+                <div class="p-8 lg:p-12 bg-paper group relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-[10rem] font-display text-ink/[0.03] leading-none select-none group-hover:scale-110 group-hover:text-ink/[0.05] transition-transform duration-500">4</div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 border border-ink/30 rounded-full flex items-center justify-center mb-6 font-display text-xl group-hover:bg-ink group-hover:text-paper transition-colors duration-300">04</div>
+                        <h4 class="text-xl font-bold mb-2 uppercase">Entretien Équipe</h4>
+                        <p class="text-sm font-light text-ink/70">Rencontre avec vos futurs collaborateurs. On discute architecture, design et vision.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. WHAT WE VALUE (2 Columns Layout) -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 border-b border-ink/15">
+            <!-- DOs -->
+            <div class="p-8 md:p-16 lg:p-24 border-b lg:border-b-0 lg:border-r border-ink/15 bg-paper reveal">
+                <div class="w-16 h-16 rounded-full border border-ink/20 flex items-center justify-center mb-8">
+                    <i class="ph ph-check text-3xl text-ink"></i>
+                </div>
+                <h3 class="font-display text-5xl uppercase mb-12">On <span class="text-outline">Cherche</span></h3>
+                
+                <ul class="space-y-8">
+                    <li class="flex gap-4">
+                        <div class="w-1.5 h-1.5 bg-ink rounded-full mt-2.5 flex-shrink-0"></div>
+                        <div>
+                            <strong class="block text-xl uppercase tracking-wide mb-1">Curiosité Obsessionnelle</strong>
+                            <p class="text-ink/70 font-light leading-relaxed">Vous cherchez à comprendre comment les choses fonctionnent sous le capot, pas juste à utiliser le framework du moment.</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-4">
+                        <div class="w-1.5 h-1.5 bg-ink rounded-full mt-2.5 flex-shrink-0"></div>
+                        <div>
+                            <strong class="block text-xl uppercase tracking-wide mb-1">Sens du détail extrême</strong>
+                            <p class="text-ink/70 font-light leading-relaxed">Le pixel parfait, l'animation fluide, le code sec. L'art se cache dans les petites finitions.</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-4">
+                        <div class="w-1.5 h-1.5 bg-ink rounded-full mt-2.5 flex-shrink-0"></div>
+                        <div>
+                            <strong class="block text-xl uppercase tracking-wide mb-1">Écriture Claire</strong>
+                            <p class="text-ink/70 font-light leading-relaxed">Que ce soit pour une PR de 50 lignes ou un message Slack, vous structurez votre pensée avec limpidité.</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-4">
+                        <div class="w-1.5 h-1.5 bg-ink rounded-full mt-2.5 flex-shrink-0"></div>
+                        <div>
+                            <strong class="block text-xl uppercase tracking-wide mb-1">Autonomie Asynchrone</strong>
+                            <p class="text-ink/70 font-light leading-relaxed">Vous n'avez pas besoin d'être micro-managé. Vous identifiez les bloqueurs et avancez.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- DON'Ts -->
+            <div class="p-8 md:p-16 lg:p-24 bg-[#EBEBE6] reveal delay-200">
+                <div class="w-16 h-16 rounded-full border border-borange/30 text-borange flex items-center justify-center mb-8">
+                    <i class="ph ph-x text-3xl"></i>
+                </div>
+                <h3 class="font-display text-5xl uppercase mb-12 text-ink/40">On ne <span class="text-outline border-transparent text-ink" style="-webkit-text-stroke: 1.5px rgba(10,10,10,0.4)">cherche pas</span></h3>
+                
+                <ul class="space-y-8">
+                    <li class="flex gap-4 opacity-60">
+                        <div class="w-1.5 h-1.5 bg-borange rounded-full mt-2.5 flex-shrink-0"></div>
+                        <div>
+                            <strong class="block text-xl uppercase tracking-wide mb-1">Les "Experts en tout"</strong>
+                            <p class="text-ink/80 font-light leading-relaxed">L'humilité est reine. Personne ne maîtrise tout. Avouez quand vous ne savez pas, puis apprenez.</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-4 opacity-60">
+                        <div class="w-1.5 h-1.5 bg-borange rounded-full mt-2.5 flex-shrink-0"></div>
+                        <div>
+                            <strong class="block text-xl uppercase tracking-wide mb-1">Attardés du CV (10+ ans obligatoires)</strong>
+                            <p class="text-ink/80 font-light leading-relaxed">Nous valorisons la vélocité et l'impact de vos projets récents plus que la durée sur une chaise.</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-4 opacity-60">
+                        <div class="w-1.5 h-1.5 bg-borange rounded-full mt-2.5 flex-shrink-0"></div>
+                        <div>
+                            <strong class="block text-xl uppercase tracking-wide mb-1">Ceux qui attendent les instructions</strong>
+                            <p class="text-ink/80 font-light leading-relaxed">Si vous voyez un problème d'UX, proposez une solution. Ne codez pas aveuglément des specs cassées.</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-4 opacity-60">
+                        <div class="w-1.5 h-1.5 bg-borange rounded-full mt-2.5 flex-shrink-0"></div>
+                        <div>
+                            <strong class="block text-xl uppercase tracking-wide mb-1">Corporate Talk</strong>
+                            <p class="text-ink/80 font-light leading-relaxed">Ici, pas de "synergie", de "gérer les stakeholders", ou de politique. On construit des choses.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 7. BENEFITS GRID (3x3 Bento) -->
+        <section class="p-6 md:p-12 lg:p-24 border-b border-ink/15">
+            <h2 class="font-display text-5xl md:text-7xl mb-12 text-center uppercase reveal">L'Écosystème <span class="block text-outline">Interne</span></h2>
+            
+            <div class="hairline-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mx-auto max-w-6xl reveal delay-100">
+                <!-- 1 -->
+                <div class="p-8 hover:bg-ink hover:text-paper transition-all duration-300 group">
+                    <i class="ph ph-laptop text-4xl mb-6 text-ink/40 group-hover:text-borange"></i>
+                    <h4 class="font-bold uppercase tracking-wider mb-2">Ordinateur Mac Neuf</h4>
+                    <p class="text-sm font-light opacity-80">Matériel dernière génération dès le jour 1. Pas de compromis sur les outils.</p>
+                </div>
+                <!-- 2 -->
+                <div class="p-8 hover:bg-ink hover:text-paper transition-all duration-300 group">
+                    <i class="ph ph-heartbeat text-4xl mb-6 text-ink/40 group-hover:text-bblue"></i>
+                    <h4 class="font-bold uppercase tracking-wider mb-2">Mutuelle Premium</h4>
+                    <p class="text-sm font-light opacity-80">Couverture complète prise en charge à 100% par l'agence pour la tranquillité d'esprit.</p>
+                </div>
+                <!-- 3 -->
+                <div class="p-8 hover:bg-ink hover:text-paper transition-all duration-300 group">
+                    <i class="ph ph-airplane-tilt text-4xl mb-6 text-ink/40 group-hover:text-borange"></i>
+                    <h4 class="font-bold uppercase tracking-wider mb-2">25 Jours de Congés</h4>
+                    <p class="text-sm font-light opacity-80">Le repos n'est pas négociable. Prenez de vraies coupures pour revenir inspiré.</p>
+                </div>
+                <!-- 4 -->
+                <div class="p-8 hover:bg-ink hover:text-paper transition-all duration-300 group">
+                    <i class="ph ph-house-line text-4xl mb-6 text-ink/40 group-hover:text-bblue"></i>
+                    <h4 class="font-bold uppercase tracking-wider mb-2">Télétravail Flexible</h4>
+                    <p class="text-sm font-light opacity-80">Bureau à Douala ou canapé à la maison. L'important c'est l'output, pas la localisation.</p>
+                </div>
+                <!-- 5 -->
+                <div class="p-8 hover:bg-ink hover:text-paper transition-all duration-300 group bg-ink/5">
+                    <i class="ph ph-books text-4xl mb-6 text-ink text-outline group-hover:text-outline-paper"></i>
+                    <h4 class="font-bold uppercase tracking-wider mb-2">Budget Formation</h4>
+                    <p class="text-sm font-light opacity-80">Conférences internationales, Masterclasses, livres. Continuez d'évoluer. (2000€/an)</p>
+                </div>
+                <!-- 6 -->
+                <div class="p-8 hover:bg-ink hover:text-paper transition-all duration-300 group">
+                    <i class="ph ph-desk text-4xl mb-6 text-ink/40 group-hover:text-bblue"></i>
+                    <h4 class="font-bold uppercase tracking-wider mb-2">Équipement Bureau</h4>
+                    <p class="text-sm font-light opacity-80">Budget alloué pour écran 4K, chaise ergonomique, clavier mécanique.</p>
+                </div>
+                <!-- 7 -->
+                <div class="p-8 hover:bg-ink hover:text-paper transition-all duration-300 group">
+                    <i class="ph ph-users-three text-4xl mb-6 text-ink/40 group-hover:text-borange"></i>
+                    <h4 class="font-bold uppercase tracking-wider mb-2">Activités Team</h4>
+                    <p class="text-sm font-light opacity-80">Retraites bi-annuelles, hackathons internes, soirées sans écrans.</p>
+                </div>
+                <!-- 8 -->
+                <div class="p-8 hover:bg-ink hover:text-paper transition-all duration-300 group">
+                    <i class="ph ph-stack text-4xl mb-6 text-ink/40 group-hover:text-bblue"></i>
+                    <h4 class="font-bold uppercase tracking-wider mb-2">Abonnements Pro</h4>
+                    <p class="text-sm font-light opacity-80">Figma, GitHub Copilot, Raycast Pro, ChatGPT Plus. Vos supers pouvoirs numériques.</p>
+                </div>
+                <!-- 9 -->
+                <div class="p-8 hover:bg-ink hover:text-paper transition-all duration-300 group">
+                    <i class="ph ph-coffee text-4xl mb-6 text-ink/40 group-hover:text-borange"></i>
+                    <h4 class="font-bold uppercase tracking-wider mb-2">Café Illimité</h4>
+                    <p class="text-sm font-light opacity-80">Grain de spécialité torréfié localement. L'essence pure du code frontal.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. TEAM TESTIMONIALS (Brutalist Quotes) -->
+        <section class="border-b border-ink/15 overflow-hidden">
+             <div class="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-ink/15">
+                <!-- 1 -->
+                <div class="p-10 lg:p-16 flex flex-col justify-between reveal">
+                    <div>
+                        <i class="ph-fill ph-quotes text-3xl mb-8 text-ink/20"></i>
+                        <p class="text-xl md:text-2xl font-light italic leading-snug mb-12">"Je n'ai jamais vu une agence pousser autant le curseur sur la qualité du code. On ne livre pas pour valider un ticket, on livre pour créer des standards."</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=150&q=80" alt="Sarah J." class="w-12 h-12 rounded-full grayscale object-cover">
+                        <div>
+                            <strong class="block uppercase text-sm tracking-wider">Sarah M.</strong>
+                            <span class="text-xs text-ink/60 font-bold tracking-widest">Lead Frontend</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 2 -->
+                <div class="p-10 lg:p-16 flex flex-col justify-between bg-ink text-paper reveal delay-100">
+                    <div>
+                        <i class="ph-fill ph-quotes text-3xl mb-8 text-paper/20"></i>
+                        <p class="text-xl md:text-2xl font-light italic leading-snug mb-12">"L'autonomie qu'on nous donne est radicale. Si je trouve une nouvelle librairie d'animation qui sauve 3 jours, j'ai le feu vert pour l'intégrer le lendemain."</p>
+                    </div>
+                    <div class="flex items-center gap-4 border-t border-paper/10 pt-6">
+                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80" alt="David E." class="w-12 h-12 rounded-full grayscale object-cover">
+                        <div>
+                            <strong class="block uppercase text-sm tracking-wider text-borange">David E.</strong>
+                            <span class="text-xs text-paper/60 font-bold tracking-widest">Creative Developer</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 3 -->
+                <div class="p-10 lg:p-16 flex flex-col justify-between reveal delay-200">
+                    <div>
+                        <i class="ph-fill ph-quotes text-3xl mb-8 text-ink/20"></i>
+                        <p class="text-xl md:text-2xl font-light italic leading-snug mb-12">"On a détruit l'idée que le design systémique est ennuyeux. Chaque projet est un terrain de jeu où art et mathématiques se rencontrent."</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Yasmine K." class="w-12 h-12 rounded-full grayscale object-cover">
+                        <div>
+                            <strong class="block uppercase text-sm tracking-wider">Yasmine K.</strong>
+                            <span class="text-xs text-ink/60 font-bold tracking-widest">Brand Designer</span>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <!-- 9. SPONTANEOUS CTA -->
+        <section class="bg-ink text-paper py-32 px-6 text-center border-b-[8px] border-borange relative overflow-hidden flex flex-col items-center justify-center">
+            <!-- Background Decoration -->
+            <div class="absolute inset-0 z-0 pointer-events-none flex items-center justify-center opacity-5">
+                <i class="ph-fill ph-asterisk text-[40vw] animate-[spin_40s_linear_infinite]"></i>
+            </div>
+            
+            <div class="relative z-10 max-w-3xl reveal">
+                <h2 class="font-display text-5xl md:text-7xl lg:text-8xl mb-6 uppercase">Pas de poste <br><span class="text-outline-paper">qui correspond?</span></h2>
+                <p class="text-xl text-paper/70 font-light mb-12 max-w-xl mx-auto">Nous créons toujours de la place pour les talents absolus. Montrez-nous ce dont vous êtes capable.</p>
+                
+                <a href="#mail" class="button-press inline-flex items-center justify-center gap-4 bg-paper text-ink px-8 py-5 md:px-12 md:py-6 rounded-full font-bold uppercase tracking-widest text-sm hover:bg-borange hover:text-paper transition-all duration-300 shadow-[0_0_0_0_rgba(255,77,0,0)] hover:shadow-[0_0_40px_-10px_rgba(255,77,0,0.8)]">
+                    Postuler Spontanément <i class="ph-bold ph-paper-plane-tilt text-xl"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- 10. FOOTER -->
+        <footer class="bg-paper border-t border-ink/15 pt-20 pb-10 px-6 md:px-12 lg:px-24">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20 lg:mb-32">
+                <div class="col-span-1 lg:col-span-2">
+                    <a href="#" class="font-display text-4xl mb-6 block">OVER<span class="text-outline">BRAND</span></a>
+                    <p class="max-w-xs text-ink/60 text-sm font-light">Agence digitale hybride. Nous concevons et développons des infrastructures numériques pour ceux qui refusent le statut quo.</p>
+                </div>
+                
+                <div class="flex flex-col gap-4">
+                    <strong class="font-display uppercase text-xl mb-2">Réseaux</strong>
+                    <a href="#" class="text-sm font-bold uppercase tracking-wider hover:text-borange transition-colors flex items-center gap-2"><i class="ph-fill ph-arrow-up-right"></i> Twitter / X</a>
+                    <a href="#" class="text-sm font-bold uppercase tracking-wider hover:text-borange transition-colors flex items-center gap-2"><i class="ph-fill ph-arrow-up-right"></i> LinkedIn</a>
+                    <a href="#" class="text-sm font-bold uppercase tracking-wider hover:text-borange transition-colors flex items-center gap-2"><i class="ph-fill ph-arrow-up-right"></i> Dribbble</a>
+                    <a href="#" class="text-sm font-bold uppercase tracking-wider hover:text-borange transition-colors flex items-center gap-2"><i class="ph-fill ph-arrow-up-right"></i> GitHub</a>
+                </div>
+                
+                <div class="flex flex-col gap-4">
+                    <strong class="font-display uppercase text-xl mb-2">Contact</strong>
+                    <a href="mailto:hello@overbrand.co" class="text-sm font-bold uppercase tracking-wider hover:text-bblue transition-colors">hello@overbrand.co</a>
+                    <p class="text-sm text-ink/60 font-light mt-4">HQ: Douala, CM<br>Remote: Europe & Afrique</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-ink/15 text-xs font-bold uppercase tracking-widest text-ink/40">
+                <p>&copy; 2025 OverBrand. Tous droits réservés.</p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-ink transition-colors">Mentions Légales</a>
+                    <a href="#" class="hover:text-ink transition-colors">Confidentialité</a>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Interactive Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Intersection Observer for Fade-Up Reveals
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -10% 0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Optional: Stop observing once revealed
+                        // observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const revealElements = document.querySelectorAll('.reveal');
+            revealElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>

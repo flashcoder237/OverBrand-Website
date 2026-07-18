@@ -5,11 +5,16 @@ import { routing } from './i18n/routing'
 
 const intlMiddleware = createMiddleware(routing)
 
+// Built from `routing.locales` rather than hardcoded: a locale missing from this
+// pattern would slip past the auth checks below, since its paths would never
+// match `/dashboard` or `/admin` once the prefix failed to strip.
+const LOCALE_PREFIX = new RegExp(`^/(${routing.locales.join('|')})(?=/|$)`)
+
 export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Strip locale prefix to check the real path
-  const pathnameWithoutLocale = pathname.replace(/^\/(fr|en)/, '') || '/'
+  const pathnameWithoutLocale = pathname.replace(LOCALE_PREFIX, '') || '/'
 
   const isProtected =
     pathnameWithoutLocale.startsWith('/dashboard') ||
@@ -40,8 +45,8 @@ export default async function proxy(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser()
 
-    const localeMatch = pathname.match(/^\/(fr|en)/)
-    const locale = localeMatch ? localeMatch[1] : 'fr'
+    const localeMatch = pathname.match(LOCALE_PREFIX)
+    const locale = localeMatch ? localeMatch[1] : routing.defaultLocale
 
     if (isProtected && !user) {
       const url = request.nextUrl.clone()
@@ -71,6 +76,8 @@ export default async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next|_vercel|.*\..*).*)',
+    // `\\.` so the escape survives the string literal — `'\.'` collapses to a
+    // bare `.`, which made the static-asset exclusion match almost anything.
+    '/((?!api|_next|_vercel|.*\\..*).*)',
   ],
 }

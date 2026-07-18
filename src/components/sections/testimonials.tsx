@@ -1,116 +1,111 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { Quote } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
+// Aidesigner: horizontal snap-scroll row of 3 testimonial cards on paper bg.
+// Third card inverts to blue with a dark drop-shadow.
 export function TestimonialsSection() {
   const t = useTranslations('testimonials')
-  const items = t.raw('items') as { name: string; role: string; text: string }[]
+  const items = (t.raw('items') ?? []) as Array<{
+    name: string
+    role: string
+    text: string
+  }>
+
+  const portraits = [
+    'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200&auto=format&fit=crop',
+  ]
 
   return (
-    <section className="section" style={{ background: 'var(--bg)' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-20"
-        >
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
-            <span className="badge">{t('eyebrow')}</span>
-          </div>
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
-            <h2
-              className="font-display leading-none"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(3rem, 7vw, 6rem)',
-                color: 'var(--text)',
-              }}
+    <section
+      id="testimonials"
+      className="section px-6 lg:px-12 lg:pl-28 overflow-hidden"
+      style={{ background: 'var(--bg)' }}
+    >
+      <div className="max-w-screen-2xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 reveal">
+          <div>
+            <p
+              className="text-xs font-bold uppercase mb-3"
+              style={{ color: 'var(--accent-warm)', letterSpacing: '0.3em' }}
             >
-              {t('title_1')}{' '}
-              <span style={{ color: 'var(--primary)' }}>{t('title_2')}</span>
-            </h2>
-            <p className="text-sm max-w-xs lg:text-right" style={{ color: 'var(--text-muted)' }}>
-              {t('subtitle')}
+              {t('eyebrow')}
             </p>
-          </div>
-        </motion.div>
-
-        {/* Stacked editorial quotes */}
-        <div className="space-y-0">
-          {items.map((item, i) => (
-            <motion.div
-              key={item.name}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.55, delay: i * 0.1 }}
-              className="group relative py-10 lg:py-14"
-              style={{ borderTop: '1px solid var(--border)' }}
+            <h2
+              className="font-display uppercase tracking-tight leading-[0.9]"
+              style={{ fontSize: 'clamp(2.2rem, 5vw, 4rem)' }}
             >
-              <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr_auto] gap-6 lg:gap-16 items-start">
-
-                {/* Number */}
-                <span
-                  className="font-display leading-none select-none flex-shrink-0"
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    fontSize: 'clamp(3rem, 5vw, 4.5rem)',
-                    WebkitTextStroke: '1.5px var(--accent-warm)',
-                    color: 'transparent',
-                    lineHeight: 1,
-                  }}
-                >
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-
-                {/* Quote text */}
-                <div className="flex-1">
-                  <p
-                    className="italic leading-relaxed"
-                    style={{
-                      fontSize: 'clamp(1.05rem, 2vw, 1.45rem)',
-                      color: 'var(--text)',
-                      fontFamily: 'var(--font-sans)',
-                    }}
-                  >
-                    &ldquo;{item.text}&rdquo;
-                  </p>
-                </div>
-
-                {/* Author — right-aligned */}
-                <div className="lg:text-right flex-shrink-0 lg:pt-1">
-                  <div
-                    className="font-bold text-sm uppercase tracking-widest"
-                    style={{ color: 'var(--text)', letterSpacing: '0.1em' }}
-                  >
-                    {item.name}
-                  </div>
-                  <div className="text-xs mt-1" style={{ color: 'var(--text-subtle)' }}>
-                    {item.role}
-                  </div>
-                  {/* Accent line under author */}
-                  <motion.div
-                    className="h-[1.5px] mt-3 lg:ml-auto"
-                    style={{ background: 'var(--primary)', width: 0 }}
-                    whileInView={{ width: '100%' }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: i * 0.1 + 0.4 }}
-                  />
-                </div>
-              </div>
-            </motion.div>
-          ))}
-
-          {/* Bottom border */}
-          <div style={{ borderTop: '1px solid var(--border)' }} />
+              {t('title_1')} <span style={{ color: 'var(--primary)' }}>{t('title_2')}.</span>
+            </h2>
+          </div>
+          <p
+            className="mt-4 md:mt-0 md:max-w-sm text-sm"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            {t('subtitle')}
+          </p>
         </div>
 
+        <div
+          className="flex gap-6 lg:gap-8 overflow-x-auto snap-x snap-mandatory pb-10 scrollbar-none"
+          style={{ scrollbarWidth: 'none' }}
+        >
+          {items.map((item, i) => {
+            const isAccent = i === 2
+            return (
+              <div
+                key={i}
+                className="reveal snap-center shrink-0 w-[85vw] md:w-[50vw] lg:w-[420px] p-8 md:p-10 relative flex flex-col justify-between"
+                style={{
+                  background: isAccent ? 'var(--primary)' : 'var(--card-bg)',
+                  border: '1px solid var(--line)',
+                  boxShadow: isAccent ? '10px 10px 0 var(--ink)' : undefined,
+                  color: isAccent ? 'var(--paper)' : 'var(--text)',
+                }}
+              >
+                <Quote
+                  size={44}
+                  fill="currentColor"
+                  className="absolute top-6 right-6 opacity-20"
+                  style={{ color: isAccent ? 'var(--paper)' : 'var(--accent-warm)' }}
+                />
+                <p
+                  className="italic text-lg leading-relaxed mb-10"
+                  style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic' }}
+                >
+                  "{item.text}"
+                </p>
+                <div className="flex items-center gap-4">
+                  <div
+                    className="w-12 h-12 rounded-full overflow-hidden shrink-0"
+                    style={{
+                      backgroundImage: `url('${portraits[i % portraits.length]}')`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                  />
+                  <div>
+                    <h5
+                      className="font-display text-lg uppercase leading-none"
+                      style={{ color: isAccent ? 'var(--accent-warm)' : 'var(--text)' }}
+                    >
+                      {item.name}
+                    </h5>
+                    <span
+                      className="text-xs"
+                      style={{ color: isAccent ? 'rgba(244,244,240,0.65)' : 'var(--text-subtle)' }}
+                    >
+                      {item.role}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </section>
   )

@@ -6,7 +6,14 @@ import { Footer } from '@/components/layout/footer'
 import { ArrowLeft, ArrowUpRight, Tag, Calendar, User, Play } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { routing } from '@/i18n/routing'
+import { getTranslations } from 'next-intl/server'
 import { ProjectGallery } from './project-gallery'
+import { CaseStudyView } from './case-study'
+import { CASE_SLUGS, getCaseStudy } from '@/lib/projects-data'
+// Aliased: this file already declares a local `breadcrumbSchema` for the
+// Supabase-backed branch further down.
+import { breadcrumbSchema as buildBreadcrumbs } from '@/lib/seo'
 import { gqlClient } from '@/lib/graphql/client'
 import {
   GET_PROJECT_BY_ID,
@@ -61,6 +68,13 @@ async function fetchProject(id: string): Promise<ShowcaseProject | null> {
 // ── generateStaticParams ──────────────────────────────────────────────────────
 
 export async function generateStaticParams() {
+  const locales = routing.locales
+  // The curated case studies are always pre-rendered; Supabase-managed
+  // showcase projects are appended when the build can reach them.
+  const staticParams = CASE_SLUGS.flatMap((slug) =>
+    locales.map((locale) => ({ locale, id: slug })),
+  )
+
   try {
     // Direct Supabase client — no cookies/request context needed at build time
     const { createClient: createSupabase } = await import('@supabase/supabase-js')
@@ -73,12 +87,12 @@ export async function generateStaticParams() {
       .select('id')
       .eq('visible', true)
 
-    const locales = ['fr', 'en']
-    return (data ?? []).flatMap(p =>
-      locales.map(locale => ({ locale, id: p.id }))
-    )
+    return [
+      ...staticParams,
+      ...(data ?? []).flatMap(p => locales.map(locale => ({ locale, id: p.id }))),
+    ]
   } catch {
-    return []
+    return staticParams
   }
 }
 
@@ -90,17 +104,47 @@ export async function generateMetadata({
   params: Promise<{ locale: string; id: string }>
 }): Promise<Metadata> {
   const { locale, id } = await params
+
+  const t = await getTranslations({ locale, namespace: 'projectDetail' })
+
+  const study = getCaseStudy(id, locale)
+  if (study) {
+    const title = `${study.title} — ${t('case_title_suffix')}`
+    const description = study.mandate
+    const ogImage = `${SITE_URL}${study.cover}`
+    return {
+      title,
+      description,
+      alternates: {
+        canonical: `${SITE_URL}/${locale}/projets/${id}`,
+        languages: Object.fromEntries(
+          routing.locales.map((l) => [l, `${SITE_URL}/${l}/projets/${id}`]),
+        ),
+      },
+      openGraph: {
+        title,
+        description,
+        type: 'article',
+        url: `${SITE_URL}/${locale}/projets/${id}`,
+        siteName: 'OverBrand',
+        images: [{ url: ogImage, width: 1200, height: 630, alt: study.title }],
+      },
+      twitter: { card: 'summary_large_image', title, description, images: [ogImage] },
+    }
+  }
+
   const project = await fetchProject(id)
 
   if (!project) {
     return {
-      title: 'Projet introuvable',
+      title: t('not_found'),
       robots: { index: false, follow: false },
     }
   }
 
   const title = `${project.title} — OverBrand`
-  const description = project.description ?? `Projet ${project.category} réalisé par OverBrand.`
+  const description =
+    project.description ?? t('generic_description', { category: project.category ?? '' })
   const ogImage = project.image_url
     ? project.image_url
     : `${SITE_URL}/api/og?title=${encodeURIComponent(project.title)}&description=${encodeURIComponent(description)}`
@@ -110,10 +154,9 @@ export async function generateMetadata({
     description,
     alternates: {
       canonical: `${SITE_URL}/${locale}/projets/${id}`,
-      languages: {
-        fr: `${SITE_URL}/fr/projets/${id}`,
-        en: `${SITE_URL}/en/projets/${id}`,
-      },
+      languages: Object.fromEntries(
+        routing.locales.map((l) => [l, `${SITE_URL}/${l}/projets/${id}`]),
+      ),
     },
     openGraph: {
       title,
@@ -140,6 +183,42 @@ export default async function ProjetDetailPage({
   params: Promise<{ locale: string; id: string }>
 }) {
   const { locale, id } = await params
+  const t = await getTranslations({ locale, namespace: 'projectDetail' })
+
+  // Curated case studies render the full editorial template; anything else
+  // falls through to the Supabase-managed showcase layout below.
+  const study = getCaseStudy(id, locale)
+  if (study) {
+    const caseSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'CreativeWork',
+      name: study.title,
+      description: study.mandate,
+      creator: { '@id': `${SITE_URL}/#organization` },
+      author: { '@type': 'Organization', name: study.client },
+      dateCreated: study.year,
+      image: `${SITE_URL}${study.cover}`,
+      keywords: study.services.join(', '),
+      url: `${SITE_URL}/${locale}/projets/${id}`,
+      genre: study.category,
+    }
+    const crumbs = buildBreadcrumbs(locale, [
+      { name: t('breadcrumb_home'), path: '' },
+      { name: t('breadcrumb_projects'), path: '/projets' },
+      { name: study.title, path: `/projets/${study.slug}` },
+    ])
+
+    return (
+      <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(caseSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(crumbs) }} />
+        <Navbar />
+        <CaseStudyView study={study} locale={locale} />
+        <Footer />
+      </>
+    )
+  }
+
   const project = await fetchProject(id)
   if (!project) notFound()
 
@@ -162,7 +241,7 @@ export default async function ProjetDetailPage({
       {
         '@type': 'ListItem',
         position: 2,
-        name: locale === 'fr' ? 'Projets' : 'Projects',
+        name: t('breadcrumb_projects'),
         item: `${SITE_URL}/${locale}#projects`,
       },
       {
@@ -243,7 +322,7 @@ export default async function ProjetDetailPage({
               className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest mb-10 transition-opacity hover:opacity-60"
               style={{ color: allImages[0] ? 'rgba(255,255,255,0.7)' : 'var(--text-muted)' }}
             >
-              <ArrowLeft size={14} /> {locale === 'fr' ? 'Retour aux projets' : 'Back to projects'}
+              <ArrowLeft size={14} /> {t('back_to_projects')}
             </Link>
 
             <div className="flex items-center gap-3 mb-4">
@@ -301,7 +380,7 @@ export default async function ProjetDetailPage({
                 <div className="flex items-center gap-2">
                   <Calendar size={14} style={{ color: 'var(--primary)' }} />
                   <div>
-                    <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-subtle)', fontSize: '0.6rem' }}>{locale === 'fr' ? 'Année' : 'Year'}</div>
+                    <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-subtle)', fontSize: '0.6rem' }}>{t('label_year')}</div>
                     <div className="text-sm font-semibold" style={{ color: 'var(--text)' }}>{project.year}</div>
                   </div>
                 </div>
@@ -340,7 +419,7 @@ export default async function ProjetDetailPage({
                   className="ml-auto flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-5 py-2.5 transition-all hover:opacity-80"
                   style={{ background: 'var(--primary)', color: 'white', clipPath: 'polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)' }}
                 >
-                  {locale === 'fr' ? 'Voir le projet' : 'View project'} <ArrowUpRight size={14} />
+                  {t('view_project')} <ArrowUpRight size={14} />
                 </a>
               )}
             </div>
@@ -358,7 +437,7 @@ export default async function ProjetDetailPage({
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-1 h-5" style={{ background: 'var(--primary)' }} />
                     <span className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: 'var(--text-subtle)' }}>
-                      {locale === 'fr' ? 'À propos du projet' : 'About the project'}
+                      {t('about_project')}
                     </span>
                   </div>
                   <div
@@ -383,16 +462,14 @@ export default async function ProjetDetailPage({
                     className="font-display text-3xl mb-2"
                     style={{ fontFamily: 'var(--font-display)', color: 'var(--text)' }}
                   >
-                    {locale === 'fr' ? 'UN PROJET SIMILAIRE ?' : 'SIMILAR PROJECT?'}
+                    {t('similar_project')}
                   </h3>
                   <p className="text-xs mb-6" style={{ color: 'var(--text-muted)' }}>
-                    {locale === 'fr'
-                      ? 'Discutons de votre projet et voyons comment nous pouvons vous aider.'
-                      : 'Let\'s discuss your project and see how we can help you.'}
+                    {t('similar_body')}
                   </p>
                   <Link href={`/${locale}#contact`}>
                     <button className="btn-primary text-xs px-6 py-3 w-full flex items-center justify-center gap-2">
-                      {locale === 'fr' ? 'Demander un devis' : 'Request a quote'} <ArrowUpRight size={14} />
+                      {t('request_quote')} <ArrowUpRight size={14} />
                     </button>
                   </Link>
                 </div>
@@ -411,7 +488,7 @@ export default async function ProjetDetailPage({
                   <div className="w-1 h-5" style={{ background: 'var(--primary)' }} />
                   <span className="text-xs font-bold uppercase tracking-[0.18em] flex items-center gap-2" style={{ color: 'var(--text-subtle)' }}>
                     <Play size={11} fill="currentColor" />
-                    {locale === 'fr' ? 'Vidéo' : 'Video'}
+                    {t('video')}
                   </span>
                 </div>
                 <div
@@ -448,7 +525,7 @@ export default async function ProjetDetailPage({
                     >
                       <Play size={40} style={{ color: 'var(--primary)' }} />
                       <span className="text-xs font-bold uppercase tracking-widest">
-                        {locale === 'fr' ? 'Voir la vidéo' : 'Watch the video'}
+                        {t('watch_video')}
                       </span>
                     </a>
                   )}
@@ -465,7 +542,7 @@ export default async function ProjetDetailPage({
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-1 h-5" style={{ background: 'var(--primary)' }} />
                 <span className="text-xs font-bold uppercase tracking-[0.18em]" style={{ color: 'var(--text-subtle)' }}>
-                  {allImages.length > 1 ? (locale === 'fr' ? 'Galerie' : 'Gallery') : (locale === 'fr' ? 'Visuel' : 'Visual')}
+                  {allImages.length > 1 ? t('gallery') : t('visual')}
                 </span>
               </div>
               <ProjectGallery images={allImages} title={project.title} position={project.image_position ?? 'center'} />

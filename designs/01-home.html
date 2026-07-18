@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth bg-[#F4F4F0] text-[#0A0A0A]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OverBrand — Agence Digitale Créative</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                colors: { ob: { blue: '#2855A0', orange: '#FF4D00', paper: '#F4F4F0', dark: '#0A0A0A', gray: '#8C8C8C' } },
+                fontFamily: { display: ['Anton', 'sans-serif'], body: ['Outfit', 'sans-serif'] },
+                transitionTimingFunction: { 'expo': 'cubic-bezier(0.19, 1, 0.22, 1)' }
+            } }
+        }
+    </script>
+    <style>
+        ::selection { background-color: #FF4D00; color: #F4F4F0; }
+        body { position: relative; }
+        body::before { content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); opacity: 0.035; pointer-events: none; z-index: 9999; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #F4F4F0; }
+        ::-webkit-scrollbar-thumb { background: #0A0A0A; border-radius: 0px; }
+        .text-outline { -webkit-text-stroke: 1.5px #0A0A0A; color: transparent; }
+        .text-outline-light { -webkit-text-stroke: 1.5px #F4F4F0; color: transparent; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .animate-marquee { display: inline-block; white-space: nowrap; animation: marquee 20s linear infinite; }
+        .reveal-mask { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%); transition: clip-path 1.2s cubic-bezier(0.19, 1, 0.22, 1); }
+        .reveal-mask.is-visible { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+        .fade-up { opacity: 0; transform: translateY(40px); transition: opacity 1s cubic-bezier(0.19, 1, 0.22, 1), transform 1s cubic-bezier(0.19, 1, 0.22, 1); }
+        .fade-up.is-visible { opacity: 1; transform: translateY(0); }
+        .hairline-b { border-bottom: 1px solid rgba(10, 10, 10, 0.15); } .hairline-t { border-top: 1px solid rgba(10, 10, 10, 0.15); }
+        .hairline-r { border-right: 1px solid rgba(10, 10, 10, 0.15); } .hairline-l { border-left: 1px solid rgba(10, 10, 10, 0.15); }
+        .hairline-light-b { border-bottom: 1px solid rgba(244, 244, 240, 0.15); } .hairline-light-t { border-top: 1px solid rgba(244, 244, 240, 0.15); }
+        .hairline-light-r { border-right: 1px solid rgba(244, 244, 240, 0.15); }
+        .img-container { overflow: hidden; } .img-container img { transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1); } .img-container:hover img { transform: scale(1.05); }
+    </style>
+</head>
+<body class="font-body antialiased">
+<div class="relative w-full flex flex-col lg:flex-row">
+    <aside class="hidden lg:flex fixed top-0 left-0 w-16 h-screen flex-col items-center justify-between py-10 hairline-r z-50 bg-ob-paper">
+        <div class="font-display text-xl leading-none -rotate-90 origin-center text-ob-dark">EST. 2019</div>
+        <div class="flex-1 flex items-center justify-center"><p class="font-body text-xs tracking-widest text-ob-gray uppercase -rotate-90 whitespace-nowrap">Douala/Yaoundé — Cameroun</p></div>
+        <div class="w-2 h-2 rounded-full bg-ob-orange animate-pulse"></div>
+    </aside>
+    <main class="flex-1 lg:ml-16 w-full max-w-[100vw] overflow-x-hidden">
+        <header class="w-full relative z-40 px-6 lg:px-12 py-6 flex justify-between items-center hairline-b">
+            <a href="#" class="font-display text-3xl uppercase tracking-tight">OverBrand<span class="text-ob-orange">.</span></a>
+            <nav class="hidden md:flex gap-8 font-body text-sm font-medium uppercase tracking-widest text-ob-dark/80">
+                <a href="#expertises" class="hover:text-ob-orange transition-colors">Expertises</a>
+                <a href="#projets" class="hover:text-ob-orange transition-colors">Projets</a>
+                <a href="#processus" class="hover:text-ob-orange transition-colors">Processus</a>
+            </nav>
+            <a href="#contact" class="hidden md:inline-flex items-center gap-2 bg-ob-dark text-ob-paper px-6 py-3 font-body text-sm uppercase tracking-wider hover:bg-ob-orange transition-colors duration-300">Contact <i class="ph ph-arrow-right"></i></a>
+        </header>
+
+        <section class="relative min-h-[calc(100dvh-85px)] w-full flex flex-col justify-end pb-12 lg:pb-20 px-6 lg:px-12 pt-12 overflow-hidden">
+            <div class="absolute top-0 right-0 w-full md:w-3/4 h-[70vh] -z-10 mix-blend-multiply opacity-80 pointer-events-none">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" alt="" class="w-full h-full object-cover object-right grayscale contrast-125 opacity-20">
+                <div class="absolute inset-0 bg-gradient-to-t from-ob-paper via-transparent to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-ob-paper via-transparent to-transparent"></div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end relative z-10 w-full max-w-screen-2xl mx-auto">
+                <div class="lg:col-span-8 flex flex-col">
+                    <p class="font-body text-sm lg:text-base font-semibold tracking-[0.2em] uppercase text-ob-orange mb-6 flex items-center gap-4 fade-up"><span class="w-12 h-[1px] bg-ob-orange"></span>AGENCE DIGITALE CRÉATIVE</p>
+                    <h1 class="font-display uppercase text-[16vw] lg:text-[10vw] leading-[0.85] tracking-tight text-ob-dark m-0 p-0 flex flex-col">
+                        <span class="overflow-hidden block"><span class="block reveal-mask bg-ob-dark text-ob-paper px-4 pb-2 w-max mb-1">VOTRE</span></span>
+                        <span class="overflow-hidden block"><span class="block reveal-mask text-ob-blue">VISION</span></span>
+                        <span class="overflow-hidden block"><span class="block reveal-mask text-outline">RÉALISÉE.</span></span>
+                    </h1>
+                </div>
+                <div class="lg:col-span-4 flex flex-col gap-8 lg:pl-12 hairline-l border-ob-dark/10 h-full justify-end py-6 fade-up" style="transition-delay: 400ms;">
+                    <p class="font-body text-lg lg:text-xl text-ob-dark/80 font-light leading-relaxed">Sites web, branding, applications, SEO — OverBrand transforme votre présence digitale en avantage concurrentiel durable.</p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#contact" class="inline-flex justify-center items-center gap-2 bg-ob-blue text-white px-8 py-4 font-body text-sm font-semibold uppercase tracking-wider hover:bg-ob-orange transition-colors duration-300">Démarrer un projet</a>
+                        <a href="#projets" class="inline-flex justify-center items-center gap-2 bg-transparent border border-ob-dark text-ob-dark px-8 py-4 font-body text-sm font-semibold uppercase tracking-wider hover:bg-ob-dark hover:text-white transition-colors duration-300">Voir nos projets</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="relative bg-ob-blue text-white overflow-hidden border-y-[12px] border-ob-dark">
+            <div class="py-4 hairline-light-b whitespace-nowrap overflow-hidden flex items-center bg-ob-dark text-white">
+                <div class="animate-marquee font-display text-4xl lg:text-6xl uppercase tracking-wider text-outline-light opacity-50">OVERBRAND — AGENCE DIGITALE CRÉATIVE — DOUALA & YAOUNDÉ — EXPERTISE PRÉMIUM — OVERBRAND — AGENCE DIGITALE CRÉATIVE — DOUALA & YAOUNDÉ — EXPERTISE PRÉMIUM —</div>
+            </div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 w-full divide-x divide-y lg:divide-y-0 divide-white/20">
+                <div class="p-10 lg:p-16 flex flex-col justify-center items-center text-center fade-up"><span class="font-display text-6xl lg:text-8xl text-ob-orange tracking-tighter">50+</span><span class="font-body text-xs lg:text-sm uppercase tracking-widest mt-2 text-white/70">Projets livrés</span></div>
+                <div class="p-10 lg:p-16 flex flex-col justify-center items-center text-center fade-up"><span class="font-display text-6xl lg:text-8xl text-ob-paper tracking-tighter">40+</span><span class="font-body text-xs lg:text-sm uppercase tracking-widest mt-2 text-white/70">Clients satisfaits</span></div>
+                <div class="p-10 lg:p-16 flex flex-col justify-center items-center text-center fade-up"><span class="font-display text-6xl lg:text-8xl text-outline-light tracking-tighter">5+</span><span class="font-body text-xs lg:text-sm uppercase tracking-widest mt-2 text-white/70">Années d'Expérience</span></div>
+                <div class="p-10 lg:p-16 flex flex-col justify-center items-center text-center fade-up"><span class="font-display text-6xl lg:text-8xl text-ob-paper tracking-tighter">7</span><span class="font-body text-xs lg:text-sm uppercase tracking-widest mt-2 text-white/70">Domaines d'Expertise</span></div>
+            </div>
+        </section>
+
+        <section id="expertises" class="py-24 lg:py-32 px-6 lg:px-12 max-w-screen-2xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16">
+                <div class="lg:col-span-4"><h2 class="font-display text-5xl lg:text-7xl uppercase tracking-tight text-ob-dark leading-[0.9] fade-up">Nos <br> <span class="text-ob-blue">Expertises.</span></h2></div>
+                <div class="lg:col-span-6 lg:col-start-6 lg:border-l border-ob-dark/10 lg:pl-12 flex items-center fade-up"><p class="font-body text-lg text-ob-dark/70 font-light">De la conception visuelle complexe à l'ingénierie backend robuste. Nous ne faisons pas que construire des sites, nous sculptons des écosystèmes digitaux complets.</p></div>
+            </div>
+            <div class="hairline-t divide-y divide-ob-dark/15">
+                <div class="group py-8 lg:py-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 cursor-pointer hover:bg-ob-dark hover:px-8 transition-all duration-500 fade-up"><div class="flex items-center gap-8 w-full md:w-1/2"><span class="font-display text-3xl text-ob-orange opacity-60">01</span><h3 class="font-display text-4xl lg:text-5xl uppercase tracking-wide group-hover:text-ob-paper transition-colors duration-300">Création de Sites Web</h3></div><p class="font-body text-base lg:text-lg text-ob-dark/60 group-hover:text-ob-paper/70 transition-colors duration-300 w-full md:w-1/3">Vitrines, e-commerce, portfolios</p><div class="text-ob-dark group-hover:text-ob-orange transition-colors duration-300 text-3xl"><i class="ph-light ph-arrow-up-right group-hover:rotate-45 transition-transform duration-300"></i></div></div>
+                <div class="group py-8 lg:py-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 cursor-pointer hover:bg-ob-dark hover:px-8 transition-all duration-500 fade-up"><div class="flex items-center gap-8 w-full md:w-1/2"><span class="font-display text-3xl text-ob-orange opacity-60">02</span><h3 class="font-display text-4xl lg:text-5xl uppercase tracking-wide group-hover:text-ob-paper transition-colors duration-300">Logiciels & Applications</h3></div><p class="font-body text-base lg:text-lg text-ob-dark/60 group-hover:text-ob-paper/70 transition-colors duration-300 w-full md:w-1/3">Web et mobiles sur mesure</p><div class="text-ob-dark group-hover:text-ob-orange transition-colors duration-300 text-3xl"><i class="ph-light ph-arrow-up-right group-hover:rotate-45 transition-transform duration-300"></i></div></div>
+                <div class="group py-8 lg:py-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 cursor-pointer hover:bg-ob-dark hover:px-8 transition-all duration-500 fade-up"><div class="flex items-center gap-8 w-full md:w-1/2"><span class="font-display text-3xl text-ob-orange opacity-60">03</span><h3 class="font-display text-4xl lg:text-5xl uppercase tracking-wide group-hover:text-ob-paper transition-colors duration-300">Hébergement & Gestion</h3></div><p class="font-body text-base lg:text-lg text-ob-dark/60 group-hover:text-ob-paper/70 transition-colors duration-300 w-full md:w-1/3">Sécurisé, maintenance continue</p><div class="text-ob-dark group-hover:text-ob-orange transition-colors duration-300 text-3xl"><i class="ph-light ph-arrow-up-right group-hover:rotate-45 transition-transform duration-300"></i></div></div>
+                <div class="group py-8 lg:py-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 cursor-pointer hover:bg-ob-dark hover:px-8 transition-all duration-500 fade-up"><div class="flex items-center gap-8 w-full md:w-1/2"><span class="font-display text-3xl text-ob-orange opacity-60">04</span><h3 class="font-display text-4xl lg:text-5xl uppercase tracking-wide group-hover:text-ob-paper transition-colors duration-300">Publicité en Ligne</h3></div><p class="font-body text-base lg:text-lg text-ob-dark/60 group-hover:text-ob-paper/70 transition-colors duration-300 w-full md:w-1/3">Google Ads, Meta Ads</p><div class="text-ob-dark group-hover:text-ob-orange transition-colors duration-300 text-3xl"><i class="ph-light ph-arrow-up-right group-hover:rotate-45 transition-transform duration-300"></i></div></div>
+                <div class="group py-8 lg:py-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 cursor-pointer hover:bg-ob-dark hover:px-8 transition-all duration-500 fade-up"><div class="flex items-center gap-8 w-full md:w-1/2"><span class="font-display text-3xl text-ob-orange opacity-60">05</span><h3 class="font-display text-4xl lg:text-5xl uppercase tracking-wide group-hover:text-ob-paper transition-colors duration-300">Visibilité Google (SEO)</h3></div><p class="font-body text-base lg:text-lg text-ob-dark/60 group-hover:text-ob-paper/70 transition-colors duration-300 w-full md:w-1/3">Stratégie SEO complète</p><div class="text-ob-dark group-hover:text-ob-orange transition-colors duration-300 text-3xl"><i class="ph-light ph-arrow-up-right group-hover:rotate-45 transition-transform duration-300"></i></div></div>
+                <div class="group py-8 lg:py-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 cursor-pointer hover:bg-ob-dark hover:px-8 transition-all duration-500 fade-up"><div class="flex items-center gap-8 w-full md:w-1/2"><span class="font-display text-3xl text-ob-orange opacity-60">06</span><h3 class="font-display text-4xl lg:text-5xl uppercase tracking-wide group-hover:text-ob-paper transition-colors duration-300">Logo & Identité</h3></div><p class="font-body text-base lg:text-lg text-ob-dark/60 group-hover:text-ob-paper/70 transition-colors duration-300 w-full md:w-1/3">Identités visuelles mémorables</p><div class="text-ob-dark group-hover:text-ob-orange transition-colors duration-300 text-3xl"><i class="ph-light ph-arrow-up-right group-hover:rotate-45 transition-transform duration-300"></i></div></div>
+                <div class="group py-8 lg:py-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 cursor-pointer hover:bg-ob-dark hover:px-8 transition-all duration-500 hairline-b fade-up"><div class="flex items-center gap-8 w-full md:w-1/2"><span class="font-display text-3xl text-ob-orange opacity-60">07</span><h3 class="font-display text-4xl lg:text-5xl uppercase tracking-wide group-hover:text-ob-paper transition-colors duration-300">Création de Contenus</h3></div><p class="font-body text-base lg:text-lg text-ob-dark/60 group-hover:text-ob-paper/70 transition-colors duration-300 w-full md:w-1/3">Motion, graphisme, visuels</p><div class="text-ob-dark group-hover:text-ob-orange transition-colors duration-300 text-3xl"><i class="ph-light ph-arrow-up-right group-hover:rotate-45 transition-transform duration-300"></i></div></div>
+            </div>
+        </section>
+
+        <section id="projets" class="py-24 lg:py-32 px-6 lg:px-12 bg-white">
+            <div class="max-w-screen-2xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-16 fade-up">
+                    <h2 class="font-display text-5xl lg:text-8xl uppercase tracking-tight text-ob-dark leading-[0.9]">Projets <br> <span class="text-outline">Récents.</span></h2>
+                    <a href="#" class="mt-6 md:mt-0 font-body text-sm uppercase tracking-widest text-ob-blue font-semibold border-b border-ob-blue pb-1 hover:text-ob-orange hover:border-ob-orange transition-all">Voir tous les projets</a>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10">
+                    <div class="md:col-span-7 flex flex-col gap-4 fade-up">
+                        <div class="img-container w-full h-[50vh] md:h-[70vh] bg-ob-paper overflow-hidden relative group"><img src="https://images.unsplash.com/photo-1600132806608-231446b2e7af?q=80&w=2400&auto=format&fit=crop" alt="" class="w-full h-full object-cover"><div class="absolute inset-0 bg-ob-blue/20 mix-blend-multiply opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div></div>
+                        <div class="grid grid-cols-2 hairline-t pt-4 border-ob-dark/20"><div><h4 class="font-display text-2xl uppercase">TechStart App</h4><p class="font-body text-sm text-ob-gray">UI/UX, Développement Mobile</p></div><div class="text-right flex items-start justify-end"><span class="bg-ob-dark text-ob-paper px-3 py-1 font-body text-xs uppercase rounded-full">2023</span></div></div>
+                    </div>
+                    <div class="md:col-span-5 flex flex-col gap-16 md:mt-24">
+                        <div class="flex flex-col gap-4 fade-up"><div class="img-container w-full h-[40vh] bg-ob-paper overflow-hidden relative group"><img src="https://images.unsplash.com/photo-1620288627223-53302f4e8c74?q=80&w=1600&auto=format&fit=crop" alt="" class="w-full h-full object-cover"></div><div class="grid grid-cols-2 hairline-t pt-4 border-ob-dark/20"><div><h4 class="font-display text-2xl uppercase">BioShop Web</h4><p class="font-body text-sm text-ob-gray">E-commerce, SEO, Branding</p></div><div class="text-right flex items-start justify-end"><span class="bg-ob-dark text-ob-paper px-3 py-1 font-body text-xs uppercase rounded-full">2023</span></div></div></div>
+                        <div class="flex flex-col gap-4 fade-up"><div class="img-container w-full h-[40vh] bg-ob-paper overflow-hidden relative group"><img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=1600&auto=format&fit=crop" alt="" class="w-full h-full object-cover grayscale"><div class="absolute inset-0 bg-ob-orange/20 mix-blend-multiply"></div></div><div class="grid grid-cols-2 hairline-t pt-4 border-ob-dark/20"><div><h4 class="font-display text-2xl uppercase">InnoGroup Portal</h4><p class="font-body text-sm text-ob-gray">Développement Web, Sécurité</p></div><div class="text-right flex items-start justify-end"><span class="bg-ob-dark text-ob-paper px-3 py-1 font-body text-xs uppercase rounded-full">2024</span></div></div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="processus" class="py-24 lg:py-32 px-6 lg:px-12 bg-ob-dark text-white relative">
+            <div class="absolute inset-0 pointer-events-none opacity-20" style="background-image: linear-gradient(rgba(244,244,240,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(244,244,240,0.05) 1px, transparent 1px); background-size: 50px 50px;"></div>
+            <div class="max-w-screen-2xl mx-auto relative z-10">
+                <div class="mb-20 text-center flex flex-col items-center fade-up"><span class="font-body text-sm tracking-[0.3em] uppercase text-ob-orange mb-4">Méthodologie</span><h2 class="font-display text-5xl lg:text-7xl uppercase tracking-tight leading-[0.9]">Notre <span class="text-outline-light">Processus</span>.</h2></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border border-white/20">
+                    <div class="p-8 lg:p-12 hairline-light-b lg:hairline-light-r bg-[#111] hover:bg-ob-blue transition-colors duration-500 group fade-up"><span class="font-display text-5xl text-ob-orange/40 group-hover:text-ob-orange mb-6 block transition-colors">01.</span><h4 class="font-display text-2xl uppercase mb-3">Consultation<br>Gratuite</h4><p class="font-body text-sm text-white/60 group-hover:text-white/90">Analyse de vos besoins, audit initial de votre présence et définition des objectifs globaux.</p></div>
+                    <div class="p-8 lg:p-12 hairline-light-b lg:hairline-light-r bg-[#111] hover:bg-ob-blue transition-colors duration-500 group fade-up"><span class="font-display text-5xl text-ob-orange/40 group-hover:text-ob-orange mb-6 block transition-colors">02.</span><h4 class="font-display text-2xl uppercase mb-3">Proposition<br>& Devis</h4><p class="font-body text-sm text-white/60 group-hover:text-white/90">Stratégie sur mesure, architecture technique proposée et tarification transparente.</p></div>
+                    <div class="p-8 lg:p-12 hairline-light-b bg-[#111] hover:bg-ob-blue transition-colors duration-500 group fade-up"><span class="font-display text-5xl text-ob-orange/40 group-hover:text-ob-orange mb-6 block transition-colors">03.</span><h4 class="font-display text-2xl uppercase mb-3">Conception<br>& Design</h4><p class="font-body text-sm text-white/60 group-hover:text-white/90">Wireframes, UI/UX design, prototypes interactifs et validation de la direction artistique.</p></div>
+                    <div class="p-8 lg:p-12 hairline-light-b lg:border-b-0 lg:hairline-light-r bg-[#111] hover:bg-ob-blue transition-colors duration-500 group fade-up"><span class="font-display text-5xl text-ob-orange/40 group-hover:text-ob-orange mb-6 block transition-colors">04.</span><h4 class="font-display text-2xl uppercase mb-3">Développement<br>Front & Back</h4><p class="font-body text-sm text-white/60 group-hover:text-white/90">Codage propre, intégration CMS dynamique, sécurité des données et optimisation SEO technique.</p></div>
+                    <div class="p-8 lg:p-12 hairline-light-b md:border-b-0 lg:hairline-light-r bg-[#111] hover:bg-ob-blue transition-colors duration-500 group fade-up"><span class="font-display text-5xl text-ob-orange/40 group-hover:text-ob-orange mb-6 block transition-colors">05.</span><h4 class="font-display text-2xl uppercase mb-3">Tests<br>& Validation</h4><p class="font-body text-sm text-white/60 group-hover:text-white/90">QA rigide, compatibilité multi-navigateurs, tests de charge et ajustements finaux sur serveur staging.</p></div>
+                    <div class="p-8 lg:p-12 bg-[#111] hover:bg-ob-blue transition-colors duration-500 group fade-up"><span class="font-display text-5xl text-ob-orange/40 group-hover:text-ob-orange mb-6 block transition-colors">06.</span><h4 class="font-display text-2xl uppercase mb-3">Livraison<br>& Support</h4><p class="font-body text-sm text-white/60 group-hover:text-white/90">Déploiement en production, formation de vos équipes et maintenance évolutive continue garantie.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-24 lg:py-32 px-6 lg:px-12 overflow-hidden bg-ob-paper">
+            <div class="max-w-screen-2xl mx-auto">
+                <h2 class="font-display text-4xl lg:text-6xl uppercase tracking-tight text-ob-dark mb-16 fade-up">Ils nous font <span class="text-ob-blue">Confiance.</span></h2>
+                <div class="flex gap-6 lg:gap-10 overflow-x-auto snap-x snap-mandatory pb-12" style="scrollbar-width: none;">
+                    <div class="snap-center shrink-0 w-[85vw] md:w-[50vw] lg:w-[400px] border border-ob-dark/15 p-10 bg-white relative flex flex-col justify-between fade-up"><i class="ph-fill ph-quotes text-5xl text-ob-orange/20 absolute top-8 right-8"></i><p class="font-body text-lg italic text-ob-dark/80 mb-12 relative z-10">"OverBrand a transformé notre présence en ligne. Notre site génère maintenant 3x plus de leads qu'avant."</p><div class="flex items-center gap-4"><div class="w-12 h-12 bg-ob-dark rounded-full overflow-hidden"><img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop" alt="" class="w-full h-full object-cover"></div><div><h5 class="font-display text-xl uppercase leading-none">Sophie Mbeki</h5><span class="font-body text-xs text-ob-gray">CEO, TechStart</span></div></div></div>
+                    <div class="snap-center shrink-0 w-[85vw] md:w-[50vw] lg:w-[400px] border border-ob-dark/15 p-10 bg-white relative flex flex-col justify-between fade-up"><i class="ph-fill ph-quotes text-5xl text-ob-orange/20 absolute top-8 right-8"></i><p class="font-body text-lg italic text-ob-dark/80 mb-12 relative z-10">"Application mobile livrée dans les délais, exactement comme nous l'avions imaginé. Un professionnalisme rare."</p><div class="flex items-center gap-4"><div class="w-12 h-12 bg-ob-dark rounded-full overflow-hidden"><img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200&auto=format&fit=crop" alt="" class="w-full h-full object-cover grayscale"></div><div><h5 class="font-display text-xl uppercase leading-none">Jean-Paul Kofi</h5><span class="font-body text-xs text-ob-gray">Dir. Commercial, InnoGroup</span></div></div></div>
+                    <div class="snap-center shrink-0 w-[85vw] md:w-[50vw] lg:w-[400px] border border-ob-dark/15 p-10 bg-ob-blue text-white relative flex flex-col justify-between shadow-[10px_10px_0px_#1C1C1C] fade-up"><i class="ph-fill ph-quotes text-5xl text-ob-paper/20 absolute top-8 right-8"></i><p class="font-body text-lg italic text-white/90 mb-12 relative z-10">"Logo, site web et stratégie SEO — tout en un seul endroit. +40% de trafic organique dès le premier mois."</p><div class="flex items-center gap-4"><div class="w-12 h-12 bg-ob-dark rounded-full overflow-hidden"><img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200&auto=format&fit=crop" alt="" class="w-full h-full object-cover"></div><div><h5 class="font-display text-xl uppercase leading-none text-ob-orange">Marie Nguyen</h5><span class="font-body text-xs text-white/60">Fondatrice, BioShop</span></div></div></div>
+                </div>
+            </div>
+        </section>
+
+        <footer id="contact" class="bg-ob-dark text-ob-paper pt-24 lg:pt-32 pb-8 px-6 lg:px-12 flex flex-col overflow-hidden relative">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 max-w-screen-2xl mx-auto w-full mb-32 z-10">
+                <div class="md:col-span-8 flex flex-col items-start fade-up">
+                    <h2 class="font-display text-5xl lg:text-7xl uppercase tracking-tight leading-[0.9] mb-8">Prêt à dominer <br><span class="text-ob-orange">votre marché ?</span></h2>
+                    <a href="mailto:contact@overbrand.net" class="inline-flex justify-center items-center gap-4 bg-ob-paper text-ob-dark px-10 py-5 font-display text-2xl uppercase tracking-wider hover:bg-ob-blue hover:text-white transition-all duration-300">Discutons de votre projet <i class="ph-bold ph-arrow-right"></i></a>
+                </div>
+                <div class="md:col-span-4 flex flex-col gap-8 md:pl-12 md:hairline-light-l fade-up">
+                    <div><h5 class="font-display text-xl uppercase text-ob-orange mb-2">Siège Social</h5><p class="font-body text-sm text-white/60 leading-relaxed">Akwa, Douala<br>Cameroun</p></div>
+                    <div><h5 class="font-display text-xl uppercase text-ob-orange mb-2">Contact</h5><p class="font-body text-sm text-white/60 leading-relaxed">+237 652 761 931<br>contact@overbrand.net</p></div>
+                </div>
+            </div>
+            <div class="w-full text-center select-none overflow-hidden fade-up">
+                <h1 class="font-display text-[22vw] leading-[0.75] tracking-tighter m-0 p-0 text-outline-light opacity-30 w-full whitespace-nowrap">OVERBRAND</h1>
+            </div>
+            <div class="max-w-screen-2xl mx-auto w-full pt-8 flex flex-col md:flex-row justify-between items-center text-xs font-body text-white/40 uppercase tracking-widest gap-4 z-10 hairline-light-t mt-4">
+                <span>&copy; 2024 OverBrand. Tous droits réservés.</span>
+                <div class="flex gap-4"><a href="#" class="hover:text-ob-orange">Mentions Légales</a><a href="#" class="hover:text-ob-orange">Confidentialité</a></div>
+            </div>
+        </footer>
+    </main>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.fade-up, .reveal-mask').forEach(el => observer.observe(el));
+    });
+</script>
+</body>
+</html>

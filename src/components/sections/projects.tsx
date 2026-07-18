@@ -1,427 +1,162 @@
 'use client'
 
-import { useState } from 'react'
-import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion'
-import { ArrowUpRight, ArrowRight, Play } from 'lucide-react'
-import Link from 'next/link'
-import Image from 'next/image'
 import { useTranslations, useLocale } from 'next-intl'
+import { Link } from '@/i18n/navigation'
+import type { ShowcaseProject } from '@/lib/graphql/queries'
+import { getClientCases } from '@/lib/projects-data'
 
-type ShowcaseProject = {
-  id: string | number
-  title: string
-  category: string
-  description: string | null
-  gradient: string
-  accent: string
-  size: string
-  image_url: string | null
-  image_position: string | null
-  video_url?: string | null
-}
+type Props = { projects?: ShowcaseProject[] | null }
 
-const FALLBACK_PROJECTS: ShowcaseProject[] = [
-  {
-    id: 1,
-    title: 'Identité Marque Luxe',
-    category: 'Branding',
-    description: "Refonte complète de l'identité visuelle pour une maison de mode parisienne.",
-    gradient: 'linear-gradient(135deg, #0d2240 0%, #2855a0 50%, #3a6fd8 100%)',
-    accent: '#3a6fd8',
-    size: 'large',
-    image_url: null,
-    image_position: null,
-  },
-  {
-    id: 2,
-    title: 'Plateforme E-Commerce',
-    category: 'Site Web',
-    description: 'Boutique en ligne avec tunnel de vente optimisé et +180% de conversion.',
-    gradient: 'linear-gradient(135deg, #1a3a6b 0%, #6b9fd4 100%)',
-    accent: '#6b9fd4',
-    size: 'medium',
-    image_url: null,
-    image_position: null,
-  },
-  {
-    id: 3,
-    title: 'App Mobile Fintech',
-    category: 'Application',
-    description: 'Interface utilisateur pour une startup de paiement mobile primée.',
-    gradient: 'linear-gradient(160deg, #2855a0 0%, #0d2240 100%)',
-    accent: '#2855a0',
-    size: 'medium',
-    image_url: null,
-    image_position: null,
-  },
-  {
-    id: 4,
-    title: 'Campagne SEO & Ads',
-    category: 'Marketing',
-    description: 'Stratégie 360° qui a triplé le trafic organique en 3 mois.',
-    gradient: 'linear-gradient(135deg, #3a6fd8 0%, #1a3a6b 100%)',
-    accent: '#3a6fd8',
-    size: 'medium',
-    image_url: null,
-    image_position: null,
-  },
-  {
-    id: 5,
-    title: 'Motion Design Brand',
-    category: 'Contenu',
-    description: 'Série de vidéos animées pour lancement de produit viral.',
-    gradient: 'linear-gradient(135deg, #6b9fd4 0%, #2855a0 60%, #0d2240 100%)',
-    accent: '#6b9fd4',
-    size: 'medium',
-    image_url: null,
-    image_position: null,
-  },
-]
-
-function ProjectPreview({ project }: { project: ShowcaseProject }) {
-  return (
-    <motion.div
-      className="overflow-hidden shadow-2xl pointer-events-none"
-      style={{
-        width: 300,
-        height: 190,
-        background: project.gradient,
-        position: 'relative',
-        clipPath: 'polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%)',
-      }}
-      initial={{ opacity: 0, scale: 0.88, y: 14 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.88, y: 14 }}
-      transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-    >
-      {project.image_url && (
-        <Image
-          src={project.image_url}
-          alt={project.title}
-          fill
-          className="object-cover"
-          sizes="300px"
-          style={{ objectPosition: project.image_position ?? 'center' }}
-        />
-      )}
-      {/* Dot overlay */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: 'radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px)',
-          backgroundSize: '18px 18px',
-          opacity: 0.15,
-        }}
-      />
-      {/* Video badge */}
-      {project.video_url && (
-        <div
-          className="absolute top-3 left-3 flex items-center gap-1.5 px-2 py-1"
-          style={{
-            background: 'rgba(0,0,0,0.55)',
-            backdropFilter: 'blur(6px)',
-            clipPath: 'polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%)',
-          }}
-        >
-          <Play size={9} fill="white" style={{ color: 'white' }} />
-          <span className="text-white font-bold uppercase tracking-widest" style={{ fontSize: '9px' }}>Vidéo</span>
-        </div>
-      )}
-      {/* Category label */}
-      <div
-        className="absolute bottom-0 inset-x-0 p-4"
-        style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.65), transparent)' }}
-      >
-        <span className="text-xs font-bold uppercase tracking-widest text-white/80">
-          {project.category}
-        </span>
-      </div>
-    </motion.div>
-  )
-}
-
-export function ProjectsSection({ projects: dbProjects }: { projects: ShowcaseProject[] }) {
+export function ProjectsSection({ projects }: Props) {
   const t = useTranslations('projects')
   const locale = useLocale()
-  const projects = dbProjects.length > 0 ? dbProjects.slice(0, 5) : FALLBACK_PROJECTS
 
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  // Aidesigner masonry: 1 big (7/12) + 2 smaller stacked (5/12 with top offset).
+  // Defaults to the three lead client projects — EventEz and TKAMS are
+  // OverBrand's own solutions and belong to the products section, not "projets
+  // récents". Supabase projects override them when the admin curates a selection.
+  const DEFAULTS = getClientCases(locale)
+    .slice(0, 3)
+    .map((c) => ({
+      title: c.title,
+      category: c.category,
+      year: c.year,
+      image: c.cover,
+      href: `/projets/${c.slug}`,
+    }))
 
-  const cursorX = useMotionValue(-500)
-  const cursorY = useMotionValue(-500)
-  const springX = useSpring(cursorX, { stiffness: 200, damping: 28 })
-  const springY = useSpring(cursorY, { stiffness: 200, damping: 28 })
+  const liveProjects = (projects ?? []).slice(0, 3)
+  const items = liveProjects.length
+    ? liveProjects.map((p) => ({
+        title: p.title,
+        category: p.category,
+        year: p.year ?? '',
+        image: p.image_url ?? DEFAULTS[0].image,
+        href: `/${locale}/projets/${p.id}`,
+      }))
+    : DEFAULTS
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    cursorX.set(e.clientX)
-    cursorY.set(e.clientY)
-  }
+  // Pad to 3 so layout remains stable.
+  while (items.length < 3) items.push(DEFAULTS[items.length])
+
+  const [featured, second, third] = items
 
   return (
     <section
       id="projects"
-      className="section"
-      style={{ background: 'var(--bg)' }}
-      onMouseMove={handleMouseMove}
+      className="section px-6 lg:px-12 lg:pl-28"
+      style={{ background: 'var(--surface)' }}
     >
-      {/* Floating cursor preview — fixed to viewport */}
-      <motion.div
-        className="fixed top-0 left-0 z-40 pointer-events-none"
-        style={{ x: springX, y: springY }}
-      >
-        <div style={{ transform: 'translate(-50%, calc(-100% - 20px))' }}>
-          <AnimatePresence mode="wait">
-            {hoveredIndex !== null && (
-              <ProjectPreview key={hoveredIndex} project={projects[hoveredIndex]} />
-            )}
-          </AnimatePresence>
+      <div className="max-w-screen-2xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 md:mb-16 reveal">
+          <h2
+            className="font-display uppercase tracking-tight leading-[0.9]"
+            style={{ fontSize: 'clamp(2.8rem, 7vw, 6rem)', color: 'var(--text)' }}
+          >
+            {t('title_1')} <br />
+            <span className="text-outline">{t('title_2')}.</span>
+          </h2>
+          <Link
+            href="/projets"
+            className="mt-6 md:mt-0 text-sm uppercase tracking-[0.2em] font-semibold pb-1 transition-colors"
+            style={{
+              color: 'var(--primary)',
+              borderBottom: '1px solid var(--primary)',
+            }}
+          >
+            {t('view_all')}
+          </Link>
         </div>
-      </motion.div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-12 lg:mb-16"
-        >
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-px" style={{ background: 'var(--primary)' }} />
-            <span className="badge">{t('eyebrow')}</span>
-          </div>
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
-            <h2
-              className="font-display leading-none tracking-wide"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(3rem, 7vw, 6rem)',
-                color: 'var(--text)',
-              }}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10">
+          <Link
+            href={featured.href as never}
+            className="md:col-span-7 flex flex-col gap-4 reveal group"
+          >
+            <div
+              className="w-full h-[50vh] md:h-[70vh] overflow-hidden relative"
+              style={{ background: 'var(--paper-dark)' }}
             >
-              {t('title_1')}<br />
-              <span style={{ WebkitTextStroke: '2px var(--primary)', color: 'transparent' }}>
-                {t('title_2')}
-              </span>
-            </h2>
-            <div className="flex items-center gap-4 pb-2">
-              <p className="text-sm max-w-xs" style={{ color: 'var(--text-muted)' }}>
-                {t('subtitle')}
-              </p>
-              <a href="#contact">
-                <button className="btn-outline text-xs px-6 py-3 flex items-center gap-2 whitespace-nowrap" data-magnetic>
-                  {t('view_all')} <ArrowRight size={14} />
-                </button>
-              </a>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Desktop: editorial cursor-follow text list */}
-        <div className="hidden lg:block" style={{ borderTop: '1px solid var(--border)' }}>
-          {projects.map((project, i) => (
-            <motion.div
-              key={project.id}
-              className="relative"
-              style={{ borderBottom: '1px solid var(--border)' }}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.07 }}
-            >
-              {/* Accent underline on hover */}
-              <motion.div
-                className="absolute bottom-0 left-0 h-[1px] pointer-events-none z-10"
-                animate={{ width: hoveredIndex === i ? '100%' : '0%' }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                style={{ background: `linear-gradient(90deg, ${project.accent}, transparent)` }}
+              <div
+                className="absolute inset-0 transition-transform duration-[800ms] group-hover:scale-105"
+                style={{
+                  backgroundImage: `url('${featured.image}')`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
               />
-
-              <Link href={`/${locale}/projets/${project.id}`}>
-                <motion.div
-                  className="flex items-center gap-6 xl:gap-10 py-5 xl:py-7"
-                  animate={{
-                    opacity: hoveredIndex !== null && hoveredIndex !== i ? 0.3 : 1,
-                    x: hoveredIndex === i ? 14 : 0,
-                  }}
-                  transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                  onHoverStart={() => setHoveredIndex(i)}
-                  onHoverEnd={() => setHoveredIndex(null)}
-                >
-                  {/* Number */}
-                  <span
-                    className="flex-shrink-0 font-display leading-none"
-                    style={{
-                      fontFamily: 'var(--font-display)',
-                      fontSize: '1.1rem',
-                      color: hoveredIndex === i ? 'var(--primary)' : 'var(--text-subtle)',
-                      width: '2.5rem',
-                      textAlign: 'right',
-                      transition: 'color 0.25s',
-                    }}
-                  >
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-
-                  {/* Category + video badge */}
-                  <span
-                    className="hidden xl:flex flex-shrink-0 items-center gap-2 text-xs font-bold uppercase tracking-widest"
-                    style={{ color: 'var(--text-subtle)', width: '7.5rem' }}
-                  >
-                    {project.category}
-                    {project.video_url && (
-                      <span
-                        className="inline-flex items-center gap-0.5 px-1.5 py-0.5"
-                        style={{
-                          background: 'var(--primary-glow)',
-                          color: 'var(--primary)',
-                          clipPath: 'polygon(3px 0%, 100% 0%, calc(100% - 3px) 100%, 0% 100%)',
-                          fontSize: '8px',
-                          letterSpacing: '0.12em',
-                        }}
-                      >
-                        <Play size={7} fill="currentColor" />
-                        VID
-                      </span>
-                    )}
-                  </span>
-
-                  {/* Title — the editorial centerpiece */}
-                  <h3
-                    className="flex-1 font-display leading-none tracking-wide"
-                    style={{
-                      fontFamily: 'var(--font-display)',
-                      fontSize: 'clamp(2rem, 4.5vw, 4rem)',
-                      color: hoveredIndex === i ? 'var(--primary)' : 'var(--text)',
-                      transition: 'color 0.25s',
-                    }}
-                  >
-                    {project.title}
-                  </h3>
-
-                  {/* Description — appears on hover at far right */}
-                  <p
-                    className="hidden 2xl:block text-xs max-w-[180px] text-right flex-shrink-0 leading-relaxed"
-                    style={{
-                      color: 'var(--text-muted)',
-                      opacity: hoveredIndex === i ? 1 : 0,
-                      transition: 'opacity 0.3s',
-                    }}
-                  >
-                    {project.description ?? ''}
-                  </p>
-
-                  {/* Arrow */}
-                  <motion.div
-                    animate={{ opacity: hoveredIndex === i ? 1 : 0, x: hoveredIndex === i ? 0 : 14 }}
-                    transition={{ duration: 0.22 }}
-                    style={{ color: 'var(--primary)', flexShrink: 0 }}
-                  >
-                    <ArrowUpRight size={26} />
-                  </motion.div>
-                </motion.div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Mobile: snap-scroll cards */}
-        <div
-          className="lg:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory pb-6 -mx-4 px-4 scrollbar-none"
-          style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
-        >
-          {projects.map((project, i) => (
-            <motion.div
-              key={project.id}
-              className="snap-center flex-shrink-0"
-              style={{ width: '78vw', maxWidth: '340px' }}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: i * 0.06 }}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ background: 'var(--primary)', mixBlendMode: 'multiply' }}
+              />
+            </div>
+            <div
+              className="grid grid-cols-2 pt-4 gap-4"
+              style={{ borderTop: '1px solid var(--line)' }}
             >
-              <Link href={`/${locale}/projets/${project.id}`}>
-                <div
-                  className="relative overflow-hidden"
-                  style={{ aspectRatio: '4/3', background: project.gradient }}
+              <div>
+                <h4 className="font-display text-2xl md:text-3xl uppercase">{featured.title}</h4>
+                <p className="text-sm" style={{ color: 'var(--text-subtle)' }}>{featured.category}</p>
+              </div>
+              <div className="text-right">
+                <span
+                  className="inline-block px-3 py-1 text-xs uppercase rounded-full"
+                  style={{ background: 'var(--ink)', color: 'var(--paper)' }}
                 >
-                  {project.image_url && (
-                    <Image
-                      src={project.image_url}
-                      alt={project.title}
-                      fill
-                      className="object-cover"
-                      sizes="340px"
-                      style={{ objectPosition: project.image_position ?? 'center' }}
-                    />
-                  )}
+                  {featured.year}
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <div className="md:col-span-5 flex flex-col gap-14 md:mt-20">
+            {[second, third].map((item, i) => (
+              <Link
+                key={i}
+                href={item.href as never}
+                className="flex flex-col gap-4 reveal group"
+              >
+                <div
+                  className="w-full h-[40vh] overflow-hidden relative"
+                  style={{ background: 'var(--paper-dark)' }}
+                >
                   <div
-                    className="absolute inset-0"
+                    className="absolute inset-0 transition-transform duration-[800ms] group-hover:scale-105"
                     style={{
-                      backgroundImage: 'radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px)',
-                      backgroundSize: '18px 18px',
-                      opacity: 0.12,
+                      backgroundImage: `url('${item.image}')`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      filter: i === 1 ? 'grayscale(0.6)' : undefined,
                     }}
                   />
-                  <div
-                    className="absolute bottom-0 inset-x-0 p-4"
-                    style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.72), transparent)' }}
-                  >
-                    <p className="text-xs text-white/60 uppercase tracking-widest mb-1">{project.category}</p>
-                    <h3
-                      className="font-display text-white"
-                      style={{ fontFamily: 'var(--font-display)', fontSize: '1.6rem' }}
-                    >
-                      {project.title}
-                    </h3>
-                  </div>
-                  <div className="absolute top-3 right-3 flex items-center gap-1.5">
-                    {project.video_url && (
-                      <div
-                        className="flex items-center gap-1 px-2 py-1"
-                        style={{
-                          background: 'rgba(0,0,0,0.5)',
-                          backdropFilter: 'blur(6px)',
-                          clipPath: 'polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%)',
-                        }}
-                      >
-                        <Play size={10} fill="white" style={{ color: 'white' }} />
-                      </div>
-                    )}
+                  {i === 1 && (
                     <div
-                      className="w-8 h-8 flex items-center justify-center"
-                      style={{
-                        background: 'rgba(255,255,255,0.15)',
-                        clipPath: 'polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%)',
-                      }}
+                      className="absolute inset-0"
+                      style={{ background: 'var(--accent-warm)', opacity: 0.18, mixBlendMode: 'multiply' }}
+                    />
+                  )}
+                </div>
+                <div
+                  className="grid grid-cols-2 pt-4 gap-4"
+                  style={{ borderTop: '1px solid var(--line)' }}
+                >
+                  <div>
+                    <h4 className="font-display text-2xl uppercase">{item.title}</h4>
+                    <p className="text-sm" style={{ color: 'var(--text-subtle)' }}>{item.category}</p>
+                  </div>
+                  <div className="text-right">
+                    <span
+                      className="inline-block px-3 py-1 text-xs uppercase rounded-full"
+                      style={{ background: 'var(--ink)', color: 'var(--paper)' }}
                     >
-                      <ArrowUpRight size={14} className="text-white" />
-                    </div>
+                      {item.year}
+                    </span>
                   </div>
                 </div>
               </Link>
-            </motion.div>
-          ))}
+            ))}
+          </div>
         </div>
-
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
-        >
-          <p className="text-sm" style={{ color: 'var(--text-subtle)' }}>{t('cta_text')}</p>
-          <a href="#contact">
-            <button className="btn-primary text-xs px-6 py-3 flex items-center gap-2">
-              {t('cta_button')} <ArrowUpRight size={14} />
-            </button>
-          </a>
-        </motion.div>
-
       </div>
     </section>
   )

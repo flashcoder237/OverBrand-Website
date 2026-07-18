@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: Nexus Finance — OverBrand</title>
+    
+    <!-- 
+    aesthetic_dna: Editorial Brutalism & Swiss Grid Modernism
+    ui_paradigm: Architectural Side-Rail Layout with Compartmentalized Content Grids
+    palette: Paper (#F4F4F0), Ink (#0A0A0A), Action Blue (#2855A0), Alert Orange (#FF4D00)
+    -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;700&family=Playfair+Display:ital,wght@1,500;1,700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        paper: '#F4F4F0',
+                        ink: '#0A0A0A',
+                        'ob-blue': '#2855A0',
+                        'ob-orange': '#FF4D00',
+                    },
+                    fontFamily: {
+                        anton: ['Anton', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    spacing: {
+                        'rail': '64px',
+                    },
+                    transitionTimingFunction: {
+                        'spring': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                        'expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --bg-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        body {
+            background-color: theme('colors.paper');
+            color: theme('colors.ink');
+            font-family: theme('fontFamily.outfit');
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Persistent Grain Overlay */
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            background-image: var(--bg-grain);
+            opacity: 0.15;
+            mix-blend-multiply: true;
+            z-index: 9999;
+        }
+
+        /* Typography Utilities */
+        .text-outline {
+            color: transparent;
+            -webkit-text-stroke: 1.5px theme('colors.ink');
+        }
+        
+        .dark-section .text-outline {
+            -webkit-text-stroke: 1.5px theme('colors.paper');
+        }
+
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+        }
+
+        /* Hover Interactions */
+        .magnetic-link {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .magnetic-link:hover {
+            transform: scale(1.1) translateY(-2px);
+        }
+
+        /* Scroll Reveal Logistics */
+        .reveal-node {
+            opacity: 0;
+            transform: translateY(30px) scale(0.98);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .reveal-node.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Waterfall Delay Classes */
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: theme('colors.paper');
+            border-left: 1px solid theme('colors.ink');
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.ink');
+        }
+
+        /* Layout Helpers */
+        .hairline-b { border-bottom: 1px solid theme('colors.ink'); }
+        .hairline-t { border-top: 1px solid theme('colors.ink'); }
+        .hairline-r { border-right: 1px solid theme('colors.ink'); }
+        .hairline-l { border-left: 1px solid theme('colors.ink'); }
+        
+        .dark-section .hairline-b { border-bottom: 1px solid rgba(244, 244, 240, 0.2); }
+        .dark-section .hairline-t { border-top: 1px solid rgba(244, 244, 240, 0.2); }
+        .dark-section .hairline-r { border-right: 1px solid rgba(244, 244, 240, 0.2); }
+
+        /* Masonry Fix for Tailwind */
+        .css-masonry {
+            column-count: 1;
+            column-gap: 1rem;
+        }
+        @media (min-width: 768px) {
+            .css-masonry { column-count: 2; }
+        }
+        @media (min-width: 1024px) {
+            .css-masonry { column-count: 3; }
+        }
+        .css-masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="selection:bg-ob-orange selection:text-paper">
+
+    <div class="grain-overlay"></div>
+
+    <!-- 0. LEFT NAVIGATION RAIL (Mobile Top Header) -->
+    <nav class="fixed top-0 left-0 w-full h-16 md:w-rail md:h-screen bg-paper border-b md:border-b-0 md:border-r border-ink z-50 flex flex-row md:flex-col justify-between items-center p-4">
+        <!-- Logo -->
+        <a href="#" class="w-8 h-8 bg-ink rounded-full flex items-center justify-center text-paper font-anton text-xs shrink-0 overflow-hidden group">
+            <span class="group-hover:rotate-180 transition-transform duration-700 ease-spring">OB</span>
+        </a>
+        
+        <!-- Center Text indicator (Desktop only) -->
+        <div class="hidden md:flex flex-1 justify-center items-center">
+            <span class="font-anton text-[10px] tracking-widest uppercase vertical-text text-ink/40">Nexus Finance // CS-04</span>
+        </div>
+
+        <!-- Menu Toggle / Social -->
+        <button class="w-8 h-8 flex flex-col justify-center items-center gap-1 group">
+            <span class="w-6 h-[2px] bg-ink group-hover:w-8 transition-all duration-300"></span>
+            <span class="w-6 h-[2px] bg-ink group-hover:w-4 transition-all duration-300"></span>
+            <span class="w-6 h-[2px] bg-ink group-hover:w-8 transition-all duration-300"></span>
+        </button>
+    </nav>
+
+    <!-- MAIN WRAPPER -->
+    <main class="pt-16 md:pt-0 md:ml-rail flex flex-col min-h-screen">
+
+        <!-- 1. HERO SECTION -->
+        <header class="flex flex-col min-h-[90vh]">
+            <!-- Top Bar -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center px-6 py-4 hairline-b text-xs font-mono tracking-wider uppercase bg-paper relative z-10">
+                <div class="flex gap-2 items-center text-ink/60">
+                    <a href="#" class="hover:text-ink transition-colors">Accueil</a>
+                    <span>/</span>
+                    <a href="#" class="hover:text-ink transition-colors">Projets</a>
+                    <span>/</span>
+                    <span class="text-ink">Nexus Finance</span>
+                </div>
+                <div class="mt-2 sm:mt-0 font-bold text-ob-blue flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-ob-blue animate-pulse"></span>
+                    CASE STUDY · 04
+                </div>
+            </div>
+
+            <!-- Giant Title Area -->
+            <div class="px-6 py-12 md:py-20 lg:py-32 flex flex-col justify-center reveal-node">
+                <h1 class="font-anton uppercase leading-[0.85] tracking-tighter w-full flex flex-col">
+                    <span class="text-[15vw] md:text-[12vw] block text-ink">NEXUS</span>
+                    <span class="text-[15vw] md:text-[12vw] block text-outline ml-0 md:ml-24 flex items-center gap-4">
+                        <span class="text-ob-orange font-sans font-black">/</span> FINANCE.
+                    </span>
+                </h1>
+            </div>
+
+            <!-- Metadata Strip -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 hairline-y bg-paper">
+                <div class="p-4 md:p-6 hairline-r hairline-b lg:hairline-b-0 reveal-node delay-100 flex flex-col justify-between min-h-[120px]">
+                    <span class="text-[10px] font-mono uppercase text-ink/50">Client</span>
+                    <span class="font-anton text-2xl md:text-3xl mt-4">NEXUS GROUP</span>
+                </div>
+                <div class="p-4 md:p-6 lg:hairline-r hairline-b lg:hairline-b-0 reveal-node delay-200 flex flex-col justify-between min-h-[120px]">
+                    <span class="text-[10px] font-mono uppercase text-ink/50">Année</span>
+                    <span class="font-anton text-2xl md:text-3xl mt-4">2024</span>
+                </div>
+                <div class="p-4 md:p-6 hairline-r reveal-node delay-300 flex flex-col justify-between min-h-[120px]">
+                    <span class="text-[10px] font-mono uppercase text-ink/50">Services</span>
+                    <span class="font-bold text-sm md:text-base leading-tight mt-4">UX Design<br>Front-end<br>Design System</span>
+                </div>
+                <div class="p-4 md:p-6 reveal-node delay-100 flex flex-col justify-between min-h-[120px]">
+                    <span class="text-[10px] font-mono uppercase text-ink/50">Durée</span>
+                    <span class="font-anton text-2xl md:text-3xl mt-4 text-ob-blue transform rotate-[-2deg]">14<span class="text-sm uppercase tracking-widest ml-1 font-outfit">Semaines</span></span>
+                </div>
+            </div>
+
+            <!-- Hero Image -->
+            <div class="flex-1 w-full relative min-h-[50vh] lg:min-h-[70vh] bg-ink overflow-hidden border-b border-ink">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop" alt="Dashboard mockup for Nexus Finance on a computer screen" class="absolute inset-0 w-full h-full object-cover opacity-90 transition-transform duration-1000 scale-105 hover:scale-100">
+            </div>
+        </header>
+
+        <!-- 2. BRIEF INTRO -->
+        <section class="grid grid-cols-1 md:grid-cols-12 hairline-b">
+            <div class="md:col-span-4 p-8 md:p-12 lg:p-16 hairline-r reveal-node bg-paper">
+                <h2 class="font-anton text-4xl md:text-5xl tracking-tight leading-none uppercase">
+                    Le <br>Mandat <span class="text-ob-orange">.</span>
+                </h2>
+            </div>
+            <div class="md:col-span-8 p-8 md:p-12 lg:p-16 reveal-node delay-100 bg-white/50 backdrop-blur-sm">
+                <p class="text-xl md:text-2xl font-light leading-relaxed max-w-3xl">
+                    Nexus Finance voulait unifier 3 produits SaaS fintech sous une même interface, pour <strong>50k+ utilisateurs professionnels</strong>. Le design system existant était fragmenté, chaque équipe avait reconstruit ses propres composants en vase clos. 
+                </p>
+                <p class="text-xl md:text-2xl font-light leading-relaxed max-w-3xl mt-6">
+                    <strong class="font-bold text-ob-blue">Challenge :</strong> Créer un design system robuste, visuellement radical mais hyper-fonctionnel, utilisable par 4 squads produit sans freiner leur vélocité d'expédition.
+                </p>
+            </div>
+        </section>
+
+        <!-- 3. SCOPE & APPROACH STRIP -->
+        <section class="flex flex-col lg:flex-row hairline-b text-sm font-mono bg-paper">
+            <div class="flex-1 p-6 lg:hairline-r hairline-b lg:hairline-b-0 flex flex-col md:flex-row lg:flex-col justify-between gap-4 reveal-node">
+                <div class="flex items-center gap-2"><i class="ph ph-magnifying-glass text-ob-blue text-xl"></i> Phase 01</div>
+                <div><strong class="block text-base font-outfit uppercase">Recherche & Audit</strong><span class="text-ink/50">Semaines 1-3</span></div>
+            </div>
+            <div class="flex-1 p-6 lg:hairline-r hairline-b lg:hairline-b-0 flex flex-col md:flex-row lg:flex-col justify-between gap-4 reveal-node delay-100">
+                <div class="flex items-center gap-2"><i class="ph ph-bounding-box text-ob-blue text-xl"></i> Phase 02</div>
+                <div><strong class="block text-base font-outfit uppercase">Design System</strong><span class="text-ink/50">Semaines 4-8</span></div>
+            </div>
+            <div class="flex-1 p-6 lg:hairline-r hairline-b lg:hairline-b-0 flex flex-col md:flex-row lg:flex-col justify-between gap-4 reveal-node delay-200">
+                <div class="flex items-center gap-2"><i class="ph ph-devices text-ob-blue text-xl"></i> Phase 03</div>
+                <div><strong class="block text-base font-outfit uppercase">Prototypage</strong><span class="text-ink/50">Semaines 9-11</span></div>
+            </div>
+            <div class="flex-1 p-6 flex flex-col md:flex-row lg:flex-col justify-between gap-4 reveal-node delay-300">
+                <div class="flex items-center gap-2"><i class="ph ph-code text-ob-blue text-xl"></i> Phase 04</div>
+                <div><strong class="block text-base font-outfit uppercase">Handoff Dévelop.</strong><span class="text-ink/50">Semaines 12-14</span></div>
+            </div>
+        </section>
+
+        <!-- 4. KEY METRICS BLOCK (DARK MODE) -->
+        <section class="bg-ink text-paper dark-section py-16 md:py-24 px-6 hairline-b">
+            <div class="max-w-7xl mx-auto flex flex-col justify-center">
+                <div class="text-[10px] font-mono tracking-widest uppercase mb-12 flex items-center gap-4 text-paper/50 w-full">
+                    <span class="h-px bg-paper/20 flex-1"></span>
+                    <i class="ph-fill ph-target"></i> Impact Immédiat
+                    <span class="h-px bg-paper/20 flex-1"></span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 divide-y lg:divide-y-0 lg:divide-x divide-paper/20">
+                    <div class="reveal-node flex flex-col pt-8 lg:pt-0 pl-0 lg:pl-8 first:pt-0 first:pl-0">
+                        <span class="font-anton text-6xl md:text-7xl lg:text-8xl text-ob-orange tracking-tighter leading-none">+220<span class="text-4xl">%</span></span>
+                        <span class="font-bold text-sm tracking-wide mt-4 uppercase">Vélocité Design</span>
+                        <p class="text-sm font-light text-paper/60 mt-2">Accélération de la création de maquettes par les UX.</p>
+                    </div>
+                    <div class="reveal-node delay-100 flex flex-col pt-8 lg:pt-0 pl-0 lg:pl-8">
+                        <span class="font-anton text-6xl md:text-7xl lg:text-8xl text-paper tracking-tighter leading-none">85</span>
+                        <span class="font-bold text-sm tracking-wide mt-4 uppercase">Composants Livrés</span>
+                        <p class="text-sm font-light text-paper/60 mt-2">Documentés en React et Figma avec variantes.</p>
+                    </div>
+                    <div class="reveal-node delay-200 flex flex-col pt-8 lg:pt-0 pl-0 lg:pl-8">
+                        <span class="font-anton text-6xl md:text-7xl lg:text-8xl text-ob-blue tracking-tighter leading-none">-45<span class="text-4xl">%</span></span>
+                        <span class="font-bold text-sm tracking-wide mt-4 uppercase">Incidents UI</span>
+                        <p class="text-sm font-light text-paper/60 mt-2">Réduction des bugs d'interface en production.</p>
+                    </div>
+                    <div class="reveal-node delay-300 flex flex-col pt-8 lg:pt-0 pl-0 lg:pl-8">
+                        <span class="font-anton text-6xl md:text-7xl lg:text-8xl text-outline tracking-tighter leading-none">04</span>
+                        <span class="font-bold text-sm tracking-wide mt-4 uppercase">Équipes Alignées</span>
+                        <p class="text-sm font-light text-paper/60 mt-2">Processus commun adopté par toutes les squads.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SYSTEMATIZED CHAPTER HEADERS MIXIN -->
+        <!-- Solution chapter 1 — "L'ARCHITECTURE" -->
+        <section class="hairline-b bg-paper">
+            <div class="flex items-center gap-4 px-6 py-4 hairline-b text-xs font-mono tracking-wider uppercase text-ink/50 bg-white/30 backdrop-blur-md sticky top-16 md:top-0 z-40">
+                <i class="ph-fill ph-diamonds-four text-ob-blue"></i>
+                Chapitre_01 <span class="mx-2">/</span> L'Architecture Conceptuelle
+            </div>
+            <div class="p-4 md:p-8">
+                <div class="relative w-full aspect-[4/3] md:aspect-[21/9] bg-ink/5 rounded-[2rem] overflow-hidden reveal-node">
+                    <img src="https://images.unsplash.com/photo-1618761714954-0b8cd0026356?q=80&w=1600&auto=format&fit=crop" alt="Wireframes and abstract system architecture grid" class="w-full h-full object-cover">
+                    <!-- Overlay Grid Logic Visualization -->
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik02MCAwaC0xdjYwaDFWb3ptMCA1OXYxaC02MHYtMWg2MHoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjIiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgo8L3N2Zz4=')] opacity-30 mix-blend-overlay pointer-events-none"></div>
+                </div>
+                <p class="text-center text-sm font-mono text-ink/60 mt-6 max-w-2xl mx-auto reveal-node">
+                    Fig 1.0 — Mapping des flux de données complexes vers un modèle Bento-box prédictif.
+                </p>
+            </div>
+        </section>
+
+        <!-- Solution chapter 2 — "LA TYPOGRAPHIE" -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 hairline-b">
+            <!-- Header for mobile / Text side -->
+            <div class="flex flex-col lg:hairline-r bg-paper">
+                <div class="flex items-center gap-4 px-6 py-4 hairline-b text-xs font-mono tracking-wider uppercase text-ink/50 bg-white/30 backdrop-blur-md sticky top-16 md:top-0 z-40">
+                    <i class="ph-fill ph-text-aa text-ob-orange"></i>
+                    Chapitre_02 <span class="mx-2">/</span> La Typographie
+                </div>
+                <div class="p-8 md:p-16 flex-1 flex flex-col justify-center reveal-node">
+                    <h3 class="font-anton text-5xl md:text-6xl uppercase tracking-tighter mb-8">Hiérarchie <br>Radicale.</h3>
+                    <p class="text-lg leading-relaxed font-light text-ink/80 mb-6">
+                        L'interface nécessitant une lecture dense de données financières, nous avons banni les typographies décoratives. Le choix s'est porté sur une famille sans-serif géométrique pseudo-grotesque pour l'UI, garantissant une lisibilité parfaite sur les petits écrans.
+                    </p>
+                    <p class="text-lg leading-relaxed font-light text-ink/80">
+                        Pour les données tubulaires et les tickers financiers, <span class="font-mono bg-ink/10 px-2 py-1 rounded text-sm">JetBrains Mono</span> a été intégré, permettant un alignement vertical mathématique crucial pour les traders.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Type Specimen Side -->
+            <div class="bg-[#EAEAEA] p-8 md:p-16 flex items-center justify-center relative overflow-hidden">
+                <!-- Decorative absolute text -->
+                <div class="absolute -right-20 -bottom-10 font-anton text-[250px] text-ink/5 leading-none pointer-events-none select-none">Aa</div>
+                
+                <div class="w-full max-w-md bg-paper p-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] rounded-2xl reveal-node delay-100 relative z-10 border border-ink/10">
+                    <div class="border-b border-ink/20 pb-6 mb-6">
+                        <span class="text-[10px] font-mono text-ink/50 uppercase mb-2 block">Interface / Grotesque</span>
+                        <div class="text-5xl font-bold tracking-tight">Söhne Type</div>
+                        <div class="text-xl mt-2 font-medium">A B C D E F G H I J K L M</div>
+                        <div class="text-base mt-2 font-light text-ink/70">1 2 3 4 5 6 7 8 9 0 ! @ # $ % &</div>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-mono text-ink/50 uppercase mb-2 block">Data Viz / Monospace</span>
+                        <div class="text-4xl font-mono font-bold tracking-tight">JetBrains Mono</div>
+                        <div class="text-lg mt-2 font-mono">A B C D E F G H I J K</div>
+                        <div class="text-sm mt-2 font-mono text-ink/70">1 2 3 4 5 6 7 8 9 0 [ ] { } = +</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Solution chapter 3 — "LE SYSTÈME DE COULEUR" -->
+        <section class="hairline-b bg-paper">
+             <div class="flex items-center gap-4 px-6 py-4 hairline-b text-xs font-mono tracking-wider uppercase text-ink/50 bg-white/30 backdrop-blur-md sticky top-16 md:top-0 z-40">
+                <i class="ph-fill ph-palette text-ob-blue"></i>
+                Chapitre_03 <span class="mx-2">/</span> Le Système de Couleur
+            </div>
+            <div class="p-8 md:p-16">
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-8 reveal-node">
+                    
+                    <!-- Color Swatch Component -->
+                    <div class="flex flex-col group">
+                        <div class="aspect-square bg-[#0F172A] rounded-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] border border-ink/10 mb-4 transition-transform duration-500 group-hover:-translate-y-2"></div>
+                        <span class="font-bold text-sm">Background Base</span>
+                        <span class="font-mono text-xs text-ink/50 mt-1">#0F172A</span>
+                    </div>
+                    
+                    <div class="flex flex-col group">
+                        <div class="aspect-square bg-[#1E293B] rounded-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] border border-ink/10 mb-4 transition-transform duration-500 group-hover:-translate-y-2"></div>
+                        <span class="font-bold text-sm">Surface Elevée</span>
+                        <span class="font-mono text-xs text-ink/50 mt-1">#1E293B</span>
+                    </div>
+
+                    <div class="flex flex-col group">
+                        <div class="aspect-square bg-ob-blue rounded-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] border border-ink/10 mb-4 transition-transform duration-500 group-hover:-translate-y-2"></div>
+                        <span class="font-bold text-sm flex items-center gap-2">Brand Action <span class="w-2 h-2 rounded-full bg-ob-blue block"></span></span>
+                        <span class="font-mono text-xs text-ink/50 mt-1">#2855A0</span>
+                    </div>
+
+                    <div class="flex flex-col group">
+                        <div class="aspect-square bg-[#10B981] rounded-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] border border-ink/10 mb-4 transition-transform duration-500 group-hover:-translate-y-2"></div>
+                        <span class="font-bold text-sm">Success / Tend Up</span>
+                        <span class="font-mono text-xs text-ink/50 mt-1">#10B981</span>
+                    </div>
+
+                    <div class="flex flex-col group col-span-2 md:col-span-1">
+                        <div class="aspect-[2/1] md:aspect-square bg-ob-orange rounded-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] border border-ink/10 mb-4 transition-transform duration-500 group-hover:-translate-y-2"></div>
+                        <span class="font-bold text-sm flex items-center gap-2">Alert / Warn <span class="w-2 h-2 rounded-full bg-ob-orange block"></span></span>
+                        <span class="font-mono text-xs text-ink/50 mt-1">#FF4D00</span>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Solution chapter 4 — "LES COMPOSANTS" (Asymmetric Grid) -->
+        <section class="hairline-b bg-[#F0F0EB]">
+            <div class="flex items-center gap-4 px-6 py-4 hairline-b text-xs font-mono tracking-wider uppercase text-ink/50 bg-[#F0F0EB]/80 backdrop-blur-md sticky top-16 md:top-0 z-40">
+                <i class="ph-fill ph-lego text-ink"></i>
+                Chapitre_04 <span class="mx-2">/</span> Bibliothèque de Composants
+            </div>
+            
+            <div class="p-6 md:p-12">
+                <!-- CSS Grid Asymmetric Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[250px] md:auto-rows-[300px]">
+                    
+                    <!-- Large Hero Component -->
+                    <div class="md:col-span-8 md:row-span-2 rounded-[2rem] overflow-hidden relative shadow-lg reveal-node border border-ink/10 bg-white">
+                        <img src="https://images.unsplash.com/photo-1555421689-491a97ff2040?q=80&w=1200&auto=format&fit=crop" alt="Dashboard Main Interface Components" class="w-full h-full object-cover">
+                        <div class="absolute bottom-6 left-6 right-6 backdrop-blur-xl bg-ink/70 text-paper p-4 rounded-xl border border-white/20">
+                            <span class="block text-xs font-mono mb-1 uppercase">Component / Layout.Dashboard</span>
+                            <span class="font-bold">Vue principale des portefeuilles utilisateurs.</span>
+                        </div>
+                    </div>
+
+                    <!-- Small Square 1 -->
+                    <div class="md:col-span-4 md:row-span-1 rounded-[2rem] overflow-hidden relative shadow-lg reveal-node delay-100 border border-ink/10 bg-white">
+                        <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=800&auto=format&fit=crop" alt="Data Visualization Charts" class="w-full h-full object-cover">
+                         <div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent"></div>
+                          <span class="absolute bottom-6 left-6 text-paper text-sm font-bold">Chart / Area.Spline</span>
+                    </div>
+
+                    <!-- Small Square 2 -->
+                    <div class="md:col-span-4 md:row-span-1 rounded-[2rem] overflow-hidden relative shadow-lg reveal-node delay-200 border border-ink/10 bg-white">
+                        <img src="https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?q=80&w=800&auto=format&fit=crop" alt="Mobile Banking Interface" class="w-full h-full object-cover">
+                         <div class="absolute inset-x-0 bottom-0 p-4 bg-paper/90 backdrop-blur-md rounded-t-xl border-t border-ink/10 mx-4">
+                             <span class="text-xs font-mono text-ink/70">Mobile / View.Cards</span>
+                         </div>
+                    </div>
+
+                    <!-- Medium Wide -->
+                    <div class="md:col-span-6 md:row-span-1 rounded-[2rem] overflow-hidden relative shadow-lg reveal-node delay-100 border border-ink/10 bg-white">
+                         <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop" alt="Data tables and analytics" class="w-full h-full object-cover">
+                    </div>
+
+                     <!-- Medium Wide 2 -->
+                     <div class="md:col-span-6 md:row-span-1 rounded-[2rem] overflow-hidden relative shadow-lg reveal-node delay-200 border border-ink/10 bg-white">
+                        <img src="https://images.unsplash.com/photo-1661956602116-aa6865609028?q=80&w=1000&auto=format&fit=crop" alt="Settings and toggle states" class="w-full h-full object-cover">
+                        <div class="absolute top-4 right-4 bg-ob-blue text-paper px-3 py-1 rounded-full text-xs font-bold shadow-md">States / Interactive</div>
+                   </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Solution chapter 5 — "LE DARK MODE" (Split Before/After Concept) -->
+        <section class="hairline-b bg-paper flex flex-col md:flex-row relative">
+            <!-- Central Divider (Desktop) -->
+            <div class="hidden md:block absolute top-0 bottom-0 left-1/2 w-px bg-ink/20 z-20">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-paper text-ink border border-ink/20 px-4 py-2 rounded-full font-mono text-xs shadow-xl uppercase font-bold tracking-widest whitespace-nowrap">
+                    Dualité Native
+                </div>
+            </div>
+
+            <!-- Light Side -->
+            <div class="w-full md:w-1/2 p-8 md:p-16 flex flex-col items-center bg-paper relative">
+                <div class="w-full max-w-lg mb-8 text-center reveal-node">
+                    <h4 class="font-anton text-3xl md:text-5xl uppercase tracking-tight text-ink">Thème Clair</h4>
+                    <p class="text-sm text-ink/60 mt-2 font-mono">mode: 'light' // default</p>
+                </div>
+                <div class="w-full aspect-[4/5] md:aspect-square bg-white shadow-2xl rounded-3xl overflow-hidden reveal-node border border-ink/10 transform rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop" alt="Light mode dashboard" class="w-full h-full object-cover opacity-90 mix-blend-luminosity hover:mix-blend-normal transition-all duration-700">
+                </div>
+            </div>
+
+            <!-- Dark Side -->
+            <div class="w-full md:w-1/2 p-8 md:p-16 flex flex-col items-center bg-ink dark-section relative">
+                 <div class="w-full max-w-lg mb-8 text-center reveal-node">
+                    <h4 class="font-anton text-3xl md:text-5xl uppercase tracking-tight text-paper">Thème Sombre</h4>
+                    <p class="text-sm text-paper/40 mt-2 font-mono">mode: 'dark' // system</p>
+                </div>
+                <div class="w-full aspect-[4/5] md:aspect-square bg-[#0F172A] shadow-2xl rounded-3xl overflow-hidden reveal-node delay-100 border border-white/10 transform rotate-[2deg] hover:rotate-0 transition-transform duration-500 relative">
+                     <img src="https://images.unsplash.com/photo-1555421689-d68471e189f2?q=80&w=800&auto=format&fit=crop" alt="Dark mode dashboard" class="w-full h-full object-cover opacity-90 transition-all duration-700">
+                     <!-- Glint effect overlay -->
+                     <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. QUOTE PULL-OUT -->
+        <section class="py-24 md:py-40 px-6 max-w-5xl mx-auto flex flex-col items-center text-center hairline-b">
+            <i class="ph-fill ph-quotes text-6xl text-ob-orange/30 mb-8 reveal-node"></i>
+            <h2 class="font-serif italic text-4xl md:text-6xl lg:text-7xl text-ink leading-[1.1] mb-12 reveal-node delay-100">
+                "En 3 mois, on a livré plus de nouvelles fonctionnalités qu'en 18 mois avec l'ancien système fragmenté."
+            </h2>
+            <div class="flex items-center gap-4 reveal-node delay-200">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop" alt="Portrait de Marc Dubois" class="w-16 h-16 rounded-full object-cover grayscale border border-ink/20">
+                <div class="flex flex-col text-left">
+                    <span class="font-bold text-lg leading-none">Marc Dubois</span>
+                    <span class="text-sm font-mono text-ink/50 uppercase mt-1">CTO, Nexus Group</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. TECHNICAL DETAILS & DATA SHEET -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 hairline-b bg-paper">
+            <div class="lg:col-span-4 p-8 md:p-12 hairline-r flex flex-col justify-between">
+                <h3 class="font-anton text-4xl uppercase">Fiche <br>Technique.</h3>
+                <i class="ph ph-cpu text-4xl text-ink/20 mt-8"></i>
+            </div>
+            
+            <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-ink font-mono text-sm">
+                <!-- Block 1 -->
+                <div class="p-8 flex flex-col gap-6 sm:hairline-b lg:hairline-b-0 reveal-node">
+                    <div>
+                        <span class="block text-ink/40 uppercase mb-1 text-xs">Stack Design</span>
+                        <div class="font-bold flex flex-col gap-1">
+                            <span>Figma (Variables & Tokens)</span>
+                            <span>Protopie (Micro-interactions)</span>
+                            <span>Zeroheight (Documentation)</span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="block text-ink/40 uppercase mb-1 text-xs">Stack Dev</span>
+                        <div class="font-bold flex flex-col gap-1">
+                            <span>React 18 / Next.js</span>
+                            <span>Tailwind CSS</span>
+                            <span>Radix UI (Primitives)</span>
+                            <span>Storybook</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Block 2 -->
+                <div class="p-8 flex flex-col gap-6 lg:hairline-b-0 reveal-node delay-100">
+                     <div>
+                        <span class="block text-ink/40 uppercase mb-1 text-xs">Outils Audit</span>
+                        <div class="font-bold flex flex-col gap-1">
+                            <span>Hotjar</span>
+                            <span>Mixpanel</span>
+                            <span>Maze (User Testing)</span>
+                        </div>
+                    </div>
+                     <div>
+                        <span class="block text-ink/40 uppercase mb-1 text-xs">Livrables</span>
+                        <div class="font-bold flex flex-col gap-1">
+                            <span>Fichier UI Kit .fig</span>
+                            <span>Package NPM (NexusUI v1)</span>
+                            <span>Guidelines Rédigées (FR/EN)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 12. GALLERY MASONRY -->
+        <section class="p-6 md:p-8 hairline-b bg-[#FCFCFA]">
+            <div class="flex justify-between items-end mb-8 md:px-4">
+                <h3 class="font-anton text-2xl uppercase tracking-widest text-ink/30">Behind the scenes</h3>
+            </div>
+            <div class="css-masonry">
+                <img src="https://images.unsplash.com/photo-1542626991-cbc4e32524cc?q=80&w=800&auto=format&fit=crop" class="css-masonry-item rounded-xl w-full grayscale hover:grayscale-0 transition-all duration-500 reveal-node" alt="Workshop sticky notes">
+                <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=800&auto=format&fit=crop" class="css-masonry-item rounded-xl w-full grayscale hover:grayscale-0 transition-all duration-500 reveal-node delay-100" alt="Designers working">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop" class="css-masonry-item rounded-xl w-full grayscale hover:grayscale-0 transition-all duration-500 reveal-node delay-200" alt="Team meeting round table">
+                <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=800&auto=format&fit=crop" class="css-masonry-item rounded-xl w-full shadow-lg border border-ink/5 reveal-node delay-100" alt="Code on screen">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop" class="css-masonry-item rounded-xl w-full shadow-lg border border-ink/5 reveal-node delay-300" alt="Dashboard detail">
+            </div>
+        </section>
+
+        <!-- 13. RESULTS & EXPANDED CONTEXT -->
+        <section class="p-8 md:p-16 hairline-b bg-paper max-w-7xl mx-auto w-full">
+             <h3 class="font-anton text-4xl md:text-5xl uppercase mb-16 text-center">Bilan de l'Opération</h3>
+             
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24">
+                <div class="flex flex-col reveal-node">
+                    <div class="flex items-start gap-6 border-l-4 border-ob-blue pl-6">
+                        <span class="font-anton text-5xl text-ob-blue leading-none mt-1">1.</span>
+                        <div>
+                            <h4 class="font-bold text-xl uppercase tracking-wide mb-2">Cohérence Absolue</h4>
+                            <p class="text-ink/70 font-light leading-relaxed">Les 3 produits phares de Nexus (Banking, Trading, Analytics) respirent enfin la même identité visuelle. L'apprentissage utilisateur d'un module à l'autre est devenu quasi nul, réduisant le taux de rebond inter-applications de 34%.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col reveal-node delay-100">
+                    <div class="flex items-start gap-6 border-l-4 border-ob-orange pl-6">
+                        <span class="font-anton text-5xl text-ob-orange leading-none mt-1">2.</span>
+                        <div>
+                            <h4 class="font-bold text-xl uppercase tracking-wide mb-2">Écovolontarisme Tech</h4>
+                            <p class="text-ink/70 font-light leading-relaxed">En centralisant les composants frontend, la dette technique a été massivement purgée. Le poids global du bundle CSS/JS envoyé au client a été divisé par trois, améliorant les performances du dashboard de 1.2s sur le First Contentful Paint.</p>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <!-- 14. TEAM CREDITS (STRIP LAYOUT) -->
+        <section class="bg-paper hairline-b">
+            <div class="px-6 py-4 hairline-b text-xs font-mono tracking-wider uppercase text-ink/50 sticky top-16 md:top-0 bg-paper/80 backdrop-blur-md z-40">
+                Crédits Projet
+            </div>
+            
+            <div class="flex flex-col divide-y divide-ink">
+                <!-- Row 1 -->
+                <div class="flex flex-col md:flex-row items-start md:items-center p-6 md:p-8 hover:bg-ink/5 transition-colors group reveal-node">
+                    <div class="w-full md:w-1/4 font-mono text-xs uppercase text-ink/50 mb-4 md:mb-0 group-hover:text-ink transition-colors">Design & UX</div>
+                    <div class="w-full md:w-3/4 flex flex-wrap gap-8">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-ink/10 overflow-hidden">
+                                <img src="https://i.pravatar.cc/150?u=sandrine" alt="Sandrine" class="w-full h-full object-cover grayscale">
+                            </div>
+                            <span class="font-bold text-lg">Sandrine Biya</span>
+                            <span class="text-sm border border-ink/20 rounded-full px-2 py-0.5 ml-2 font-mono">Lead</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-ink/10 overflow-hidden">
+                                <img src="https://i.pravatar.cc/150?u=marlyse" alt="Marlyse" class="w-full h-full object-cover grayscale">
+                            </div>
+                            <span class="font-bold text-lg">Marlyse Ngono</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="flex flex-col md:flex-row items-start md:items-center p-6 md:p-8 hover:bg-ink/5 transition-colors group reveal-node">
+                    <div class="w-full md:w-1/4 font-mono text-xs uppercase text-ink/50 mb-4 md:mb-0 group-hover:text-ink transition-colors">Ingénierie & Front</div>
+                    <div class="w-full md:w-3/4 flex flex-wrap gap-8">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-ink/10 overflow-hidden">
+                                <img src="https://i.pravatar.cc/150?u=eric" alt="Eric" class="w-full h-full object-cover grayscale">
+                            </div>
+                            <span class="font-bold text-lg">Éric Mbappe</span>
+                            <span class="text-sm border border-ink/20 rounded-full px-2 py-0.5 ml-2 font-mono">Lead</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-ink/10 overflow-hidden">
+                                <img src="https://i.pravatar.cc/150?u=patrice" alt="Patrice" class="w-full h-full object-cover grayscale">
+                            </div>
+                            <span class="font-bold text-lg">Patrice Nkomo</span>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Row 3 -->
+                 <div class="flex flex-col md:flex-row items-start md:items-center p-6 md:p-8 hover:bg-ink/5 transition-colors group reveal-node">
+                    <div class="w-full md:w-1/4 font-mono text-xs uppercase text-ink/50 mb-4 md:mb-0 group-hover:text-ink transition-colors">Stratégie & Produit</div>
+                    <div class="w-full md:w-3/4 flex flex-wrap gap-8">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-ink/10 overflow-hidden">
+                                <img src="https://i.pravatar.cc/150?u=cedric" alt="Cédric" class="w-full h-full object-cover grayscale">
+                            </div>
+                            <span class="font-bold text-lg">Cédric Tefoye</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 15. NEXT PROJECT TEASE -->
+        <a href="#" class="block relative w-full h-[60vh] lg:h-[80vh] overflow-hidden group">
+            <!-- Background Image -->
+            <img src="https://images.unsplash.com/photo-1616422329388-3ebcb09b9f5f?q=80&w=1600&auto=format&fit=crop" alt="Next Project Image" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 scale-100 group-hover:scale-105 filter brightness-50">
+            
+            <!-- Overlay Content -->
+            <div class="absolute inset-0 flex flex-col justify-center items-center text-paper p-6 z-10">
+                <span class="font-mono text-sm tracking-widest uppercase mb-4 opacity-70 group-hover:opacity-100 transition-opacity">Projet Suivant</span>
+                <h4 class="font-anton text-[12vw] md:text-[8vw] uppercase leading-none tracking-tighter text-outline group-hover:text-transparent group-hover:[-webkit-text-stroke:2px_var(--color-paper)] transition-all duration-500">
+                    DAKAR <span class="text-paper [-webkit-text-stroke:0px] group-hover:text-ob-orange transition-colors duration-500">MEDIA.</span>
+                </h4>
+            </div>
+
+            <!-- Floating CTA Center Bottom -->
+            <div class="absolute bottom-12 left-1/2 -translate-x-1/2 bg-paper text-ink w-16 h-16 rounded-full flex items-center justify-center translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-spring shadow-2xl">
+                <i class="ph-bold ph-arrow-right text-2xl"></i>
+            </div>
+        </a>
+
+        <!-- 16 & 17. BACK CTA & FOOTER SYSTEM -->
+        <footer class="flex flex-col">
+            <!-- Interstitial CTA -->
+            <div class="grid grid-cols-1 md:grid-cols-2 hairline-b bg-paper">
+                <a href="#" class="p-8 md:p-12 lg:p-16 hairline-b md:hairline-b-0 md:hairline-r flex justify-center items-center group bg-[#EAEAEA] hover:bg-paper transition-colors">
+                    <span class="font-anton uppercase tracking-widest flex items-center gap-4 text-xl">
+                        <i class="ph-bold ph-grid-four text-ink group-hover:-rotate-90 transition-transform duration-500"></i>
+                        Tous les projets
+                    </span>
+                </a>
+                <div class="p-8 md:p-12 lg:p-16 flex justify-center items-center bg-ob-orange text-ink group cursor-pointer overflow-hidden relative">
+                    <!-- Hover ripple effect logic visually via CSS -->
+                    <div class="absolute inset-0 bg-ink translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-expo z-0"></div>
+                    <span class="font-anton uppercase tracking-widest flex items-center gap-4 text-2xl md:text-3xl relative z-10 group-hover:text-paper transition-colors duration-500">
+                        Démarrer un projet <i class="ph-bold ph-arrow-up-right"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Main Footer Block -->
+            <div class="bg-ink text-paper dark-section py-20 px-6 md:px-12 lg:px-20 min-h-[50vh] flex flex-col justify-between">
+                
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-12 mb-20">
+                    <div class="md:col-span-6 reveal-node">
+                        <h5 class="font-anton text-[8vw] md:text-6xl uppercase leading-none tracking-tighter mb-6">Un projet ambitieux<br>en tête ?</h5>
+                        <p class="text-paper/60 font-light max-w-sm text-lg">Nous concevons des identités et des interfaces qui refusent la médiocrité. Parlons de votre vision.</p>
+                        <a href="mailto:hello@overbrand.com" class="inline-block mt-8 text-xl font-bold border-b-2 border-ob-blue pb-1 hover:text-ob-blue transition-colors">hello@overbrand.com</a>
+                    </div>
+                    
+                    <div class="md:col-span-3 flex flex-col gap-4 font-mono text-sm reveal-node delay-100">
+                        <span class="text-paper/40 uppercase mb-2">Socials</span>
+                        <a href="#" class="hover:text-ob-blue transition-colors flex items-center gap-2"><i class="ph ph-instagram-logo"></i> Instagram</a>
+                        <a href="#" class="hover:text-ob-blue transition-colors flex items-center gap-2"><i class="ph ph-twitter-logo"></i> Twitter / X</a>
+                        <a href="#" class="hover:text-ob-blue transition-colors flex items-center gap-2"><i class="ph ph-linkedin-logo"></i> LinkedIn</a>
+                        <a href="#" class="hover:text-ob-blue transition-colors flex items-center gap-2"><i class="ph ph-behance-logo"></i> Behance</a>
+                    </div>
+
+                    <div class="md:col-span-3 flex flex-col gap-4 font-mono text-sm reveal-node delay-200">
+                        <span class="text-paper/40 uppercase mb-2">Bureaux</span>
+                        <p class="leading-relaxed text-paper/80">
+                            14 Rue de l'Audace<br>
+                            75011 Paris, France<br>
+                            —<br>
+                            Remote worldwide.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-paper/20 text-xs font-mono text-paper/40">
+                    <span>©2024 OverBrand. Tous droits réservés.</span>
+                    <div class="flex gap-4 mt-4 md:mt-0">
+                        <a href="#" class="hover:text-paper transition-colors">Mentions Légales</a>
+                        <a href="#" class="hover:text-paper transition-colors">Confidentialité</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Interactive Layer / Vanilla JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Intersection Observer for Scroll Reveals
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        // Optional: Stop observing once revealed
+                        // observer.unobserve(entry.target); 
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal-node').forEach((node) => {
+                revealObserver.observe(node);
+            });
+
+            // Dynamic setup for CSS Masonry logic if needed for Safari fallbacks
+            // (Tailwind columns handle most, but adding a touch of JS parallax could go here)
+            
+            // Subtle Parallax on Hero Image
+            const heroImage = document.querySelector('header img');
+            if(heroImage) {
+                window.addEventListener('scroll', () => {
+                    const scrollY = window.scrollY;
+                    if(scrollY < window.innerHeight) {
+                        heroImage.style.transform = `translateY(${scrollY * 0.15}px) scale(1.05)`;
+                    }
+                }, { passive: true });
+            }
+        });
+    </script>
+</body>
+</html>

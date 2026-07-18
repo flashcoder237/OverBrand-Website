@@ -5,6 +5,9 @@
     "about": "À propos",
     "process": "Processus",
     "contact": "Contact",
+    "team": "Équipe",
+    "insights": "Insights",
+    "careers": "Carrières",
     "login": "Connexion",
     "dashboard": "Mon espace",
     "quote": "Devis gratuit"
@@ -209,26 +212,34 @@
     "legal_title": "Légal",
     "copyright": "© 2024 OverBrand. Tous droits réservés.",
     "made_by": "Conçu et développé avec ❤️ par OverBrand",
-    "services_links": [
-      "Création de sites web",
-      "Applications mobiles",
-      "Hébergement",
-      "Publicité en ligne",
-      "SEO & Visibilité",
-      "Identité de marque"
-    ],
-    "company_links": [
-      "À propos",
-      "Notre processus",
-      "Devis gratuit",
-      "Espace client",
-      "Notre équipe"
-    ],
+    "services_items": {
+      "website": "Sites web",
+      "software": "Applications",
+      "hosting": "Hébergement",
+      "ads": "Publicité",
+      "seo": "SEO",
+      "branding": "Branding",
+      "content": "Contenus"
+    },
+    "company_items": {
+      "about": "À propos",
+      "team": "Équipe",
+      "careers": "Carrières",
+      "insights": "Insights",
+      "contact": "Contact"
+    },
     "legal_links": [
       "Mentions légales",
       "Politique de confidentialité",
       "CGV"
-    ]
+    ],
+    "cta_title_1": "Prêt à dominer",
+    "cta_title_2": "votre marché ?",
+    "cta_button": "Discutons de votre projet",
+    "hq_title": "Siège social",
+    "hq_address": "Akwa, Douala",
+    "hq_country": "Cameroun",
+    "contact_title": "Contact"
   },
   "auth": {
     "back": "Retour au site",
@@ -291,5 +302,473 @@
   "metadata": {
     "title": "OverBrand — Agence Digitale Créative",
     "description": "OverBrand est votre partenaire digital pour la création de sites web, applications mobiles, branding, SEO et publicité en ligne."
+  },
+  "servicesPage": {
+    "meta_title": "Expertises — Sites web, applications, SEO & branding",
+    "meta_description": "Création de sites web, applications sur mesure, SEO, branding et publicité en ligne. Agence digitale à Douala et Yaoundé, au service des marques au Cameroun et en Afrique centrale.",
+    "eyebrow": "Expertises — 2026",
+    "title_1": "Sept",
+    "title_2": "terrains",
+    "title_3": "de jeu",
+    "lead": "De la conception visuelle complexe à l'ingénierie backend robuste. Un seul partenaire pour tout votre écosystème digital.",
+    "philosophy_title_1": "Stratégie. Design.",
+    "philosophy_title_2": "Ingénierie.",
+    "philosophy_highlight": "Un seul partenaire",
+    "philosophy_body": "Pas d'agences en cascade, pas de silos. Nos designers discutent avec nos développeurs chaque jour. Vos décisions circulent vite — vos livrables arrivent à l'heure.",
+    "stack_label": "Stack",
+    "detail_link": "Voir la prestation en détail",
+    "expertise_badge": "Expertise",
+    "packs_title_1": "Les packs qui ont",
+    "packs_title_2": "fait leurs preuves",
+    "packs": [
+      {
+        "name": "STARTUP",
+        "desc": "Lancement d'une marque de zéro : logo, site vitrine, stratégie SEO initiale.",
+        "price": "À partir de 3 500€"
+      },
+      {
+        "name": "SCALE-UP",
+        "desc": "E-commerce complet avec branding, publicité Google + Meta, maintenance continue.",
+        "price": "À partir de 12 000€"
+      },
+      {
+        "name": "RENAISSANCE",
+        "desc": "Refonte complète d'une marque existante : nouveau site, nouveau brand, nouveau SEO.",
+        "price": "Sur devis"
+      }
+    ],
+    "pack_link": "En savoir plus →",
+    "cta_title_1": "Un projet qui recouvre",
+    "cta_title_2": "plusieurs expertises ?",
+    "cta_highlight": "Parlons-en",
+    "cta_button": "Demander un devis gratuit"
+  },
+  "serviceDetail": {
+    "not_found": "Service introuvable",
+    "breadcrumb_home": "Accueil",
+    "breadcrumb_services": "Expertises",
+    "eyebrow_expertise": "Expertise",
+    "cta_quote": "Demander un devis",
+    "cta_work": "Voir les réalisations",
+    "aside_duration": "Délais",
+    "aside_from": "Tarif",
+    "aside_tech": "Technologies",
+    "aside_deliverables": "Livrables",
+    "aside_items": "{count}+ éléments",
+    "pull_1": "On ne livre pas un service.",
+    "pull_2": "On livre un levier",
+    "deliverables_title": "Ce qu'on livre, concrètement.",
+    "pricing_title": "Tarification transparente.",
+    "tier_launch_desc": "Version essentielle pour démarrer.",
+    "tier_signature_desc": "Sur mesure, avec CMS, animations, SEO.",
+    "tier_enterprise_price": "Sur devis",
+    "tier_enterprise_desc": "Multi-langue, intégrations, support dédié.",
+    "tier_choose": "Choisir ce forfait",
+    "related_title": "Expertises complémentaires.",
+    "related_link": "Explorer →",
+    "bottom_title": "DISCUTONS.",
+    "bottom_lead": "Prêt à lancer <service>{name}</service> ?",
+    "bottom_button": "Demander un devis gratuit"
+  },
+  "projectsHub": {
+    "meta_title": "Projets — Des produits en production",
+    "meta_description": "Études de cas OverBrand : Buy'N'Sellem, Cœurs Braves, INSES, AfriDienst e.V., plus nos solutions EventEz et TKAMS — six plateformes en ligne, du cadrage à la mise en production.",
+    "collection_name": "Projets OverBrand",
+    "breadcrumb_home": "Accueil",
+    "breadcrumb_projects": "Projets",
+    "eyebrow": "Projets — 2025 → 2026",
+    "title_1": "Des produits",
+    "title_2": "en",
+    "title_3": "production",
+    "lead": "Pas des maquettes : des plateformes en ligne, utilisées tous les jours. Marketplace, association trilingue, institut de formation, ONG — et nos propres solutions, EventEz et TKAMS. Voici comment elles ont été construites.",
+    "filters": [
+      "Tous",
+      "Marketplace",
+      "Nos solutions",
+      "EdTech",
+      "Association",
+      "ONG",
+      "Mobile",
+      "Refonte"
+    ],
+    "count_label": "projets affichés",
+    "featured_badge": "Featured",
+    "read_case": "Lire l'étude",
+    "solution_label": "Solution OverBrand",
+    "explore": "Explorer →",
+    "metric_platforms": "Plateformes en production",
+    "metric_solutions": "Solutions OverBrand (EventEz, TKAMS)",
+    "metric_cities": "Villes couvertes (Buy'N'Sellem)",
+    "metric_languages": "Langues livrées (Cœurs Braves)",
+    "cta_title_1": "Votre projet ici",
+    "cta_title_2": "en 2026 ?",
+    "cta_button": "Parlons-en"
+  },
+  "projectDetail": {
+    "case_title_suffix": "Étude de cas OverBrand",
+    "not_found": "Projet introuvable",
+    "generic_description": "Projet {category} réalisé par OverBrand.",
+    "back_to_projects": "Retour aux projets",
+    "label_year": "Année",
+    "label_client": "Client",
+    "label_category": "Catégorie",
+    "view_project": "Voir le projet",
+    "about_project": "À propos du projet",
+    "similar_project": "UN PROJET SIMILAIRE ?",
+    "request_quote": "Demander un devis",
+    "video": "Vidéo",
+    "watch_video": "Voir la vidéo",
+    "gallery": "Galerie",
+    "visual": "Visuel",
+    "similar_body": "Discutons de votre projet et voyons comment nous pouvons vous aider.",
+    "breadcrumb_home": "Accueil",
+    "breadcrumb_projects": "Projets"
+  },
+  "caseStudy": {
+    "chapter": "Chapitre",
+    "case_study_ref": "Case study",
+    "meta_client": "Client",
+    "meta_year": "Année",
+    "meta_services": "Services",
+    "meta_duration": "Durée",
+    "challenge_label": "Challenge : ",
+    "phase": "Phase",
+    "impact": "Impact mesuré",
+    "chapter_01": "L'interface livrée",
+    "fig_caption": "Fig 1.0 — {url}, en production.",
+    "chapter_02": "Le système de couleur",
+    "chapter_03": "Parcours & écrans",
+    "chapter_04": "Crédits projet",
+    "deliverables": "Livrables",
+    "outcomes_title": "Bilan de l'opération",
+    "lead_badge": "Lead",
+    "next_project": "Projet suivant",
+    "all_projects": "Tous les projets",
+    "start_project": "Démarrer un projet",
+    "alt_interface": "{title} — interface",
+    "alt_screen": "{title} — écran {n}",
+    "breadcrumb_home": "Accueil",
+    "mandate_1": "Le",
+    "mandate_2": "Mandat",
+    "spec_1": "Fiche",
+    "spec_2": "Technique"
+  },
+  "aboutPage": {
+    "meta_title": "À propos — Agence digitale à Douala & Yaoundé",
+    "meta_description": "OverBrand est une agence digitale camerounaise fondée en 2019, basée à Douala (Akwa) et Yaoundé (Bastos). Une équipe de 12 personnes au service des marques ambitieuses.",
+    "eyebrow": "À propos — depuis 2019",
+    "title_1": "Une agence",
+    "title_2": "pour la nouvelle",
+    "title_3": "économie",
+    "title_highlight": "africaine",
+    "studio_label": "Studio — Douala",
+    "manifesto": "Nous croyons qu'une marque, avant tout, est une promesse. Et qu'elle se tient par le design, le code et la stratégie.",
+    "manifesto_author": "— Cédric Tefoye, fondateur",
+    "stat_projects": "Projets livrés",
+    "stat_clients": "Clients satisfaits",
+    "stat_years": "Années",
+    "stat_experts": "Experts",
+    "history_title_1": "Notre",
+    "history_title_2": "histoire",
+    "timeline": [
+      {
+        "year": "2019",
+        "title": "Fondation à Douala",
+        "desc": "Trois fondateurs, un premier client et beaucoup de café."
+      },
+      {
+        "year": "2020",
+        "title": "Premier client corporate",
+        "desc": "Un télécom régional nous confie sa refonte complète."
+      },
+      {
+        "year": "2021",
+        "title": "Ouverture bureau Yaoundé",
+        "desc": "Expansion stratégique pour couvrir la capitale."
+      },
+      {
+        "year": "2022",
+        "title": "8 personnes · 20+ projets",
+        "desc": "L'équipe double. La méthodologie se structure."
+      },
+      {
+        "year": "2023",
+        "title": "Lancement du studio motion",
+        "desc": "Une expertise nouvelle rejoint les rangs."
+      },
+      {
+        "year": "2025",
+        "title": "50+ projets · 12 pays",
+        "desc": "Clients au Cameroun, Côte d'Ivoire, France, Suisse, Sénégal."
+      }
+    ],
+    "values_title_1": "Ce qui nous",
+    "values_title_2": "guide",
+    "values": [
+      {
+        "n": "01",
+        "title": "Rigueur",
+        "desc": "Des livrables qui tiennent en production, pas seulement en maquette."
+      },
+      {
+        "n": "02",
+        "title": "Transparence",
+        "desc": "Tarifs publics, planning partagé, rapports hebdomadaires."
+      },
+      {
+        "n": "03",
+        "title": "Créativité",
+        "desc": "Chaque projet mérite sa propre direction artistique."
+      },
+      {
+        "n": "04",
+        "title": "Proximité",
+        "desc": "Une extension de vos équipes, pas un prestataire distant."
+      }
+    ],
+    "how_title": "Comment on bosse",
+    "how_items": [
+      "Lundi : stand-up équipe (30 min)",
+      "Jeudi : design critique transversale",
+      "Vendredi : démo client + rétro interne",
+      "Cycles de livraison de 6 semaines",
+      "Rapports client hebdomadaires"
+    ],
+    "refuse_title": "Ce qu'on refuse",
+    "refuse_items": [
+      "Projets gratuits \"pour la visibilité\"",
+      "Promesses qu'on ne peut pas tenir",
+      "Architecture technique en black-box",
+      "Design \"par comité\" sans direction",
+      "Délais irréalistes pour faire plaisir"
+    ],
+    "team_eyebrow": "L'équipe",
+    "team_title_1": "Une équipe de",
+    "team_title_highlight": "12 personnes",
+    "team_title_2": "à Douala et en remote.",
+    "team_link": "Rencontrer l'équipe",
+    "cta_title_1": "Rencontrons-",
+    "cta_title_2": "nous",
+    "cta_button": "Planifier un call"
+  },
+  "teamPage": {
+    "meta_title": "Équipe — Les co-fondateurs d’OverBrand",
+    "meta_description": "Les cinq co-fondateurs d'OverBrand : produit, ingénierie, cloud, marketing et opérations. Basés à Douala et Yaoundé, et en remote entre l'Afrique et l'Europe.",
+    "eyebrow": "Équipe — {count} co-fondateurs",
+    "title_1": "Les visages",
+    "title_2": "derrière",
+    "lead": "Produit, ingénierie, cloud, marketing, opérations. Cinq co-fondateurs, basés à Douala et Yaoundé, et en remote entre l'Afrique et l'Europe.",
+    "stat_founders": "Co-fondateurs",
+    "stat_founded": "Année de création",
+    "stat_offices": "Bureaux",
+    "stat_languages": "Langues de travail",
+    "default_role": "Fondateur",
+    "hiring_title": "ON RECRUTE.",
+    "hiring_lead": "Senior React Developer · Brand Designer · Growth Lead — trois postes ouverts aujourd'hui.",
+    "hiring_button": "Voir toutes les offres"
+  },
+  "careersPage": {
+    "meta_title": "Carrières — Rejoindre OverBrand à Douala",
+    "meta_description": "OverBrand recrute designers, développeurs et stratèges à Douala, Yaoundé et en remote. Découvrez les postes ouverts et notre culture d'équipe.",
+    "eyebrow": "Carrières — 2026 · 5 postes ouverts",
+    "title_1": "Construisez",
+    "title_2": "les meilleurs projets",
+    "title_3": "du",
+    "title_highlight": "continent",
+    "lead": "L'équipe OverBrand grandit. Rejoignez 12 créatifs et ingénieurs qui livrent pour les marques ambitieuses d'Afrique et d'Europe.",
+    "benefits": [
+      {
+        "n": "01",
+        "title": "Projets ambitieux",
+        "desc": "Pour des marques qui veulent dominer leur marché — pas des sites vitrines."
+      },
+      {
+        "n": "02",
+        "title": "Rémunération transparente",
+        "desc": "Grille publique · revues annuelles · pas de négociation opaque."
+      },
+      {
+        "n": "03",
+        "title": "4 jours / semaine",
+        "desc": "Depuis 2022. Vendredis libres pour vos projets perso."
+      },
+      {
+        "n": "04",
+        "title": "Budget formation 2 000€/an",
+        "desc": "Conférences, cours, livres — vous choisissez, on paye."
+      }
+    ],
+    "positions_title_1": "Postes",
+    "positions_title_2": "ouverts",
+    "positions": [
+      {
+        "role": "Senior React/Next.js Developer",
+        "location": "Douala / Remote Afrique",
+        "type": "CDI",
+        "salary": "35 – 55K EUR"
+      },
+      {
+        "role": "Brand Designer",
+        "location": "Douala",
+        "type": "CDI",
+        "salary": "25 – 40K EUR"
+      },
+      {
+        "role": "Growth Lead",
+        "location": "Remote",
+        "type": "CDI",
+        "salary": "30 – 45K EUR"
+      },
+      {
+        "role": "Motion Designer",
+        "location": "Douala",
+        "type": "CDI",
+        "salary": "22 – 35K EUR"
+      },
+      {
+        "role": "Stagiaire Front-end",
+        "location": "Douala",
+        "type": "Stage 6 mois",
+        "salary": "Gratifié + bonus fin"
+      }
+    ],
+    "process_title_1": "Processus de",
+    "process_title_2": "recrutement",
+    "process_lead": "Retour sous 5 jours maximum, quelle que soit la décision.",
+    "process": [
+      {
+        "n": "01",
+        "title": "Candidature",
+        "desc": "CV + portfolio + lettre courte (moins de 300 mots)."
+      },
+      {
+        "n": "02",
+        "title": "Call 30 min",
+        "desc": "Premier échange avec un fondateur + un pair."
+      },
+      {
+        "n": "03",
+        "title": "Test technique rémunéré",
+        "desc": "1 journée, payée 200€, directement réutilisable."
+      },
+      {
+        "n": "04",
+        "title": "Entretien équipe",
+        "desc": "2h avec 3 membres, visite du studio, décision en 48h."
+      }
+    ],
+    "seek_title": "On cherche",
+    "seek_items": [
+      "Curiosité et soif d'apprendre",
+      "Sens du détail obsessionnel",
+      "Écriture claire (on écrit beaucoup)",
+      "Autonomie dans l'ambiguïté",
+      "Envie de livrer, pas de discuter"
+    ],
+    "avoid_title": "On ne cherche pas",
+    "avoid_items": [
+      "Experts en tout (ça n'existe pas)",
+      "10+ ans obligatoires",
+      "Des profils qui attendent les instructions",
+      "Du « corporate talk » en réunion",
+      "Du syndrome de l'imposteur déguisé"
+    ],
+    "cta_eyebrow": "Pas de poste qui correspond ?",
+    "cta_title_1": "On attend",
+    "cta_title_2": "votre CV",
+    "cta_button": "Candidature spontanée"
+  },
+  "contactPage": {
+    "meta_title": "Contact — Agence digitale Douala & Yaoundé",
+    "meta_description": "Parlons de votre projet. Bureaux à Douala (Boulevard de la Liberté, Akwa) et Yaoundé (Bastos). Réponse sous 24h ouvrées — +237 652 761 931.",
+    "eyebrow": "Contact — Réponse sous 24h",
+    "title_1": "Démarrons",
+    "title_2": "quelque chose",
+    "title_3": "d'inhabituel",
+    "lead_before": "Dites-nous tout sur votre projet. On revient vers vous sous ",
+    "lead_strong": "24h ouvrées",
+    "lead_after": " avec une première lecture et une proposition de call.",
+    "why_title": "Pourquoi nous écrire ?",
+    "why_items": [
+      "Vous avez touché le plafond avec votre interface actuelle.",
+      "Vous lancez un produit qui doit écraser la norme du marché.",
+      "Vous cherchez un partenaire technique sans compromis esthétique."
+    ],
+    "shortcuts_title": "Raccourcis directs",
+    "book_call": "Réservez 30 min",
+    "ticker_days": "LUN–VEN",
+    "ticker_hours": "8H—18H",
+    "ticker_zone": "WAT (GMT+1) — IDÉAL POUR L'EUROPE",
+    "offices_title": "Laboratoires.",
+    "office_douala_address": "Boulevard de la Liberté, Akwa — BP 1541",
+    "office_douala_hours": "Lun–Ven · 08h00 — 18h00",
+    "office_yaounde_address": "Quartier Bastos, Rue 1.839",
+    "office_yaounde_hours": "Sur rendez-vous — Opérations techniques",
+    "country": "Cameroun",
+    "metric_response_time": "Temps moyen de réponse",
+    "metric_response_rate": "Taux de réponse",
+    "metric_free_consult": "Consultation gratuite",
+    "metric_detailed_quote": "Devis détaillé"
+  },
+  "insightsPage": {
+    "meta_title": "Insights — Essais, analyses, inspirations",
+    "meta_description": "Ce qu'on apprend en construisant des produits digitaux en Afrique centrale. Essais et analyses rédigés par l'équipe OverBrand.",
+    "eyebrow": "Insights — 2026",
+    "title_1": "Essais,",
+    "title_2": "analyses,",
+    "title_3": "inspirations",
+    "lead": "Ce qu'on apprend en construisant pour des marques ambitieuses. Déconstruction stratégique, deep dives techniques et culture du design.",
+    "filters": [
+      "Tous",
+      "Design",
+      "Dev",
+      "Stratégie",
+      "Business",
+      "Afrique",
+      "Tutos"
+    ],
+    "newsletter_eyebrow": "Archive hebdo",
+    "newsletter_title_1": "La newsletter qui fait gagner",
+    "newsletter_highlight": "30 min",
+    "newsletter_title_2": "par semaine."
+  },
+  "contactForm": {
+    "budget_label": "Budget estimé",
+    "service_label": "Service souhaité",
+    "placeholder_name": "Votre nom",
+    "placeholder_email": "vous@entreprise.com",
+    "placeholder_phone": "+237 6 00 00 00 00",
+    "placeholder_company": "Votre entreprise",
+    "placeholder_message": "Parlez-nous de votre projet…",
+    "required": "obligatoire",
+    "sent_title_1": "Reçu.",
+    "sent_title_2": "On vous répond vite.",
+    "sent_body": "Votre message est arrivé. Un fondateur le lira sous 24h ouvrées et vous proposera un créneau d'appel.",
+    "sent_again": "Envoyer un autre message",
+    "label_name": "Nom complet *",
+    "label_email": "Email *",
+    "label_company": "Entreprise",
+    "label_phone": "Téléphone (optionnel)",
+    "label_budget": "Budget estimé *",
+    "label_types": "Type de projet (multi-sélection)",
+    "label_deadline": "Deadline souhaitée",
+    "label_message": "Parlez-nous de votre projet *",
+    "ph_name": "Jean Dupont",
+    "ph_email": "jean@entreprise.com",
+    "ph_company": "Nom de l'entité",
+    "ph_phone": "+237 6 00 00 00 00",
+    "ph_message": "Détaillez le contexte, vos objectifs, les contraintes techniques éventuelles…",
+    "gdpr": "J'accepte que mes données soient traitées dans le cadre de ma demande de contact (RGPD).",
+    "submit": "Envoyer — Réponse sous 24h",
+    "sending": "Transmission…",
+    "project_types": [
+      "Site Vitrine",
+      "E-commerce",
+      "App Mobile",
+      "Refonte",
+      "Brand Identity",
+      "Stratégie SEO",
+      "Autre"
+    ]
   }
 }

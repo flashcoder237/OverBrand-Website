@@ -2,60 +2,66 @@
 
 /* ===== THEME VARIABLES ===== */
 :root {
-  /* Brand primary — OverBrand deep blue palette */
+  /* Brand — OverBrand editorial palette (aidesigner v1) */
   --hue: 216;
   --primary: #2855a0;
   --primary-dark: #1a3a6b;
   --primary-light: #3a6fd8;
   --primary-glow: rgba(40, 85, 160, 0.22);
-  --accent: #3a6fd8;
+  --accent: #2855a0;
   --accent-light: #6b9fd4;
   --accent-warm: #FF4D00;
   --accent-warm-glow: rgba(255, 77, 0, 0.13);
 
-  /* Hairline line tokens — used by editorial dividers */
-  --line: rgba(13, 26, 48, 0.10);
-  --line-strong: rgba(13, 26, 48, 0.22);
+  /* Editorial ink/paper tokens */
+  --ink: #0A0A0A;
+  --paper: #F4F4F0;
+  --paper-dark: #E5E4DC;
 
-  /* Light mode */
-  --bg: #f7f8fc;
-  --bg-secondary: #eef1f8;
-  --surface: #e8edf7;
-  --surface-2: #d8e0f0;
-  --border: #c8d3e8;
-  --border-strong: #a8b8d8;
-  --text: #0d1a30;
-  --text-muted: #3d5070;
-  --text-subtle: #7a90b0;
-  --nav-bg: rgba(247, 248, 252, 0.90);
-  --card-bg: #ffffff;
-  --card-border: rgba(40, 85, 160, 0.10);
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(40, 85, 160, 0.15);
-  --outline-stroke: rgba(13, 26, 48, 0.85);
+  /* Hairline line tokens — editorial dividers */
+  --line: rgba(10, 10, 10, 0.12);
+  --line-strong: rgba(10, 10, 10, 0.22);
+  --line-light: rgba(244, 244, 240, 0.15);
+
+  /* Light mode (editorial paper default) */
+  --bg: #F4F4F0;
+  --bg-secondary: #EDEDE8;
+  --surface: #FFFFFF;
+  --surface-2: #EDEDE8;
+  --border: rgba(10, 10, 10, 0.15);
+  --border-strong: rgba(10, 10, 10, 0.35);
+  --text: #0A0A0A;
+  --text-muted: rgba(10, 10, 10, 0.70);
+  --text-subtle: rgba(10, 10, 10, 0.40);
+  --nav-bg: rgba(244, 244, 240, 0.88);
+  --card-bg: #FFFFFF;
+  --card-border: rgba(10, 10, 10, 0.12);
+  --glass-bg: rgba(244, 244, 240, 0.80);
+  --glass-border: rgba(10, 10, 10, 0.10);
+  --outline-stroke: rgba(10, 10, 10, 0.95);
 }
 
 .dark {
-  /* Dark mode */
-  --bg: #050d1a;
-  --bg-secondary: #080f1e;
-  --surface: #0d1a2e;
-  --surface-2: #122038;
-  --border: #1a2d4a;
-  --border-strong: #213a60;
-  --text: #e8eef8;
-  --text-muted: #8aa0c0;
-  --text-subtle: #4d6585;
+  /* Dark mode — ink dominant */
+  --bg: #0A0A0A;
+  --bg-secondary: #121212;
+  --surface: #181818;
+  --surface-2: #1F1F1F;
+  --border: rgba(244, 244, 240, 0.15);
+  --border-strong: rgba(244, 244, 240, 0.30);
+  --text: #F4F4F0;
+  --text-muted: rgba(244, 244, 240, 0.70);
+  --text-subtle: rgba(244, 244, 240, 0.40);
   --accent-warm: #FF5A1A;
-  --accent-warm-glow: rgba(255, 90, 26, 0.10);
-  --nav-bg: rgba(5, 13, 26, 0.90);
-  --card-bg: #0d1a2e;
-  --card-border: rgba(58, 111, 216, 0.12);
-  --glass-bg: rgba(13, 26, 46, 0.75);
-  --glass-border: rgba(58, 111, 216, 0.15);
-  --line: rgba(232, 238, 248, 0.10);
-  --line-strong: rgba(232, 238, 248, 0.22);
-  --outline-stroke: rgba(232, 238, 248, 0.85);
+  --accent-warm-glow: rgba(255, 90, 26, 0.12);
+  --nav-bg: rgba(10, 10, 10, 0.90);
+  --card-bg: #121212;
+  --card-border: rgba(244, 244, 240, 0.10);
+  --glass-bg: rgba(10, 10, 10, 0.75);
+  --glass-border: rgba(244, 244, 240, 0.12);
+  --line: rgba(244, 244, 240, 0.12);
+  --line-strong: rgba(244, 244, 240, 0.25);
+  --outline-stroke: rgba(244, 244, 240, 0.90);
 }
 
 /* ===== BASE ===== */
@@ -360,14 +366,20 @@ body {
   clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
 }
 
-/* ===== SECTION ===== */
+/* ===== SECTION =====
+   Vertical rhythm only. This used to be the `padding` shorthand
+   (`6rem 1.5rem`), which silently beat the Tailwind utilities every consumer
+   pairs it with: `.section px-6 lg:px-12 lg:pl-28` still resolved to 24px of
+   horizontal padding at every breakpoint, because plain CSS outranks the
+   utility layer. On large screens that left section headings tucked under the
+   64px side rail. Horizontal padding is now the caller's job. */
 .section {
-  padding: 6rem 1.5rem;
+  padding-block: 6rem;
 }
 
 @media (max-width: 768px) {
   .section {
-    padding: 4rem 1rem;
+    padding-block: 4rem;
   }
 }
 
@@ -542,7 +554,19 @@ html.lenis {
 /* ===== EDITORIAL UTILITIES (aidesigner direction) ===== */
 .text-outline {
   color: transparent;
+  -webkit-text-stroke: 1.5px var(--outline-stroke);
+}
+.text-outline-thin {
+  color: transparent;
   -webkit-text-stroke: 1px var(--outline-stroke);
+}
+.text-outline-paper {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--paper);
+}
+.text-outline-ink {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--ink);
 }
 .text-outline-primary {
   color: transparent;
@@ -551,6 +575,113 @@ html.lenis {
 .text-outline-accent {
   color: transparent;
   -webkit-text-stroke: 1.5px var(--accent-warm);
+}
+
+/* Editorial body / display class shortcuts */
+.font-body {
+  font-family: var(--font-sans, 'Outfit', system-ui, sans-serif);
+}
+.font-serif-it {
+  font-family: var(--font-serif, 'Playfair Display', Georgia, serif);
+  font-style: italic;
+}
+
+/* Hairline variants — match aidesigner naming */
+.hairline-b { border-bottom: 1px solid var(--line); }
+.hairline-t { border-top: 1px solid var(--line); }
+.hairline-l { border-left: 1px solid var(--line); }
+.hairline-r { border-right: 1px solid var(--line); }
+.hairline-light-b { border-bottom: 1px solid var(--line-light); }
+.hairline-light-t { border-top: 1px solid var(--line-light); }
+
+/* Grid hairlines container — used by bento layouts */
+.grid-hairlines {
+  display: grid;
+  gap: 1px;
+  background-color: var(--ink);
+  border: 1px solid var(--ink);
+}
+.grid-hairlines > * {
+  background-color: var(--paper);
+}
+
+/* Scroll reveal — CSS scroll-driven animation, no JavaScript.
+   This was previously an IntersectionObserver that toggled a class/attribute on
+   server-rendered nodes. With streaming SSR it inevitably marked sections that
+   had arrived in the HTML but not yet hydrated, so React reported a hydration
+   mismatch on every page using `.reveal`. Driving it from CSS removes the race
+   entirely.
+   `.reveal` is visible by default: browsers without `animation-timeline`
+   (currently Firefox) and users with JS disabled simply see the content, and
+   nothing can ever leave it stuck at opacity 0. */
+@keyframes reveal-in {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 22%;
+    }
+  }
+}
+
+/* Editorial buttons — sharp, uppercase, tight */
+.btn-ink {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.9rem 1.6rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--ink);
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btn-ink:hover { background: var(--accent-warm); color: var(--paper); transform: translateY(-1px); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  padding: 0.9rem 1.6rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btn-ghost:hover { background: var(--ink); color: var(--paper); transform: translateY(-1px); }
+
+.dark .btn-ghost { color: var(--paper); border-color: var(--paper); }
+.dark .btn-ghost:hover { background: var(--paper); color: var(--ink); }
+
+/* Editorial pill tag */
+.tag-pill {
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.75rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 .hairline {
@@ -606,6 +737,18 @@ html.lenis {
 }
 .accent-underline:hover::after {
   transform: scaleX(1);
+}
+
+/* Job/list row that inverts to ink on hover and gains inset padding.
+   Pure CSS so the row can live in a Server Component. */
+.row-invert {
+  padding-inline: 0;
+  transition: background-color 0.3s ease, color 0.3s ease, padding-inline 0.3s ease;
+}
+.row-invert:hover {
+  background: var(--ink);
+  color: var(--paper);
+  padding-inline: 1.5rem;
 }
 
 /* Editorial side rail — rotated caption */

@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OverBrand | Processus Absolu</title>
+    
+    <!-- 
+      aesthetic_dna: Editorial Brutalism & Swiss Grid
+      ui_paradigm: Scrollytelling & Data Density
+      palette: Paper (#F4F4F0), Ink (#0A0A0A), Blue (#2855A0), Orange (#FF4D00)
+    -->
+
+    <!-- Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        paper: '#F4F4F0',
+                        ink: '#0A0A0A',
+                        brandBlue: '#2855A0',
+                        brandOrange: '#FF4D00',
+                    },
+                    fontFamily: {
+                        display: ['Anton', 'sans-serif'],
+                        body: ['Outfit', 'sans-serif'],
+                    },
+                    screens: {
+                        'md': '768px',
+                        'lg': '1024px',
+                        'xl': '1280px',
+                        '2xl': '1536px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Baseline & Utilities */
+        body { background-color: var(--color-paper, #F4F4F0); color: var(--color-ink, #0A0A0A); }
+        ::selection { background-color: #FF4D00; color: #F4F4F0; }
+        
+        /* The Grain Override */
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 9999; opacity: 0.45;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            mix-blend-mode: multiply;
+        }
+
+        /* Typography Extras */
+        .text-outline {
+            color: transparent;
+            -webkit-text-stroke: 1.5px #0A0A0A;
+        }
+        @media (min-width: 768px) { .text-outline { -webkit-text-stroke: 2px #0A0A0A; } }
+        
+        .text-outline-paper {
+            color: transparent;
+            -webkit-text-stroke: 1.5px #F4F4F0;
+        }
+
+        /* Layout Grid Lines (The Brutalist Frame) */
+        .grid-frame { border-color: #0A0A0A; }
+        .border-b-ink { border-bottom: 1px solid #0A0A0A; }
+        .border-r-ink { border-right: 1px solid #0A0A0A; }
+        .border-t-ink { border-top: 1px solid #0A0A0A; }
+        .border-l-ink { border-left: 1px solid #0A0A0A; }
+
+        /* Rail transform */
+        .vertical-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+        }
+
+        /* Complex Layout Adjustments */
+        .main-wrapper { margin-left: 48px; }
+        @media (min-width: 768px) { .main-wrapper { margin-left: 64px; } }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #F4F4F0; border-left: 1px solid #0A0A0A; }
+        ::-webkit-scrollbar-thumb { background: #0A0A0A; }
+
+        /* Hide scrollbar for timeline but keep functionality */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Image filters */
+        .img-editorial { filter: grayscale(100%) contrast(1.2); transition: filter 0.4s ease; }
+        .group:hover .img-editorial { filter: grayscale(0%) contrast(1); }
+
+        /* Multi-column text logic */
+        .reading-columns { column-count: 1; column-gap: 2rem; }
+        @media (min-width: 1024px) { .reading-columns { column-count: 2; } }
+
+        /* Accordion transition */
+        .accordion-content { grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.19, 1, 0.22, 1); }
+        .accordion-content[aria-expanded="true"] { grid-template-rows: 1fr; }
+        .accordion-inner { overflow: hidden; }
+
+        /* Interactions */
+        .btn-push:active { transform: translateY(2px) scale(0.98); }
+        .reveal-element { opacity: 0; transform: translateY(20px); transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
+        .reveal-element.is-visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body class="font-body text-ink antialiased bg-paper overflow-x-hidden">
+
+    <!-- Global Noise Overlay -->
+    <div class="noise-overlay"></div>
+
+    <!-- 64px Fixed Left Side Rail -->
+    <aside class="fixed top-0 left-0 h-screen w-[48px] md:w-[64px] border-r-ink flex flex-col justify-between items-center py-6 bg-paper z-50">
+        <a href="#" class="font-display text-2xl uppercase tracking-tighter hover:text-brandOrange transition-colors">OB</a>
+        
+        <div class="flex-1 flex items-center justify-center">
+            <span class="vertical-text font-display uppercase tracking-widest text-sm text-ink/70">
+                Methodology &middot; 2024
+            </span>
+        </div>
+
+        <button class="w-10 h-10 flex flex-col gap-1.5 items-center justify-center hover:bg-ink hover:text-paper transition-colors rounded-full rounded-none">
+            <span class="block w-5 h-[2px] bg-current"></span>
+            <span class="block w-5 h-[2px] bg-current"></span>
+        </button>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <main class="main-wrapper flex flex-col">
+
+        <!-- 1. HERO -->
+        <header class="min-h-[90vh] flex flex-col border-b-ink relative">
+            <div class="flex-1 px-4 md:px-12 py-12 md:py-24 flex flex-col justify-center">
+                <p class="font-body font-bold uppercase tracking-widest text-brandOrange mb-6 md:mb-12 text-sm md:text-base flex items-center gap-4">
+                    <span class="w-8 h-[1px] bg-brandOrange hidden md:block"></span>
+                    Processus — 6 Étapes
+                </p>
+                <h1 class="font-display uppercase text-[15vw] md:text-[12vw] leading-[0.8] mb-12 mix-blend-difference z-10">
+                    <span class="block text-outline">Une Méthode</span>
+                    <span class="block">Claire,</span>
+                    <span class="block">Mesurable.</span>
+                </h1>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 border-t-ink pt-8">
+                    <div class="lg:col-span-4 font-display text-2xl md:text-4xl text-brandBlue uppercase leading-none">
+                        Pas de hasard. <br>L'ingénierie du design.
+                    </div>
+                    <div class="lg:col-span-6 font-body text-lg md:text-xl leading-relaxed text-ink/80 max-w-3xl">
+                        <p class="mb-4">Nous avons déconstruit le processus de création digital classique pour en extraire l'essence. Exit les phases nébuleuses terminées par des "tadaaa" approximatifs. Chaque projet OverBrand est une mécanique de précision.</p>
+                        <p>Six étapes incompressibles. Des livrables tangibles à chaque palier. Une transparence tarifaire et calendaire absolue. Vous savez où nous sommes, vous savez où nous allons, et vous savez comment nous y arrivons ensemble.</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 2. MANIFESTO STRIP -->
+        <section class="border-b-ink pb-12 pt-16 px-4 md:px-12 bg-ink text-paper">
+            <h2 class="font-display uppercase text-[8vw] md:text-[6vw] leading-[0.85] text-center max-w-[90%] mx-auto">
+                Pas de <span class="text-brandOrange">black-box</span>. <br>
+                Pas de surprises. <span class="text-outline-paper">Chaque étape a</span> <br>
+                ses livrables, ses dates, son prix.
+            </h2>
+        </section>
+
+        <!-- 3. PROCESS CHAPTERS -->
+        <div class="flex flex-col">
+            
+            <!-- STEP 01 (Left Text, Right Number) -->
+            <section class="min-h-[100dvh] grid grid-cols-1 lg:grid-cols-2 border-b-ink group">
+                <!-- Data Left -->
+                <div class="p-6 md:p-12 lg:p-24 flex flex-col justify-between border-b-ink lg:border-b-0 lg:border-r-ink reveal-element">
+                    <div>
+                        <div class="flex justify-between items-start border-b-ink pb-6 mb-8">
+                            <h3 class="font-display text-4xl md:text-6xl uppercase leading-none">Consultation <br>Gratuite</h3>
+                            <span class="font-body text-xs border border-ink py-1 px-3 rounded-full uppercase tracking-wider">Durée: 30–60 Min</span>
+                        </div>
+                        
+                        <p class="font-display text-2xl text-brandBlue uppercase mb-6 leading-tight">"On ne démarre jamais dans le noir. D'abord, on écoute."</p>
+                        
+                        <div class="reading-columns text-base leading-relaxed text-ink/80 mb-12">
+                            <p class="mb-4">Toute collaboration réussie commence par une conversation franche. Ce premier appel n'est pas un argumentaire de vente, c'est une séance de diagnostic. Nous plongeons dans votre écosystème, analysons vos frictions actuelles et challengeons vos objectifs. Pourquoi voulez-vous refaire cette interface ? Quel est le véritable problème métier à résoudre ?</p>
+                            <p class="mb-4">Nous abordons immédiatement la question du budget et des délais pour vérifier l'alignement. Si vos attentes ne correspondent pas à notre méthode de travail ou à la réalité du marché, nous vous le disons immédiatement et vous orientons vers d'autres solutions.</p>
+                            <p class="mb-4">Durant cet échange, nous cartographions vos audiences cibles, évaluons l'existant (legacy tech, dettes techniques potentielles) et définissons les KPIs de succès. L'objectif est de ressortir de cette heure avec une vision claire de la faisabilité du projet et de la valeur que nous pouvons réellement apporter.</p>
+                            <p>Suite à cet appel, notre équipe interne se réunit pour valider si oui ou non, OverBrand est le partenaire idéal pour relever votre défi. C'est le fondement de notre engagement mutuel.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-8 border-t-ink pt-8">
+                        <div>
+                            <h4 class="font-bold text-xs uppercase tracking-widest text-brandOrange mb-3">Livrables Inclus</h4>
+                            <ul class="text-sm space-y-2 opacity-80 list-disc list-inside">
+                                <li>Brief de synthèse écrit</li>
+                                <li>Fourchette estimative macro</li>
+                                <li>Évaluation de faisabilité</li>
+                            </ul>
+                        </div>
+                        <div class="relative h-32 w-full bg-ink overflow-hidden border border-ink">
+                            <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=600" alt="Consultation en ligne" class="w-full h-full object-cover img-editorial opacity-50">
+                            <i class="ph ph-video-camera text-paper text-2xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Number Right -->
+                <div class="bg-paper flex items-center justify-center p-12 overflow-hidden sticky top-0 h-screen lg:h-auto z-[-1]">
+                    <span class="font-display text-[35vw] lg:text-[25vw] leading-none text-outline select-none mt-12 md:mt-0">01</span>
+                </div>
+            </section>
+
+            <!-- STEP 02 (Number Left, Text Right) -->
+            <section class="min-h-[100dvh] grid grid-cols-1 flex-col-reverse lg:grid-cols-2 border-b-ink group">
+                <!-- Number Left -->
+                <div class="hidden lg:flex bg-ink text-paper items-center justify-center p-12 overflow-hidden sticky top-0 h-screen border-r border-[#333]">
+                    <span class="font-display text-[25vw] leading-none text-outline-paper select-none">02</span>
+                </div>
+                
+                <!-- Data Right -->
+                <div class="p-6 md:p-12 lg:p-24 flex flex-col justify-between bg-paper lg:col-start-2 reveal-element">
+                    <div class="lg:hidden flex items-center justify-center bg-ink text-paper py-24 mb-6 border-b-ink w-full px-4 -mx-4">
+                        <span class="font-display text-[35vw] leading-none text-outline-paper select-none">02</span>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-start border-b-ink pb-6 mb-8 mt-12 md:mt-0 lg:mt-0">
+                            <h3 class="font-display text-4xl md:text-6xl uppercase leading-none">Proposition <br>& Devis</h3>
+                            <span class="font-body text-xs border border-ink py-1 px-3 rounded-full uppercase tracking-wider">3–5 Jours</span>
+                        </div>
+                        
+                        <p class="font-display text-2xl text-brandOrange uppercase mb-6 leading-tight">"Un document clair qui sert de contrat moral."</p>
+                        
+                        <div class="reading-columns text-base leading-relaxed text-ink/80 mb-12">
+                            <p class="mb-4">Si le diagnostic initial est concluant, nous passons à la phase de formalisation. L'élaboration de la proposition n'est pas un exercice de copier-coller. Nous orchestrons une réponse sur-mesure qui agit comme le contrat moral et technique de notre future collaboration.</p>
+                            <p class="mb-4">Nous établissons un "Scope of Work" (SoW) exhaustif. Ce document détaille avec une précision chirurgicale ce qui est inclus, et tout aussi important, ce qui est hors périmètre. Cette taxonomie des tâches empêche toute frustration future liée à des interprétations divergentes.</p>
+                            <p class="mb-4">Le planning est séquencé en jalons de validation stricts. Chaque phase est chiffrée individuellement, offrant une transparence tarifaire absolue. Vous ne recevrez jamais une simple ligne "Création site web - 15K€". Nous segmentons l'Architecture, l'Art Direction, la Production et le QA.</p>
+                            <p>Dès signature numérique de ce document et versement de l'acompte (généralement 30%), l'équipe projet est bloquée et le Kick-off meeting est planifié. Le chronomètre démarre.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-8 border-t-ink pt-8">
+                        <div>
+                            <h4 class="font-bold text-xs uppercase tracking-widest text-brandBlue mb-3">Livrables Inclus</h4>
+                            <ul class="text-sm space-y-2 opacity-80 list-disc list-inside">
+                                <li>Doc de Scope détaillé (Notion)</li>
+                                <li>Plan de phasage & Planning</li>
+                                <li>Grille tarifaire ouverte</li>
+                            </ul>
+                        </div>
+                        <div class="relative h-32 w-full overflow-hidden border border-ink bg-gray-200">
+                            <!-- Code/Doc representation -->
+                            <div class="p-3 text-[8px] font-mono leading-tight space-y-2 opacity-50">
+                                <div class="w-full h-2 bg-ink/20"></div>
+                                <div class="w-3/4 h-2 bg-ink/20"></div>
+                                <div class="w-1/2 h-2 bg-brandOrange/40"></div>
+                                <div class="grid grid-cols-3 gap-1 mt-4">
+                                    <div class="h-10 bg-ink/10"></div>
+                                    <div class="h-10 bg-ink/10"></div>
+                                    <div class="h-10 border border-ink/40"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STEP 03 -->
+            <section class="min-h-[100dvh] grid grid-cols-1 lg:grid-cols-2 border-b-ink group">
+                <div class="p-6 md:p-12 lg:p-24 flex flex-col justify-between border-b-ink lg:border-b-0 lg:border-r-ink reveal-element relative bg-[#ECECDA]">
+                    <!-- Colored background variant for tension -->
+                    <div>
+                        <div class="flex justify-between items-start border-b-ink pb-6 mb-8">
+                            <h3 class="font-display text-4xl md:text-6xl uppercase leading-none">Conception <br>& Design</h3>
+                            <span class="font-body text-xs border border-ink bg-ink text-paper py-1 px-3 rounded-full uppercase tracking-wider">1–4 Semaines</span>
+                        </div>
+                        
+                        <p class="font-display text-2xl text-ink uppercase mb-6 leading-tight">"On designe avec vous, pas pour vous."</p>
+                        
+                        <div class="reading-columns text-base leading-relaxed text-ink/80 mb-12">
+                            <p class="mb-4">Fini le design dans une tour d'ivoire. Notre méthodologie repose sur le co-design itératif. Nous vous donnons un accès direct à notre espace de travail Figma. Vous voyez les pixels bouger, les structures prendre forme, et les idées pivoter en temps réel. Cette transparence désamorce l'effet surprise anxiogène des présentations de fin de cycle.</p>
+                            <p class="mb-4">Nous commençons par l'UX. Des wireframes basse fidélité, centrés exclusivement sur la hiérarchie de l'information et les flux de conversion. Aucune couleur, aucune typographie d'interface ne vient polluer cette réflexion structurelle. Validation. Ensuite seulement, la Direction Artistique entre en jeu.</p>
+                            <p class="mb-4">L'UI est forgée via des moodboards analytiques, puis déclinée sur une ou deux pages clés de référence. Nous créons un Design System granulaire dès le premier jour : tokens, variables sémantiques, composants interactifs. Chaque bouton a ses états (hover, active, disabled) documentés.</p>
+                            <p>Avant la moindre ligne de code, vous naviguez dans un prototype interactif haute-fidélité. Ce que vous testez à l'écran correspondra au pixel près au produit final. Les allers-retours sont concentrés ici, où le changement est encore rapide et peu coûteux.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-8 border-t-ink pt-8">
+                        <div>
+                            <h4 class="font-bold text-xs uppercase tracking-widest text-ink mb-3">Livrables Inclus</h4>
+                            <ul class="text-sm space-y-2 opacity-80 list-disc list-inside">
+                                <li>Wireframes annotés</li>
+                                <li>Maquettes Responsive HD</li>
+                                <li>Figma & Design System (Tokens)</li>
+                                <li>Prototype Interactif</li>
+                            </ul>
+                        </div>
+                        <div class="relative h-32 w-full bg-ink overflow-hidden border border-ink flex items-end">
+                            <img src="https://images.unsplash.com/photo-1618788372246-ce5f4fbaea76?auto=format&fit=crop&q=80&w=600" alt="UI Design" class="w-full h-full object-cover img-editorial opacity-70">
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-paper flex items-center justify-center p-12 overflow-hidden sticky top-0 h-screen lg:h-auto z-[-1]">
+                    <span class="font-display text-[35vw] lg:text-[25vw] leading-none text-outline select-none">03</span>
+                </div>
+            </section>
+
+             <!-- STEP 04 (Number Left, Text Right) -->
+            <section class="min-h-[100dvh] grid grid-cols-1 flex-col-reverse lg:grid-cols-2 border-b-ink group">
+                <div class="hidden lg:flex bg-ink text-paper items-center justify-center p-12 overflow-hidden sticky top-0 h-screen border-r border-[#333]">
+                    <span class="font-display text-[25vw] leading-none text-outline-paper select-none">04</span>
+                </div>
+                
+                <div class="p-6 md:p-12 lg:p-24 flex flex-col justify-between bg-paper lg:col-start-2 reveal-element">
+                    <div class="lg:hidden flex items-center justify-center bg-ink text-paper py-24 mb-6 border-b-ink w-full px-4 -mx-4">
+                        <span class="font-display text-[35vw] leading-none text-outline-paper select-none">04</span>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-start border-b-ink pb-6 mb-8 mt-12 md:mt-0 lg:mt-0">
+                            <h3 class="font-display text-4xl md:text-6xl uppercase leading-none">Développe<br>ment</h3>
+                            <span class="font-body text-xs border border-ink py-1 px-3 rounded-full uppercase tracking-wider">2–10 Semaines</span>
+                        </div>
+                        
+                        <p class="font-display text-2xl text-brandBlue uppercase mb-6 leading-tight">"Du code robuste, documenté, maintenable."</p>
+                        
+                        <div class="reading-columns text-base leading-relaxed text-ink/80 mb-12">
+                            <p class="mb-4">Ici, le design devient système. Nous n'utilisons pas de constructeurs de pages génériques qui alourdissent le code et brident les performances. Nous écrivons du code natif, sémantique et optimisé. Notre philosophie technique favorise la Headless Architecture et les frameworks modernes (React, Next.js, Vue, Tailwind) pour garantir des temps de chargement millisecondaires.</p>
+                            <p class="mb-4">Le développement n'est pas une période de silence radio. Chaque semaine, nous déployons nos avancées sur un environnement de staging ("preview links"). Vous pouvez suivre la concrétisation des interfaces au fur et à mesure.</p>
+                            <p class="mb-4">Les animations complexes, les interactions au scroll et la logique métier sont intégrées avec un soin maniaque et testées pour ne jamais compromettre l'accessibilité ou la vitesse d'exécution. Nous implémentons le CMS (système de gestion de contenu) en veillant à ce que l'interface administrateur soit aussi ergonomique que le front-end.</p>
+                            <p>Notre code source est géré via des workflows stricts (Git/GitHub), revu par les pairs (Code Reviews) et propulsé par des intégrations continues (CI/CD). La dette technique est éradiquée à la source.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-8 border-t-ink pt-8">
+                        <div>
+                            <h4 class="font-bold text-xs uppercase tracking-widest text-brandBlue mb-3">Livrables Inclus</h4>
+                            <ul class="text-sm space-y-2 opacity-80 list-disc list-inside">
+                                <li>Code source propre & repo Git</li>
+                                <li>Liens de preview continus</li>
+                                <li>CMS configuré sur-mesure</li>
+                            </ul>
+                        </div>
+                         <div class="relative h-32 w-full bg-ink p-4 flex flex-col justify-end text-[#FFF] font-mono text-[10px] sm:text-xs overflow-hidden border border-ink">
+                            <span class="text-green-400">~/overbrand/project $ npm run build</span>
+                            <span class="text-gray-400">Compiling...</span>
+                            <span class="text-gray-400">✓ Compiled in 1.4s</span>
+                            <span class="text-brandBlue/80">Deploying to Vercel...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+             <!-- STEP 05 -->
+             <section class="min-h-[100dvh] grid grid-cols-1 lg:grid-cols-2 border-b-ink group">
+                <div class="p-6 md:p-12 lg:p-24 flex flex-col justify-between border-b-ink lg:border-b-0 lg:border-r-ink reveal-element">
+                    <div>
+                        <div class="flex justify-between items-start border-b-ink pb-6 mb-8">
+                            <h3 class="font-display text-4xl md:text-6xl uppercase leading-none">Tests & <br>Validation</h3>
+                            <span class="font-body text-xs border border-ink py-1 px-3 rounded-full uppercase tracking-wider">1–2 Semaines</span>
+                        </div>
+                        
+                        <p class="font-display text-2xl text-brandOrange uppercase mb-6 leading-tight">"On ne livre pas ce qu'on n'utiliserait pas."</p>
+                        
+                        <div class="reading-columns text-base leading-relaxed text-ink/80 mb-12">
+                            <p class="mb-4">La phase de QA (Quality Assurance) est souvent le parent pauvre du web. Chez OverBrand, c'est une étape critique et chiffrée. Avant de prétendre à un lancement, l'application subit une batterie d'audits agressifs.</p>
+                            <p class="mb-4">Nous effectuons un "Cross-Browser & Cross-Device testing" rigoureux : iOS, Android, Safari, Chrome, Firefox. Nous chassons les bugs d'affichage, les effondrements de grille et les interactions flottantes sur des dizaines de résolutions différentes.</p>
+                            <p class="mb-4">L'audit de performance est sans pitié. Analyse des Web Vitals (LCP, FID, CLS), compression agressive des assets, vérification de la structure sémantique pour le SEO technique. L'accessibilité (a11y) n'est pas une option : navigation au clavier complète, contrastes validés ARIA, support lecteurs d'écran.</p>
+                            <p>Nous consolidons tout cela dans un rapport de validation et procédons aux derniers ajustements. Rien ne bouge de notre serveur de staging vers la production tant que les voyants ne sont pas tous au vert. C'est la garantie qualité absolue de notre process.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-8 border-t-ink pt-8">
+                        <div>
+                            <h4 class="font-bold text-xs uppercase tracking-widest text-[#0ca678] mb-3">Livrables Inclus</h4>
+                            <ul class="text-sm space-y-2 opacity-80 list-disc list-inside">
+                                <li>Rapport QA & Bugs fixés</li>
+                                <li>Audit Performance (Lighthouse)</li>
+                                <li>Baseline SEO Technique & a11y</li>
+                            </ul>
+                        </div>
+                        <div class="relative h-32 w-full flex items-center justify-center overflow-hidden border border-ink bg-paper">
+                             <!-- Lighthouse subtle graphic -->
+                             <div class="flex gap-4">
+                                <div class="w-12 h-12 rounded-full border-4 border-[#0ca678] flex items-center justify-center text-[#0ca678] font-bold text-sm">99</div>
+                                <div class="w-12 h-12 rounded-full border-4 border-[#0ca678] flex items-center justify-center text-[#0ca678] font-bold text-sm">100</div>
+                                <div class="w-12 h-12 rounded-full border-4 border-brandOrange flex items-center justify-center text-brandOrange font-bold text-sm">82</div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-paper flex items-center justify-center p-12 overflow-hidden sticky top-0 h-screen lg:h-auto z-[-1]">
+                    <span class="font-display text-[35vw] lg:text-[25vw] leading-none text-outline select-none">05</span>
+                </div>
+            </section>
+
+             <!-- STEP 06 (Number Left, Text Right) -->
+            <section class="min-h-[100dvh] grid grid-cols-1 flex-col-reverse lg:grid-cols-2 border-b-ink group bg-ink text-paper">
+                <div class="hidden lg:flex bg-paper text-ink items-center justify-center p-12 overflow-hidden sticky top-0 h-screen border-r border-[#333]">
+                    <span class="font-display text-[25vw] leading-none text-outline select-none">06</span>
+                </div>
+                
+                <div class="p-6 md:p-12 lg:p-24 flex flex-col justify-between lg:col-start-2 reveal-element">
+                     <div class="lg:hidden flex items-center justify-center bg-paper text-ink py-24 mb-6 border-b-ink w-full px-4 -mx-4">
+                        <span class="font-display text-[35vw] leading-none text-outline select-none">06</span>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-start border-b border-[#333] pb-6 mb-8 mt-12 md:mt-0 lg:mt-0">
+                            <h3 class="font-display text-4xl md:text-6xl uppercase leading-none">Livraison & <br>Support</h3>
+                            <span class="font-body text-xs border border-paper py-1 px-3 rounded-full uppercase tracking-wider">Continu</span>
+                        </div>
+                        
+                        <p class="font-display text-2xl text-paper opacity-80 uppercase mb-6 leading-tight">"On reste à vos côtés après la livraison."</p>
+                        
+                        <div class="reading-columns text-base leading-relaxed text-paper/80 mb-12">
+                            <p class="mb-4">Le déploiement en production, le fameux "Go-Live", est orchestré au moment où l'impact sur votre traffic est minimal (souvent aux aurores). Nous gérons la migration DNS, l'implémentation des certificats SSL, et la configuration serveur pour assurer un basculement sans coupure d'activité (Zero Downtime Deployment).</p>
+                            <p class="mb-4">Mais livrer un outil complexe sans mode d'emploi est suicidaire. Nous organisons des sessions de formation approfondies pour vos équipes de contenus et de marketing. Comment modifier un texte ? Comment créer un nouvel article de blog ? Comment analyser les métriques de base intégrées ?</p>
+                            <p class="mb-4">Nous produisons des tutoriels vidéo personnalisés via des plateformes comme Loom, documentant les tâches courantes. Ces ressources deviennent les archives de votre indépendance digitale.</p>
+                            <p>Enfin, chaque projet inclut une période de garantie et de support réactif post-lancement (généralement 30 jours). Passé ce délai, nous proposons des contrats de maintenance évolutive pour assurer la sécurité continue, la mise à jour des stacks et l'itération de nouvelles fonctionnalités selon les retours data de vos utilisateurs réels.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-8 border-t border-[#333] pt-8">
+                        <div>
+                            <h4 class="font-bold text-xs uppercase tracking-widest text-[#FF4D00] mb-3">Livrables Inclus</h4>
+                            <ul class="text-sm space-y-2 opacity-80 list-disc list-inside">
+                                <li>Mise en ligne technique (Go-Live)</li>
+                                <li>Formation & Tutoriels vidéo</li>
+                                <li>30 Jours support garantie inclus</li>
+                                <li>Plan de maintenance (Option)</li>
+                            </ul>
+                        </div>
+                        <div class="relative h-32 w-full flex items-center justify-center border border-[#333]">
+                           <i class="ph ph-rocket-launch text-4xl text-paper mb-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 4. TIMELINE VISUAL (Horizontal Scroll) -->
+        <section class="py-24 px-4 md:px-12 border-b-ink bg-[#ECECDA] overflow-hidden">
+            <h3 class="font-display text-3xl uppercase mb-12 tracking-wide">Macro-Vue du cycle_</h3>
+            
+            <div class="relative w-full no-scrollbar overflow-x-auto pb-8 cursor-ew-resize">
+                <!-- The Line -->
+                <div class="absolute top-[28px] left-0 w-[150%] md:w-[120%] lg:w-full h-[2px] bg-ink"></div>
+                
+                <!-- The Stops -->
+                <div class="flex relative min-w-max md:min-w-0 justify-between items-start pt-6 gap-8 md:gap-0">
+                    
+                    <div class="flex flex-col items-center relative w-32 md:w-auto">
+                        <div class="w-4 h-4 bg-paper border-2 border-ink rounded-full absolute -top-[52px] z-10 mx-auto left-0 right-0"></div>
+                        <span class="font-display text-brandOrange text-xl">01</span>
+                        <span class="font-body text-xs uppercase font-bold text-center mt-2 leading-tight">Consultation</span>
+                    </div>
+
+                    <div class="flex flex-col items-center relative w-32 md:w-auto">
+                        <div class="w-4 h-4 bg-paper border-2 border-ink rounded-full absolute -top-[52px] z-10 mx-auto left-0 right-0"></div>
+                        <span class="font-display text-ink text-xl">02</span>
+                        <span class="font-body text-xs uppercase font-bold text-center mt-2 leading-tight">Devis & <br>Planning</span>
+                    </div>
+
+                    <div class="flex flex-col items-center relative w-32 md:w-auto">
+                        <div class="w-4 h-4 bg-paper border-2 border-ink rounded-full absolute -top-[52px] z-10 mx-auto left-0 right-0"></div>
+                        <span class="font-display text-ink text-xl">03</span>
+                        <span class="font-body text-xs uppercase font-bold text-center mt-2 leading-tight">UX/UI <br>Design</span>
+                    </div>
+
+                    <div class="flex flex-col items-center relative w-32 md:w-auto">
+                        <div class="w-4 h-4 bg-paper border-2 border-ink rounded-full absolute -top-[52px] z-10 mx-auto left-0 right-0"></div>
+                        <span class="font-display text-ink text-xl">04</span>
+                        <span class="font-body text-xs uppercase font-bold text-center mt-2 leading-tight">Code & <br>Intégration</span>
+                    </div>
+
+                    <div class="flex flex-col items-center relative w-32 md:w-auto">
+                        <div class="w-4 h-4 bg-paper border-2 border-ink rounded-full absolute -top-[52px] z-10 mx-auto left-0 right-0"></div>
+                        <span class="font-display text-ink text-xl">05</span>
+                        <span class="font-body text-xs uppercase font-bold text-center mt-2 leading-tight">QA <br>Tests</span>
+                    </div>
+
+                    <div class="flex flex-col items-center relative w-32 md:w-auto">
+                        <div class="w-4 h-4 bg-ink border-2 border-ink rounded-full absolute -top-[52px] z-10 mx-auto left-0 right-0 ring-4 ring-brandOrange/20"></div>
+                        <span class="font-display text-brandOrange text-xl">06</span>
+                        <span class="font-body text-xs uppercase font-bold text-center mt-2 leading-tight">Déploiement</span>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. TOOLS WE USE (Brutalist Grid) -->
+        <section class="border-b-ink flex flex-col md:flex-row">
+            <div class="w-full md:w-1/3 lg:w-1/4 p-12 border-b-ink md:border-b-0 md:border-r-ink bg-ink text-paper flex flex-col justify-center">
+                <h3 class="font-display text-4xl uppercase leading-none mb-4">La Tech<br>Stack.</h3>
+                <p class="font-body text-sm opacity-80">Nous n'utilisons que des standards industriels dominants. Pas d'outils obscurs, vos équipes d'ingénierie peuvent reprendre les rênes instantanément.</p>
+            </div>
+            
+            <div class="w-full md:w-2/3 lg:w-3/4 grid grid-cols-2 md:grid-cols-4 border-l-ink md:border-l-0">
+                <!-- Tool Cells -->
+                <div class="p-6 border-b-ink border-r-ink flex flex-col items-start aspect-square justify-between hover:bg-[#ECECDA] transition-colors group cursor-crosshair">
+                    <i class="ph-fill ph-figma-logo text-3xl group-hover:text-brandOrange transition-colors"></i>
+                    <div>
+                        <span class="block font-bold text-sm uppercase">Figma</span>
+                        <span class="text-xs opacity-60">Design & Prototypage collab.</span>
+                    </div>
+                </div>
+                <div class="p-6 border-b-ink border-r-ink flex flex-col items-start aspect-square justify-between hover:bg-[#ECECDA] transition-colors group cursor-crosshair">
+                    <i class="ph-bold ph-strategy text-3xl group-hover:text-brandBlue transition-colors"></i>
+                    <div>
+                        <span class="block font-bold text-sm uppercase">Linear</span>
+                        <span class="text-xs opacity-60">Ticketing spec & bugs.</span>
+                    </div>
+                </div>
+                <div class="p-6 border-b-ink border-r-ink flex flex-col items-start aspect-square justify-between hover:bg-[#ECECDA] transition-colors group cursor-crosshair">
+                    <i class="ph-fill ph-notebook text-3xl group-hover:text-ink transition-colors"></i>
+                    <div>
+                        <span class="block font-bold text-sm uppercase">Notion</span>
+                        <span class="text-xs opacity-60">Docs & Wikis projet asynchrone.</span>
+                    </div>
+                </div>
+                <div class="p-6 border-b-ink border-r-ink lg:border-r-0 flex flex-col items-start aspect-square justify-between hover:bg-[#ECECDA] transition-colors group cursor-crosshair">
+                    <i class="ph-fill ph-slack-logo text-3xl group-hover:text-[#4A154B] transition-colors"></i>
+                    <div>
+                        <span class="block font-bold text-sm uppercase">Slack</span>
+                        <span class="text-xs opacity-60">Coms privées directes via canal.</span>
+                    </div>
+                </div>
+                <div class="p-6 border-b-ink md:border-b-0 border-r-ink flex flex-col items-start aspect-square justify-between hover:bg-[#ECECDA] transition-colors group cursor-crosshair">
+                    <i class="ph-bold ph-globe-hemisphere-west text-3xl group-hover:text-ink transition-colors"></i>
+                    <div>
+                        <span class="block font-bold text-sm uppercase">Vercel</span>
+                        <span class="text-xs opacity-60">Hosting Edge ultra-rapide.</span>
+                    </div>
+                </div>
+                <div class="p-6 border-b-ink md:border-b-0 border-r-ink flex flex-col items-start aspect-square justify-between hover:bg-[#ECECDA] transition-colors group cursor-crosshair">
+                    <i class="ph-fill ph-github-logo text-3xl group-hover:text-ink transition-colors"></i>
+                    <div>
+                        <span class="block font-bold text-sm uppercase">GitHub</span>
+                        <span class="text-xs opacity-60">Versionning & CI/CD pipeline.</span>
+                    </div>
+                </div>
+                <div class="p-6 border-r-ink flex flex-col items-start aspect-square justify-between hover:bg-[#ECECDA] transition-colors group cursor-crosshair">
+                    <i class="ph-fill ph-video-camera text-3xl group-hover:text-[#625df5] transition-colors"></i>
+                    <div>
+                        <span class="block font-bold text-sm uppercase">Loom</span>
+                        <span class="text-xs opacity-60">Recordings asynchrones de code/design.</span>
+                    </div>
+                </div>
+                <div class="p-6 flex flex-col items-start aspect-square justify-between hover:bg-[#ECECDA] transition-colors group cursor-crosshair border-b-ink md:border-b-0">
+                    <i class="ph-bold ph-layout text-3xl group-hover:text-[#050038] transition-colors"></i>
+                    <div>
+                        <span class="block font-bold text-sm uppercase">Miro</span>
+                        <span class="text-xs opacity-60">Digital whiteboard, mindmapping.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. PRICING INTRO -->
+        <section class="py-24 px-4 md:px-12 border-b-ink">
+            <div class="max-w-4xl mx-auto text-center mb-16">
+                <h2 class="font-display text-4xl md:text-6xl uppercase mb-6">Et combien ça coûte ?</h2>
+                <p class="font-body text-lg text-ink/80">Le budget final dépend strictement du scope technique défini en phase 02, mais la transparence totale est de mise. Voici notre grille matricielle typique pour vous aider à budgéter grossièrement.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border-t-ink border-l-ink border-b-ink max-w-6xl mx-auto">
+                <!-- Tier 1 -->
+                <div class="border-r-ink border-b-ink md:border-b-0 p-8 flex flex-col hover:-translate-y-2 transition-transform bg-paper">
+                    <span class="font-body text-xs font-bold uppercase tracking-widest text-ink/50 mb-2">Fondation</span>
+                    <h3 class="font-display text-3xl uppercase mb-2">Starter</h3>
+                    <div class="mb-6 flex items-baseline gap-1 border-b-ink pb-6">
+                        <span class="text-sm font-bold uppercase">À partir de</span>
+                        <span class="font-display text-4xl">5k€</span>
+                    </div>
+                    <ul class="text-sm space-y-3 mb-8 flex-1">
+                        <li class="flex items-start gap-2"><i class="ph-bold ph-check mt-0.5"></i> Showcase One-Page (Scrollytelling)</li>
+                        <li class="flex items-start gap-2"><i class="ph-bold ph-check mt-0.5"></i> Design System Basique</li>
+                        <li class="flex items-start gap-2"><i class="ph-bold ph-check mt-0.5"></i> Integration CMS Simple</li>
+                        <li class="flex items-start gap-2"><i class="ph-bold ph-check mt-0.5"></i> Timeline estimée: 4 Semaines</li>
+                    </ul>
+                </div>
+                
+                <!-- Tier 2 -->
+                <div class="border-r-ink border-b-ink md:border-b-0 p-8 flex flex-col bg-ink text-paper relative transform scale-100 md:scale-[1.02] z-10 shadow-[0_0_0_1px_#0A0A0A]">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-brandOrange text-paper text-[10px] font-bold px-2 py-0.5 uppercase tracking-widest">Le Standard</div>
+                    <span class="font-body text-xs font-bold uppercase tracking-widest text-paper/50 mb-2">Refonte</span>
+                    <h3 class="font-display text-3xl uppercase mb-2 text-brandOrange">Signature</h3>
+                    <div class="mb-6 flex items-baseline gap-1 border-b border-[#333] pb-6">
+                        <span class="text-sm font-bold uppercase">À partir de</span>
+                        <span class="font-display text-4xl">15k€</span>
+                    </div>
+                    <ul class="text-sm space-y-3 mb-8 flex-1 opacity-90">
+                        <li class="flex items-start gap-2"><i class="ph-bold ph-check text-brandOrange mt-0.5"></i> Site Corporate Multi-Pages (5-15 pages)</li>
+                        <li class="flex items-start gap-2"><i class="ph-bold ph-check text-brandOrange mt-0.5"></i> Architecture Headless / Micro-Animations</li>
+                        <li class="flex items-start gap-2"><i class="ph-bold ph-check text-brandOrange mt-0.5"></i> Architecture d'information complexe</li>
+                        <li class="flex items-start gap-2"><i class="ph-bold ph-check text-brandOrange mt-0.5"></i> Timeline estimée: 8-12 Semaines</li>
+                    </ul>
+                </div>
+
+                <!-- Tier 3 -->
+                <div class="border-r-ink p-8 flex flex-col hover:-translate-y-2 transition-transform bg-paper">
+                    <span class="font-body text-xs font-bold uppercase tracking-widest text-ink/50 mb-2">Web App</span>
+                    <h3 class="font-display text-3xl uppercase mb-2 text-brandBlue">Enterprise</h3>
+                    <div class="mb-6 flex items-baseline gap-1 border-b-ink pb-6">
+                        <span class="text-sm font-bold uppercase">Sur Devis</span>
+                        <span class="font-display text-4xl"></span>
+                    </div>
+                    <ul class="text-sm space-y-3 mb-8 flex-1">
+                        <li class="flex items-start gap-2"><i class="ph-bold ph-check mt-0.5"></i> SaaS Platforms, Portails, Dashboards</li>
+                        <li class="flex items-start gap-2"><i class="ph-bold ph-check mt-0.5"></i> Authentification forte & Bases de données</li>
+                        <li class="flex items-start gap-2"><i class="ph-bold ph-check mt-0.5"></i> Scalabilité & Intégrations API (Stripe, etc.)</li>
+                        <li class="flex items-start gap-2"><i class="ph-bold ph-check mt-0.5"></i> Timeline estimée: 3-6 Mois</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. FAQ (Accordion) -->
+        <section class="py-24 px-4 md:px-12 border-b-ink grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div class="lg:col-span-4">
+                <h2 class="font-display text-4xl md:text-5xl uppercase leading-none sticky top-12">Mécanique <br>Interne_</h2>
+            </div>
+            <div class="lg:col-span-8 flex flex-col border-t-ink">
+                
+                <!-- Q1 -->
+                <button class="faq-trigger text-left w-full py-6 border-b-ink flex justify-between items-center group bg-transparent focus:outline-none">
+                    <span class="font-display text-xl uppercase group-hover:text-brandOrange transition-colors pr-8">Puis-je interrompre le projet entre 2 phases ?</span>
+                    <i class="ph ph-plus text-xl transition-transform duration-300"></i>
+                </button>
+                <div class="accordion-content grid" aria-expanded="false">
+                    <div class="accordion-inner text-ink/80 text-sm leading-relaxed p-0">
+                        <div class="pb-6 pr-12 pt-2">
+                           Oui, catégoriquement. Notre politique de jalons le permet. Si après la phase de design (Étape 03), vous décidez d'internaliser le développement, vous récupérez les fichiers sources complets, et le contrat s'arrête là sans pénalités ou lock-in.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <button class="faq-trigger text-left w-full py-6 border-b-ink flex justify-between items-center group bg-transparent focus:outline-none">
+                    <span class="font-display text-xl uppercase group-hover:text-brandOrange transition-colors pr-8">Que se passe-t-il si je change d'avis en cours de design ?</span>
+                    <i class="ph ph-plus text-xl transition-transform duration-300"></i>
+                </button>
+                <div class="accordion-content grid" aria-expanded="false">
+                    <div class="accordion-inner text-ink/80 text-sm leading-relaxed p-0">
+                        <div class="pb-6 pr-12 pt-2">
+                           Le changement d'avis est inévitable et naturel. C'est pourquoi nous travaillons en direct sur Figma. Changer un flow en phase de maquettage n'a virtuellement aucun coût. Cependant, si un changement structurel majeur intervient *après* l'approbation du design et *pendant* le code, cela fera l'objet d'un avenant logistique chiffré.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q3 -->
+                <button class="faq-trigger text-left w-full py-6 border-b-ink flex justify-between items-center group bg-transparent focus:outline-none">
+                    <span class="font-display text-xl uppercase group-hover:text-brandOrange transition-colors pr-8">Comment sont gérées les révisions ?</span>
+                    <i class="ph ph-plus text-xl transition-transform duration-300"></i>
+                </button>
+                <div class="accordion-content grid" aria-expanded="false">
+                    <div class="accordion-inner text-ink/80 text-sm leading-relaxed p-0">
+                        <div class="pb-6 pr-12 pt-2">
+                            Nous n'imposons aucune limite arbitraire du type "2 cycles de révisions max". Nous itérons jusqu'à validation de chaque jalon dans le calendrier imparti. Les commentaires sont asynchrones et déposés directement via des pins sur l'interface Figma (ou les liens de preview) pour une traçabilité totale.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <button class="faq-trigger text-left w-full py-6 border-b-ink flex justify-between items-center group bg-transparent focus:outline-none">
+                    <span class="font-display text-xl uppercase group-hover:text-brandOrange transition-colors pr-8">Puis-je voir l'avancement en direct ?</span>
+                    <i class="ph ph-plus text-xl transition-transform duration-300"></i>
+                </button>
+                <div class="accordion-content grid" aria-expanded="false">
+                    <div class="accordion-inner text-ink/80 text-sm leading-relaxed p-0">
+                        <div class="pb-6 pr-12 pt-2">
+                           Oui. En phase de conception, vous avez un accès lecteur à notre canvas de travail. En phase de développement, une URL `staging.votremarque.com` protégée par mot de passe est mise à jour continuellement (souvent daily ou weekly) par notre pipeline CI/CD.
+                        </div>
+                    </div>
+                </div>
+                
+                 <!-- Q5 -->
+                 <button class="faq-trigger text-left w-full py-6 border-b-ink flex justify-between items-center group bg-transparent focus:outline-none">
+                    <span class="font-display text-xl uppercase group-hover:text-brandOrange transition-colors pr-8">Qui rédige les textes (Copywriting) ?</span>
+                    <i class="ph ph-plus text-xl transition-transform duration-300"></i>
+                </button>
+                <div class="accordion-content grid" aria-expanded="false">
+                    <div class="accordion-inner text-ink/80 text-sm leading-relaxed p-0">
+                        <div class="pb-6 pr-12 pt-2">
+                           Par défaut, la rédaction des contenus finaux est à votre charge, car vous êtes les experts de votre métier. Nous utilisons des "copys de placement sémantiques" (et non du faux lipsum sans âme) pour orienter vos rédacteurs sur le ton. Si besoin, nous pouvons adjoindre les services d'un copywriter senior externe durant la phase de devis.
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Q6 -->
+                 <button class="faq-trigger text-left w-full py-6 border-b-ink flex justify-between items-center group bg-transparent focus:outline-none">
+                    <span class="font-display text-xl uppercase group-hover:text-brandOrange transition-colors pr-8">Comment se déroule la formation finale ?</span>
+                    <i class="ph ph-plus text-xl transition-transform duration-300"></i>
+                </button>
+                <div class="accordion-content grid" aria-expanded="false">
+                    <div class="accordion-inner text-ink/80 text-sm leading-relaxed p-0">
+                        <div class="pb-6 pr-12 pt-2">
+                           C'est un appel vidéo de 1 à 2 heures (qui peut être enregistré), pendant lequel nous naviguons dans le back-office en partage d'écran. Nous documentons les routines de modifications des médias, ajout d'articles/produits, gestion de formulaires. Les "shorts vidéos" tutoriels restent hébergés sur une plateforme privée à vie.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 8. PROCESS TESTIMONIAL -->
+        <section class="py-32 px-4 md:px-12 border-b-ink bg-[#ECECDA] flex flex-col items-center text-center">
+            <i class="ph-fill ph-quotes text-4xl md:text-6xl text-brandBlue mb-8"></i>
+            <blockquote class="font-display text-2xl md:text-4xl lg:text-5xl uppercase leading-tight max-w-5xl mb-12">
+                "Ce qui m'a frappé, ce n'est pas tant le rendu visuel final, qui est impeccable. C'est l'encadrement mental du projet. À aucun moment en trois mois je me suis demandé : 'Où en est l'agence ?'. Une transparence d'exécution rare."
+            </blockquote>
+            <div class="flex flex-col items-center justify-center">
+                <span class="font-bold uppercase tracking-widest text-sm mb-1 line-through decoration-brandOrange decoration-2">Julien Mercadier</span>
+                <span class="font-body text-xs opacity-60 uppercase">CTO, Hexagon Logistics</span>
+            </div>
+        </section>
+
+        <!-- 9. BOTTOM CTA (Dark Mode) -->
+        <section class="py-32 px-4 md:px-12 bg-ink text-paper flex flex-col items-center justify-center text-center min-h-[70vh]">
+            <h2 class="font-display text-6xl md:text-[8vw] uppercase leading-[0.85] mb-12 max-w-5xl">
+                Prêt à faire <br>
+                <span class="text-brandOrange">les choses bien</span> ?
+            </h2>
+            <a href="#" class="btn-push bg-brandOrange text-paper font-display text-2xl md:text-3xl px-12 py-6 uppercase tracking-wider shadow-[8px_8px_0_0_#FFF] border border-paper hover:bg-paper hover:text-ink hover:shadow-[8px_8px_0_0_#FF4D00] hover:border-ink transition-all inline-flex items-center gap-4">
+                Lancer la consultation <i class="ph-bold ph-arrow-right"></i>
+            </a>
+            <p class="font-body text-sm text-paper/50 mt-8">Réponse sous 24h ouvrées. Slots limités par trimestre.</p>
+        </section>
+
+        <!-- 10. FOOTER -->
+        <footer class="bg-paper flex flex-col">
+            <div class="grid grid-cols-1 md:grid-cols-4 border-b-ink">
+                <!-- Branding -->
+                <div class="col-span-1 border-r-ink p-12 flex flex-col justify-between border-b-ink md:border-b-0 min-h-[300px]">
+                    <div>
+                        <span class="font-display text-6xl uppercase tracking-tighter">OB</span>
+                    </div>
+                    <Address class="not-italic font-body text-sm lowercase opacity-80 mt-auto">
+                        12 avenue de l'opéra<br>
+                        75001 paris, france<br>
+                        hello@overbrand.co
+                    </address>
+                </div>
+                <!-- Nav -->
+                <div class="col-span-1 lg:col-span-2 border-r-ink flex flex-col sm:flex-row border-b-ink md:border-b-0">
+                    <div class="p-12 border-b-ink sm:border-b-0 sm:border-r-ink w-full">
+                        <h4 class="font-body font-bold text-xs uppercase tracking-widest mb-6 opacity-50">Navigation</h4>
+                        <ul class="font-display text-2xl uppercase flex flex-col gap-3">
+                            <li><a href="#" class="hover:text-brandOrange transition-colors">Manifesto</a></li>
+                            <li><a href="#" class="hover:text-brandOrange transition-colors">Projects</a></li>
+                            <li><a href="#" class="hover:text-brandOrange transition-colors flex items-center gap-2">Process <i class="ph-fill ph-check-circle text-brandOrange text-lg"></i></a></li>
+                            <li><a href="#" class="hover:text-brandOrange transition-colors">Team</a></li>
+                        </ul>
+                    </div>
+                     <div class="p-12 w-full">
+                        <h4 class="font-body font-bold text-xs uppercase tracking-widest mb-6 opacity-50">Social</h4>
+                        <ul class="font-display text-2xl uppercase flex flex-col gap-3">
+                            <li><a href="#" class="hover:text-brandBlue transition-colors">Twitter (X)</a></li>
+                            <li><a href="#" class="hover:text-brandBlue transition-colors">LinkedIn</a></li>
+                            <li><a href="#" class="hover:text-brandBlue transition-colors">Awwwards</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Newsletter/End -->
+                <div class="col-span-1 p-12 flex flex-col justify-between items-start">
+                    <h4 class="font-body font-bold text-xs uppercase tracking-widest mb-6 opacity-50">Système Alerte</h4>
+                    <form class="w-full flex border-b-ink pb-2 mb-4 group focus-within:border-brandOrange">
+                        <input type="email" placeholder="votre@email.com" class="w-full bg-transparent focus:outline-none placeholder:text-ink/30 font-body text-sm">
+                        <button type="submit" class="font-display uppercase text-sm group-hover:text-brandOrange focus:outline-none">Ok</button>
+                    </form>
+                    <p class="font-body text-[10px] uppercase opacity-40">1 mail par mois max. Pas de spam.</p>
+                </div>
+            </div>
+            <!-- Bottom Bar -->
+            <div class="w-full relative px-4 flex flex-col md:flex-row justify-between items-center py-6 border-t-ink font-body text-xs uppercase tracking-widest opacity-60">
+                <span>©2024 Overbrand™ All rights reserved.</span>
+                <span class="mt-2 md:mt-0">Made in Paris. No LLMs used in creation... (just kidding).</span>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Interactions Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Reveal Elements on Scroll
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal-element').forEach(el => {
+                observer.observe(el);
+            });
+
+            // 2. FAQ Accordion Logic
+            const faqTriggers = document.querySelectorAll('.faq-trigger');
+            faqTriggers.forEach(trigger => {
+                trigger.addEventListener('click', () => {
+                    const content = trigger.nextElementSibling;
+                    const isExpanded = content.getAttribute('aria-expanded') === 'true';
+                    const icon = trigger.querySelector('i');
+                    
+                    // Close others (optional, comment out to allow multiple open)
+                    document.querySelectorAll('.accordion-content').forEach(c => c.setAttribute('aria-expanded', 'false'));
+                    document.querySelectorAll('.faq-trigger i').forEach(i => i.style.transform = 'rotate(0deg)');
+
+                    // Toggle current
+                    if (!isExpanded) {
+                        content.setAttribute('aria-expanded', 'true');
+                        icon.style.transform = 'rotate(45deg)';
+                    } else {
+                        content.setAttribute('aria-expanded', 'false');
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                });
+            });
+
+            // 3. Timeline Horizontal scroll behavior (optional mouse wheel support)
+            const timelineContainer = document.querySelector('.no-scrollbar');
+            if(timelineContainer) {
+                timelineContainer.addEventListener('wheel', (evt) => {
+                    if (evt.deltaY != 0) {
+                        // Prevent default vertical scroll ONLY if we are actively scrolling horizontally to prevent getting "stuck"
+                        const isAtStart = timelineContainer.scrollLeft === 0;
+                        const isAtEnd = timelineContainer.scrollLeft + timelineContainer.clientWidth >= timelineContainer.scrollWidth - 1;
+                        
+                        if ((evt.deltaY > 0 && !isAtEnd) || (evt.deltaY < 0 && !isAtStart)) {
+                             evt.preventDefault();
+                             timelineContainer.scrollLeft += evt.deltaY;
+                        }
+                    }
+                }, { passive: false });
+            }
+        });
+    </script>
+</body>
+</html>

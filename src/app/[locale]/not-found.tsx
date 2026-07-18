@@ -3,6 +3,9 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ArrowLeft, Radio } from 'lucide-react'
+import { routing } from '@/i18n/routing'
+
+const LOCALE_PREFIX = new RegExp(`^/(${routing.locales.join('|')})(?=/|$)`)
 
 // Compact infinity path for the decorative divider (200×80 space)
 // Two perfect circles, radius=30, k = 0.5523 × 30 ≈ 17
@@ -16,7 +19,7 @@ const INF_PATH =
 
 export default function NotFound() {
   const pathname = usePathname() ?? ''
-  const locale = pathname.match(/^\/(fr|en)/)?.[1] ?? 'fr'
+  const locale = pathname.match(LOCALE_PREFIX)?.[1] ?? routing.defaultLocale
 
   return (
     <div

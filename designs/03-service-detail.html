@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Création de Sites Web — OverBrand</title>
+    
+    <!-- Fonts: Anton (Display) & Outfit (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        paper: '#F4F4F0',
+                        ink: '#0A0A0A',
+                        brandBlue: '#2855A0',
+                        brandOrange: '#FF4D00',
+                    },
+                    fontFamily: {
+                        anton: ['Anton', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif'],
+                    },
+                    borderColor: {
+                        hairline: 'rgba(10, 10, 10, 0.15)',
+                        'hairline-light': 'rgba(244, 244, 240, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* CSS Variables for custom logic */
+        :root {
+            --grain-url: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+
+        body {
+            background-color: theme('colors.paper');
+            color: theme('colors.ink');
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Fixed SVG Grain Layer */
+        .bg-grain {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            pointer-events: none;
+            background-image: var(--grain-url);
+            background-repeat: repeat;
+        }
+
+        /* Outline Typography Utility */
+        .text-outline {
+            -webkit-text-stroke: 1.5px theme('colors.ink');
+            color: transparent;
+        }
+        .text-outline-light {
+            -webkit-text-stroke: 1.5px theme('colors.paper');
+            color: transparent;
+        }
+        @media (max-width: 768px) {
+            .text-outline { -webkit-text-stroke: 1px theme('colors.ink'); }
+            .text-outline-light { -webkit-text-stroke: 1px theme('colors.paper'); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: theme('colors.paper');
+            border-left: 1px solid theme('colors.hairline');
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.ink');
+        }
+
+        /* Intersection Observer Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Staggered Delay */
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* Left Rail Text Rotation */
+        .vertical-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+        }
+
+        /* Image hover reveal fix */
+        .hover-img-zoom { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .group:hover .hover-img-zoom { transform: scale(1.05); }
+
+        /* Accordion transition */
+        .accordion-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .accordion-content > div {
+            overflow: hidden;
+        }
+        .accordion-item.active .accordion-content {
+            grid-template-rows: 1fr;
+        }
+        .accordion-icon {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .accordion-item.active .accordion-icon {
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body class="font-outfit text-base selection:bg-brandOrange selection:text-paper flex">
+
+    <!-- Global Grain Overlay -->
+    <div class="bg-grain"></div>
+
+    <!-- Mobile Top Navigation (replaces rail on small screens) -->
+    <header class="md:hidden fixed top-0 w-full bg-paper/90 backdrop-blur border-b border-hairline z-40 px-4 h-16 flex items-center justify-between">
+        <div class="font-anton text-2xl uppercase tracking-wide flex items-center gap-2">
+            OVERBRAND<span class="w-2 h-2 rounded-full bg-brandOrange animate-pulse block"></span>
+        </div>
+        <button aria-label="Menu" class="text-ink">
+            <i class="ph ph-list text-2xl"></i>
+        </button>
+    </header>
+
+    <!-- 64px Fixed Left Side Rail (Desktop) -->
+    <aside class="hidden md:flex w-16 h-screen sticky top-0 border-r border-hairline flex-col justify-between items-center py-6 z-40 bg-paper shrink-0">
+        <a href="#" class="w-full flex justify-center pb-6 border-b border-hairline group">
+            <div class="w-4 h-4 rounded-full bg-ink group-hover:bg-brandOrange transition-colors flex items-center justify-center relative">
+                <div class="absolute inset-0 rounded-full border border-ink/30 animate-ping opacity-50 scale-150"></div>
+            </div>
+        </a>
+        
+        <div class="flex-1 flex items-center justify-center w-full relative">
+            <p class="vertical-text font-outfit uppercase tracking-[0.2em] text-xs font-semibold text-ink whitespace-nowrap">
+                Douala / Yaoundé — Cameroun
+            </p>
+        </div>
+
+        <div class="w-full pt-6 border-t border-hairline flex justify-center">
+            <p class="vertical-text font-anton text-xl tracking-wider text-ink/40">
+                EST. 2019
+            </p>
+        </div>
+    </aside>
+
+    <!-- Main Scrollable Content -->
+    <main class="flex-1 min-w-0 mt-16 md:mt-0 flex flex-col pt-0">
+
+        <!-- 1. HERO SECTION -->
+        <section class="min-h-[100dvh] flex flex-col lg:flex-row border-b border-hairline">
+            
+            <!-- Left: Hero Content -->
+            <div class="flex-1 flex flex-col justify-center px-4 md:px-12 lg:px-20 py-20 lg:py-0 relative">
+                <!-- Breadcrumb -->
+                <nav class="absolute top-8 left-4 md:left-12 lg:left-20 flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-ink/50 reveal">
+                    <a href="#" class="hover:text-ink transition-colors">Accueil</a>
+                    <span>/</span>
+                    <a href="#" class="hover:text-ink transition-colors">Expertises</a>
+                    <span>/</span>
+                    <span class="text-ink">Création de sites web</span>
+                </nav>
+
+                <div class="max-w-4xl mt-12 md:mt-0">
+                    <p class="font-outfit uppercase tracking-widest text-sm font-semibold mb-6 flex items-center gap-4 reveal">
+                        <span class="w-8 h-px bg-brandOrange"></span>
+                        01 — EXPERTISE
+                    </p>
+                    
+                    <h1 class="font-anton uppercase leading-[0.85] text-[13vw] md:text-8xl lg:text-[7.5rem] tracking-tight mb-8">
+                        <div class="reveal">CRÉATION DE</div>
+                        <div class="text-outline reveal reveal-delay-1 pb-2">SITES WEB.</div>
+                    </h1>
+
+                    <p class="text-lg md:text-xl text-ink/70 max-w-2xl font-light leading-relaxed mb-10 reveal reveal-delay-2">
+                        Nous concevons des plateformes digitales sur-mesure combinant une identité visuelle frontale radicale, une ergonomie millimétrée et une infrastructure technique pensée pour la performance et l'acquisition. Pas de templates génériques, uniquement du code utile conçu pour convertir et positionner votre marque d'emblée comme leader.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row gap-4 xs:gap-6 reveal reveal-delay-3 object-cover">
+                        <a href="#devis" class="group relative inline-flex items-center justify-center bg-brandBlue text-paper px-8 py-4 uppercase font-bold tracking-wider text-sm overflow-hidden rounded-none hover:-translate-y-1 transition-transform">
+                            <span class="absolute inset-0 w-full h-full -translate-x-full group-hover:translate-x-0 bg-ink transition-transform duration-300 ease-out"></span>
+                            <span class="relative z-10 flex items-center gap-2">
+                                Demander un devis
+                                <i class="ph ph-arrow-right"></i>
+                            </span>
+                        </a>
+                        <a href="#realisations" class="group inline-flex items-center justify-center border border-ink text-ink px-8 py-4 uppercase font-bold tracking-wider text-sm hover:bg-ink hover:text-paper transition-all hover:-translate-y-1">
+                            <span class="flex items-center gap-2">
+                                Voir les réalisations
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Key Facts Bar -->
+            <div class="w-full lg:w-80 border-t lg:border-t-0 lg:border-l border-hairline bg-ink/5 flex flex-col justify-end">
+                <div class="p-8 lg:p-12 h-full flex flex-col justify-end gap-0">
+                    <div class="py-6 border-b border-hairline flex flex-col gap-1 reveal">
+                        <span class="text-xs font-bold uppercase tracking-widest text-ink/50">Délais</span>
+                        <span class="font-anton text-2xl tracking-wide uppercase">2–6 semaines</span>
+                    </div>
+                    <div class="py-6 border-b border-hairline flex flex-col gap-1 reveal reveal-delay-1">
+                        <span class="text-xs font-bold uppercase tracking-widest text-ink/50">À partir de</span>
+                        <span class="font-anton text-2xl tracking-wide uppercase">800€</span>
+                    </div>
+                    <div class="py-6 border-b border-hairline flex flex-col gap-1 reveal reveal-delay-2">
+                        <span class="text-xs font-bold uppercase tracking-widest text-ink/50">Technologies</span>
+                        <span class="font-outfit font-medium">Next.js, Webflow, Shopify</span>
+                    </div>
+                    <div class="pt-6 flex flex-col gap-1 reveal reveal-delay-3">
+                        <span class="text-xs font-bold uppercase tracking-widest text-ink/50">Livrables</span>
+                        <span class="font-anton text-2xl tracking-wide uppercase">5+</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. APPROACH INTRO STRIP -->
+        <section class="border-b border-hairline">
+            <div class="grid grid-cols-1 md:grid-cols-12">
+                <!-- Giant Statement -->
+                <div class="col-span-12 lg:col-span-7 p-8 md:p-16 border-b lg:border-b-0 lg:border-r border-hairline flex items-center">
+                    <h2 class="font-anton uppercase leading-[0.9] text-5xl md:text-6xl text-ink reveal">
+                        "On ne livre pas un site. <br/>
+                        <span class="text-brandBlue">On livre un levier commercial."</span>
+                    </h2>
+                </div>
+                <!-- 3-Col Explanation (simplified to stacked on smaller viewports) -->
+                <div class="col-span-12 lg:col-span-5 grid grid-rows-3 text-sm border-hairline division-y">
+                    <div class="p-8 border-b border-hairline flex items-start gap-6 reveal">
+                        <span class="font-anton text-2xl text-ink/30">01</span>
+                        <div>
+                            <h3 class="font-bold uppercase tracking-widest mb-2">Design Radical</h3>
+                            <p class="text-ink/70">Des interfaces pensées pour captiver. Oubliez les templates ennuyeux, nous créons des univers visuels mémorables.</p>
+                        </div>
+                    </div>
+                    <div class="p-8 border-b border-hairline flex items-start gap-6 reveal reveal-delay-1">
+                        <span class="font-anton text-2xl text-ink/30">02</span>
+                        <div>
+                            <h3 class="font-bold uppercase tracking-widest mb-2">Code Parfait</h3>
+                            <p class="text-ink/70">Performance absolue. Temps de chargement optimisés et architectures scalables prêtes à encaisser le trafic.</p>
+                        </div>
+                    </div>
+                    <div class="p-8 flex items-start gap-6 reveal reveal-delay-2">
+                        <span class="font-anton text-2xl text-ink/30">03</span>
+                        <div>
+                            <h3 class="font-bold uppercase tracking-widest mb-2">SEO Embed</h3>
+                            <p class="text-ink/70">Structuré pour les moteurs de recherche dès la première ligne de code pour garantir une visibilité organique immédiate.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. DELIVERABLES (6 Cards) -->
+        <section id="deliverables" class="border-b border-hairline bg-paper">
+            <div class="px-4 py-8 md:px-12 md:py-16 border-b border-hairline">
+                <h2 class="font-anton uppercase text-4xl md:text-5xl reveal">Notre Méthodologie</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                <!-- Card 1 (Paper) -->
+                <div class="group p-8 md:p-12 border-b md:border-b-0 md:border-r border-hairline flex flex-col h-full min-h-[400px] reveal">
+                    <span class="font-anton text-4xl text-ink mb-6">01</span>
+                    <h3 class="font-bold uppercase tracking-widest text-xl mb-4 group-hover:text-brandBlue transition-colors">Stratégie & Cadrage</h3>
+                    <p class="text-ink/70 mb-8 flex-1">Analyse des besoins et structuration de l’écosystème pour garantir l'atteinte des KPIs.</p>
+                    <ul class="space-y-3 font-medium text-sm">
+                        <li class="flex items-center gap-3"><i class="ph ph-check text-brandBlue"></i> Positionnement & cible</li>
+                        <li class="flex items-center gap-3"><i class="ph ph-check text-brandBlue"></i> Arborescence UX</li>
+                        <li class="flex items-center gap-3"><i class="ph ph-check text-brandBlue"></i> Tone of voice</li>
+                    </ul>
+                </div>
+
+                <!-- Card 2 (Dark) -->
+                <div class="group p-8 md:p-12 bg-ink text-paper border-b lg:border-b-0 lg:border-r border-hairline flex flex-col h-full min-h-[400px] reveal reveal-delay-1">
+                    <span class="font-anton text-4xl text-brandBlue mb-6">02</span>
+                    <h3 class="font-bold uppercase tracking-widest text-xl mb-4">Design UI/UX Sur Mesure</h3>
+                    <p class="text-paper/70 mb-8 flex-1">Prototypage complet et création d'une interface utilisateur à haute tension créative.</p>
+                    <ul class="space-y-3 font-medium text-sm text-paper/90">
+                        <li class="flex items-center gap-3"><i class="ph ph-check text-brandBlue"></i> Wireframes détaillés</li>
+                        <li class="flex items-center gap-3"><i class="ph ph-check text-brandBlue"></i> Maquettes haute-fidélité</li>
+                        <li class="flex items-center gap-3"><i class="ph ph-check text-brandBlue"></i> Design system</li>
+                    </ul>
+                </div>
+
+                <!-- Card 3 (Paper) -->
+                <div class="group p-8 md:p-12 border-b lg:border-b-0 lg:border-r border-hairline flex flex-col h-full min-h-[400px] reveal reveal-delay-2">
+                    <span class="font-anton text-4xl text-ink mb-6">03</span>
+                    <h3 class="font-bold uppercase tracking-widest text-xl mb-4 group-hover:text-brandBlue transition-colors">Développement Build</h3>
+                    <p class="text-ink/70 mb-8 flex-1">Production du code via des frameworks modernes pour une fluidité sans compromis.</p>
+                    <ul class="space-y-3 font-medium text-sm">
+                        <li class="flex items-center gap-3"><i class="ph ph-check text-brandBlue"></i> Next.js / Webflow</li>
+                        <li class="flex items-center gap-3"><i class="ph ph-check text-brandBlue"></i> Intégration performante & Animations</li>
+                        <li class="flex items-center gap-3"><i class="ph ph-check text-brandBlue"></i> Configuration CMS</li>
+                    </ul>
+                </div>
+
+                <!-- Card 4 (Blue) -->
+                <div class="group p-8 md:p-12 bg-brandBlue text-paper border-b md:border-b-0 md:border-r border-hairline flex flex-col h-full min-h-[400px] reveal">
+                    <span class="font-anton text-4xl text-ink mb-6">04</span>
+                    <h3 class="font-bold uppercase tracking-widest text-xl mb-4">SEO Technique Embarqué</h3>
+                    <p class="text-paper/80 mb-8 flex-1">Optimisation native de l'architecture pour les exigences des moteurs de recherche.</p>
+                    <ul class="space-y-3 font-medium text-sm text-paper/90">
+                        <li class="flex items-center gap-3"><i class="ph-bold ph-check text-ink"></i> Core Web Vitals</li>
+                        <li class="flex items-center gap-3"><i class="ph-bold ph-check text-ink"></i> Données Schema.org</li>
+                        <li class="flex items-center gap-3"><i class="ph-bold ph-check text-ink"></i> Sitemap dynamique</li>
+                    </ul>
+                </div>
+
+                <!-- Card 5 (Paper) -->
+                <div class="group p-8 md:p-12 border-b md:border-b-0 md:border-r border-hairline flex flex-col h-full min-h-[400px] reveal reveal-delay-1">
+                    <span class="font-anton text-4xl text-ink mb-6">05</span>
+                    <h3 class="font-bold uppercase tracking-widest text-xl mb-4 group-hover:text-brandBlue transition-colors">Formation & Transfert</h3>
+                    <p class="text-ink/70 mb-8 flex-1">Prise en main complète de votre nouvel outil pour garantir votre autonomie editoriale.</p>
+                    <ul class="space-y-3 font-medium text-sm">
+                        <li class="flex items-center gap-3"><i class="ph ph-check text-brandBlue"></i> Documentation PDF</li>
+                        <li class="flex items-center gap-3"><i class="ph ph-check text-brandBlue"></i> Vidéos tutoriels</li>
+                        <li class="flex items-center gap-3"><i class="ph ph-check text-brandBlue"></i> Session de formation équipe</li>
+                    </ul>
+                </div>
+
+                <!-- Card 6 (Dark) -->
+                <div class="group p-8 md:p-12 bg-ink text-paper border-b lg:border-b-0 flex flex-col h-full min-h-[400px] reveal reveal-delay-2">
+                    <span class="font-anton text-4xl text-brandBlue mb-6">06</span>
+                    <h3 class="font-bold uppercase tracking-widest text-xl mb-4">Maintenance Évolutive</h3>
+                    <p class="text-paper/70 mb-8 flex-1">Accompagnement continu pour sécuriser, mettre à jour et faire évoluer votre écosystème.</p>
+                    <ul class="space-y-3 font-medium text-sm text-paper/90">
+                        <li class="flex items-center gap-3"><i class="ph ph-check text-brandBlue"></i> Infogérance serveur</li>
+                        <li class="flex items-center gap-3"><i class="ph ph-check text-brandBlue"></i> Support dévoué</li>
+                        <li class="flex items-center gap-3"><i class="ph ph-check text-brandBlue"></i> Mises à jour continues</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. FEATURED CASE STUDY (Full-bleed editorial) -->
+        <section class="border-b border-hairline">
+            <div class="flex flex-col lg:flex-row">
+                <!-- Left Image -->
+                <div class="w-full lg:w-1/2 overflow-hidden border-b lg:border-b-0 lg:border-r border-hairline group aspect-square lg:aspect-auto h-[50vh] lg:h-auto relative bg-ink">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1600&q=80" alt="TechStart case study dashboard layout on laptop" class="w-full h-full object-cover hover-img-zoom opacity-80 mix-blend-luminosity hover:mix-blend-normal transition-all duration-700">
+                    <div class="absolute inset-0 border-[10px] border-paper z-10 pointer-events-none mix-blend-overlay"></div>
+                </div>
+                
+                <!-- Right Content -->
+                <div class="w-full lg:w-1/2 p-8 md:p-16 lg:p-20 flex flex-col justify-center bg-paper">
+                    <div class="flex items-center gap-4 mb-8 reveal">
+                        <span class="px-3 py-1 border border-ink text-xs font-bold uppercase tracking-widest">Case Study</span>
+                        <span class="text-brandBlue font-bold tracking-wider uppercase text-sm">TechStart SaaS</span>
+                    </div>
+                    
+                    <h2 class="font-anton text-4xl md:text-6xl uppercase leading-[0.9] mb-8 reveal">Refonte complète d'infrastructure front-end.</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 reveal reveal-delay-1">
+                        <div>
+                            <h4 class="font-bold uppercase tracking-widest text-xs text-ink/50 mb-2">Le Challenge</h4>
+                            <p class="text-sm font-medium text-ink relative pl-4 border-l-2 border-brandBlue">TechStart perdait 40% de ses prospects à cause d'un temps de chargement supérieur à 4 secondes et d'une architecture confuse.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold uppercase tracking-widest text-xs text-ink/50 mb-2">La Solution</h4>
+                            <p class="text-sm font-medium text-ink relative pl-4 border-l-2 border-brandBlue">Migration asynchrone vers Next.js, structure de page en clusters sémantiques et implémentation d'un design system brutaliste.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4 border-t border-b border-hairline py-8 mb-10 reveal reveal-delay-2">
+                        <div class="text-center md:text-left flex flex-col">
+                            <span class="font-anton text-3xl md:text-4xl lg:text-5xl text-brandBlue">+220%</span>
+                            <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-ink/60 mt-1">Trafic Org.</span>
+                        </div>
+                        <div class="text-center md:text-left flex flex-col border-l border-hairline pl-4">
+                            <span class="font-anton text-3xl md:text-4xl lg:text-5xl text-brandBlue">+3x</span>
+                            <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-ink/60 mt-1">Leads Qual.</span>
+                        </div>
+                        <div class="text-center md:text-left flex flex-col border-l border-hairline pl-4">
+                            <span class="font-anton text-3xl md:text-4xl lg:text-5xl text-brandBlue">-45%</span>
+                            <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-ink/60 mt-1">Taux rebond</span>
+                        </div>
+                    </div>
+
+                    <a href="#" class="group inline-flex items-center gap-3 uppercase font-bold tracking-widest text-sm hover:text-brandBlue transition-colors w-max reveal reveal-delay-3">
+                        Lire l'étude de cas 
+                        <i class="ph ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. TECHNOLOGY STACK -->
+        <section class="border-b border-hairline py-20 px-4 md:px-12 bg-[#EAEAEA] relative overflow-hidden">
+            <!-- Background massive text -->
+            <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none overflow-hidden">
+                <span class="font-anton text-[25vw] whitespace-nowrap">STACK</span>
+            </div>
+            
+            <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-start md:items-center gap-12 lg:gap-24">
+                <div class="md:w-1/3 reveal">
+                    <h2 class="font-anton uppercase text-4xl mb-4">Notre pile<br/>technique.</h2>
+                    <p class="text-sm font-medium text-ink/60">Une ingénierie de pointe pour des plateformes ultra-rapides, sécurisées et prêtes pour l'avenir.</p>
+                </div>
+                
+                <div class="md:w-2/3 flex flex-wrap gap-3 reveal reveal-delay-1">
+                    <span class="px-5 py-3 bg-paper border border-hairline text-xs font-bold uppercase tracking-widest hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#FF4D00] transition-all cursor-crosshair">Next.js</span>
+                    <span class="px-5 py-3 bg-paper border border-hairline text-xs font-bold uppercase tracking-widest hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#FF4D00] transition-all cursor-crosshair">React</span>
+                    <span class="px-5 py-3 bg-paper border border-hairline text-xs font-bold uppercase tracking-widest hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#FF4D00] transition-all cursor-crosshair">Tailwind CSS</span>
+                    <span class="px-5 py-3 bg-ink text-paper border border-hairline text-xs font-bold uppercase tracking-widest hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#2855A0] transition-all cursor-crosshair">Webflow</span>
+                    <span class="px-5 py-3 bg-paper border border-hairline text-xs font-bold uppercase tracking-widest hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#FF4D00] transition-all cursor-crosshair">Shopify</span>
+                    <span class="px-5 py-3 bg-paper border border-hairline text-xs font-bold uppercase tracking-widest hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#FF4D00] transition-all cursor-crosshair">Sanity CMS</span>
+                    <span class="px-5 py-3 bg-paper border border-hairline text-xs font-bold uppercase tracking-widest hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#FF4D00] transition-all cursor-crosshair">Supabase</span>
+                    <span class="px-5 py-3 bg-paper border border-hairline text-xs font-bold uppercase tracking-widest hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#FF4D00] transition-all cursor-crosshair">TypeScript</span>
+                    <span class="px-5 py-3 bg-paper border border-hairline text-xs font-bold uppercase tracking-widest hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#FF4D00] transition-all cursor-crosshair">Vercel</span>
+                    <span class="px-5 py-3 bg-paper border border-hairline text-xs font-bold uppercase tracking-widest hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#FF4D00] transition-all cursor-crosshair">Figma</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. PRICING TIERS (Sharp Editorial) -->
+        <section id="tarifs" class="border-b border-hairline">
+            <div class="px-4 py-8 md:px-12 md:py-16 border-b border-hairline text-center md:text-left flex flex-col md:flex-row md:items-end justify-between reveal">
+                <div>
+                    <h2 class="font-anton uppercase text-4xl md:text-6xl text-outline mb-2">INVESTISSEMENT</h2>
+                    <p class="font-medium text-ink/60 max-w-md">Des offres claires pour des résultats mesurables.</p>
+                </div>
+            </div>
+
+            <!-- Tiers Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3">
+                <!-- Tier 1 -->
+                <div class="p-8 md:p-12 border-b lg:border-b-0 lg:border-r border-hairline flex flex-col relative reveal">
+                    <h3 class="font-outfit uppercase font-bold tracking-[0.2em] text-sm text-ink/50 mb-8 border-b border-hairline pb-4">Launch</h3>
+                    <div class="font-anton text-5xl md:text-6xl mb-4">800€</div>
+                    <p class="font-medium text-ink mb-12">Site vitrine 5 pages. <br/>Idéal pour démarrer proprement.</p>
+                    
+                    <ul class="space-y-4 mb-16 flex-1 text-sm font-medium">
+                        <li class="flex items-start gap-3"><i class="ph ph-plus text-ink/40 mt-0.5"></i> Design sur template prémium</li>
+                        <li class="flex items-start gap-3"><i class="ph ph-plus text-ink/40 mt-0.5"></i> Intégration Webflow/Framer</li>
+                        <li class="flex items-start gap-3"><i class="ph ph-plus text-ink/40 mt-0.5"></i> Responsive Design complet</li>
+                        <li class="flex items-start gap-3"><i class="ph ph-plus text-ink/40 mt-0.5"></i> SEO basique (Balises)</li>
+                        <li class="flex items-start gap-3"><i class="ph ph-minus text-ink/20 mt-0.5 line-through"></i> Animations complexes</li>
+                    </ul>
+
+                    <a href="#" class="block w-full border border-ink py-4 text-center font-bold uppercase tracking-widest text-sm hover:bg-ink hover:text-paper transition-colors">
+                        Choisir ce forfait →
+                    </a>
+                </div>
+
+                <!-- Tier 2 (Signature) -->
+                <div class="p-8 md:p-12 bg-ink text-paper border-b lg:border-b-0 lg:border-r border-hairline flex flex-col relative shadow-[inset_0_4px_0_0_#2855A0] reveal reveal-delay-1">
+                    <div class="absolute top-4 right-8 bg-brandBlue px-3 py-1 font-bold uppercase text-[10px] tracking-widest">Recommandé</div>
+                    <h3 class="font-outfit uppercase font-bold tracking-[0.2em] text-sm text-paper/50 mb-8 border-b border-hairline-light pb-4">Signature</h3>
+                    <div class="font-anton text-5xl md:text-6xl mb-4 text-brandBlue">3 500€</div>
+                    <p class="font-medium text-paper/90 mb-12">Site sur-mesure avec CMS, animations et SEO avancé. Notre best-seller.</p>
+                    
+                    <ul class="space-y-4 mb-16 flex-1 text-sm font-medium">
+                        <li class="flex items-start gap-3"><i class="ph ph-plus text-brandBlue mt-0.5"></i> Design UI/UX 100% sur-mesure</li>
+                        <li class="flex items-start gap-3"><i class="ph ph-plus text-brandBlue mt-0.5"></i> Intégration CMS (Webflow/Sanity)</li>
+                        <li class="flex items-start gap-3"><i class="ph ph-plus text-brandBlue mt-0.5"></i> Animations complexes (GSAP etc.)</li>
+                        <li class="flex items-start gap-3"><i class="ph ph-plus text-brandBlue mt-0.5"></i> SEO Technique (Core Vitals)</li>
+                        <li class="flex items-start gap-3"><i class="ph ph-plus text-brandBlue mt-0.5"></i> Formation équipe d'administration</li>
+                    </ul>
+
+                    <a href="#" class="block w-full bg-brandBlue py-4 text-center font-bold uppercase tracking-widest text-sm text-paper hover:bg-paper hover:text-ink transition-colors">
+                        Choisir ce forfait →
+                    </a>
+                </div>
+
+                <!-- Tier 3 -->
+                <div class="p-8 md:p-12 bg-paper border-hairline flex flex-col relative reveal reveal-delay-2">
+                    <h3 class="font-outfit uppercase font-bold tracking-[0.2em] text-sm text-ink/50 mb-8 border-b border-hairline pb-4">Enterprise</h3>
+                    <div class="font-anton text-5xl md:text-6xl mb-4 text-outline outline-dark">SUR DEVIS</div>
+                    <p class="font-medium text-ink mb-12">E-commerce, multi-langue, intégrations complexes et portails web.</p>
+                    
+                    <ul class="space-y-4 mb-16 flex-1 text-sm font-medium">
+                        <li class="flex items-start gap-3"><i class="ph ph-plus text-brandOrange mt-0.5"></i> Architecture Next.js / Headless</li>
+                        <li class="flex items-start gap-3"><i class="ph ph-plus text-brandOrange mt-0.5"></i> E-commerce (Shopify/Stripe)</li>
+                        <li class="flex items-start gap-3"><i class="ph ph-plus text-brandOrange mt-0.5"></i> Intégration API / CRM tiers</li>
+                        <li class="flex items-start gap-3"><i class="ph ph-plus text-brandOrange mt-0.5"></i> Multilinguisme natif</li>
+                        <li class="flex items-start gap-3"><i class="ph ph-plus text-brandOrange mt-0.5"></i> SLA & Maintenance prioritaire</li>
+                    </ul>
+
+                    <a href="#" class="block w-full border border-ink py-4 text-center font-bold uppercase tracking-widest text-sm hover:bg-ink hover:text-paper transition-colors">
+                        Parler à un expert →
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. FAQ -->
+        <section class="border-b border-hairline grid grid-cols-1 md:grid-cols-12">
+            <div class="col-span-1 md:col-span-4 p-8 md:p-12 border-b md:border-b-0 md:border-r border-hairline bg-[#EAEAEA]">
+                <h2 class="font-anton uppercase text-4xl mb-6 sticky top-24 reveal">F.A.Q.</h2>
+                <p class="text-sm font-medium text-ink/60 reveal reveal-delay-1">Les questions fréquentes concernant nos services de création web.</p>
+            </div>
+            
+            <div class="col-span-1 md:col-span-8 division-y border-hairline">
+                <!-- Item 1 -->
+                <div class="accordion-item border-b border-hairline group cursor-pointer" onclick="this.classList.toggle('active')">
+                    <div class="px-8 py-6 flex justify-between items-center bg-paper hover:bg-ink/5 transition-colors">
+                        <h4 class="font-bold text-lg max-w-[80%]">Combien de temps prend un projet web ?</h4>
+                        <i class="ph ph-plus accordion-icon text-xl text-brandBlue"></i>
+                    </div>
+                    <div class="accordion-content bg-paper">
+                        <div class="px-8 pb-6 pt-2 text-ink/70 text-sm leading-relaxed max-w-2xl font-medium">
+                            En moyenne, un projet vitrine "Launch" prend 2 à 3 semaines. Un projet "Signature" nécessite entre 4 et 6 semaines de la conception à la mise en ligne, selon la complexité et la rapidité des retours clients.
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 2 -->
+                <div class="accordion-item border-b border-hairline group cursor-pointer" onclick="this.classList.toggle('active')">
+                    <div class="px-8 py-6 flex justify-between items-center bg-paper hover:bg-ink/5 transition-colors">
+                        <h4 class="font-bold text-lg max-w-[80%]">Qui écrit les textes du site ?</h4>
+                        <i class="ph ph-plus accordion-icon text-xl text-brandBlue"></i>
+                    </div>
+                    <div class="accordion-content bg-paper">
+                        <div class="px-8 pb-6 pt-2 text-ink/70 text-sm leading-relaxed max-w-2xl font-medium">
+                            Vous êtes les experts de votre métier. En standard, vous fournissez les textes. Cependant, nous pouvons vous accompagner sur le copywriting (rédaction web SEO + conversion) en option, grâce à nos concepteurs-rédacteurs dédiés.
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 3 -->
+                <div class="accordion-item border-b border-hairline group cursor-pointer" onclick="this.classList.toggle('active')">
+                    <div class="px-8 py-6 flex justify-between items-center bg-paper hover:bg-ink/5 transition-colors">
+                        <h4 class="font-bold text-lg max-w-[80%]">Puis-je modifier le site après la livraison ?</h4>
+                        <i class="ph ph-plus accordion-icon text-xl text-brandBlue"></i>
+                    </div>
+                    <div class="accordion-content bg-paper">
+                        <div class="px-8 pb-6 pt-2 text-ink/70 text-sm leading-relaxed max-w-2xl font-medium">
+                            Absolument. Nos sites dotés d'un CMS (Webflow ou Sanity) sont livrés avec un panneau d'administration intuitif. Nous vous formons (vidéos + documentation) pour que vous soyez autonome sur l'ajout d'articles, la modification de textes et d'images.
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 4 -->
+                <div class="accordion-item border-b border-hairline group cursor-pointer" onclick="this.classList.toggle('active')">
+                    <div class="px-8 py-6 flex justify-between items-center bg-paper hover:bg-ink/5 transition-colors">
+                        <h4 class="font-bold text-lg max-w-[80%]">Le site sera-t-il responsive / mobile ?</h4>
+                        <i class="ph ph-plus accordion-icon text-xl text-brandBlue"></i>
+                    </div>
+                    <div class="accordion-content bg-paper">
+                        <div class="px-8 pb-6 pt-2 text-ink/70 text-sm leading-relaxed max-w-2xl font-medium">
+                            Oui, à 100%. Plus de 70% du trafic mondial se fait sur mobile. Nous adoptons une approche "Mobile First" ou un responsive design absolu pour que l'expérience soit irréprochable sur smartphone, tablette et grand écran.
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 5 -->
+                <div class="accordion-item group cursor-pointer" onclick="this.classList.toggle('active')">
+                    <div class="px-8 py-6 flex justify-between items-center bg-paper hover:bg-ink/5 transition-colors">
+                        <h4 class="font-bold text-lg max-w-[80%]">Proposez-vous un plan de maintenance ?</h4>
+                        <i class="ph ph-plus accordion-icon text-xl text-brandBlue"></i>
+                    </div>
+                    <div class="accordion-content bg-paper">
+                        <div class="px-8 pb-6 pt-2 text-ink/70 text-sm leading-relaxed max-w-2xl font-medium">
+                            Oui, nous proposons des forfaits d'infogérance et de maintenance évolutive (corrections de bugs, mise à jour des plugins/librairies, optimisation serveur, sauvegardes quotidiennes) pour garantir la sécurité et la pérennité de votre investissement.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. RELATED PROJECTS GRID -->
+        <section class="border-b border-hairline py-16 md:py-24 px-4 md:px-12 relative">
+            <h2 class="font-anton uppercase text-3xl md:text-5xl mb-12 reveal">Récemment Livrés.</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-12">
+                <!-- Project 1 -->
+                <a href="#" class="group block reveal">
+                    <div class="aspect-[4/5] overflow-hidden mb-4 bg-ink/10 relative">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80" alt="Projet Liquid - Agence créative" class="w-full h-full object-cover hover-img-zoom grayscale group-hover:grayscale-0 transition-all duration-500">
+                    </div>
+                    <div class="flex items-start justify-between border-t border-hairline pt-4">
+                        <div>
+                            <h4 class="font-bold uppercase tracking-widest text-sm mb-1 group-hover:text-brandBlue transition-colors">Studio Liquid</h4>
+                            <p class="text-xs text-ink/50 uppercase font-medium">Design & Dev Webflow</p>
+                        </div>
+                        <i class="ph-bold ph-arrow-up-right text-ink/30 group-hover:text-ink transition-colors"></i>
+                    </div>
+                </a>
+                
+                <!-- Project 2 -->
+                <a href="#" class="group block reveal reveal-delay-1">
+                    <div class="aspect-[4/5] overflow-hidden mb-4 bg-ink/10 relative">
+                        <img src="https://images.unsplash.com/photo-1507238692062-71c1fce63b49?auto=format&fit=crop&w=800&q=80" alt="Projet Arch - Interface SaaS" class="w-full h-full object-cover hover-img-zoom grayscale group-hover:grayscale-0 transition-all duration-500">
+                    </div>
+                    <div class="flex items-start justify-between border-t border-hairline pt-4">
+                        <div>
+                            <h4 class="font-bold uppercase tracking-widest text-sm mb-1 group-hover:text-brandBlue transition-colors">Arch Metrics</h4>
+                            <p class="text-xs text-ink/50 uppercase font-medium">Dashboard Next.js</p>
+                        </div>
+                        <i class="ph-bold ph-arrow-up-right text-ink/30 group-hover:text-ink transition-colors"></i>
+                    </div>
+                </a>
+
+                <!-- Project 3 -->
+                <a href="#" class="group block reveal reveal-delay-2 hidden md:block">
+                    <div class="aspect-[4/5] overflow-hidden mb-4 bg-ink/10 relative">
+                        <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=800&q=80" alt="Projet Noir - Portfolio Architecture" class="w-full h-full object-cover hover-img-zoom grayscale group-hover:grayscale-0 transition-all duration-500">
+                    </div>
+                    <div class="flex items-start justify-between border-t border-hairline pt-4">
+                        <div>
+                            <h4 class="font-bold uppercase tracking-widest text-sm mb-1 group-hover:text-brandBlue transition-colors">Atelier Noir</h4>
+                            <p class="text-xs text-ink/50 uppercase font-medium">Portfolio E-commerce</p>
+                        </div>
+                        <i class="ph-bold ph-arrow-up-right text-ink/30 group-hover:text-ink transition-colors"></i>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- 9. CROSS-SELL STRIP -->
+        <section class="border-b border-hairline flex flex-col md:flex-row bg-[#EAEAEA]">
+            <div class="w-full md:w-1/4 p-6 md:p-8 flex items-center border-b md:border-b-0 md:border-r border-hairline reveal">
+                <span class="font-bold uppercase tracking-widest text-xs text-ink/60">Expertises complémentaires</span>
+            </div>
+            <div class="w-full md:w-3/4 flex flex-col sm:flex-row division-y sm:division-none">
+                <a href="#" class="flex-1 p-6 md:p-8 flex items-center justify-between group border-b sm:border-b-0 sm:border-r border-hairline hover:bg-paper transition-colors reveal">
+                    <span class="font-anton uppercase text-xl group-hover:text-brandBlue transition-colors">Identité de Marque</span>
+                    <i class="ph ph-arrow-right -translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all text-brandBlue"></i>
+                </a>
+                <a href="#" class="flex-1 p-6 md:p-8 flex items-center justify-between group border-b sm:border-b-0 sm:border-r border-hairline hover:bg-paper transition-colors reveal reveal-delay-1">
+                    <span class="font-anton uppercase text-xl group-hover:text-brandBlue transition-colors">SEO Stratégique</span>
+                    <i class="ph ph-arrow-right -translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all text-brandBlue"></i>
+                </a>
+                <a href="#" class="flex-1 p-6 md:p-8 flex items-center justify-between group border-b sm:border-b-0 hover:bg-paper transition-colors reveal reveal-delay-2">
+                    <span class="font-anton uppercase text-xl group-hover:text-brandBlue transition-colors">Publicité en Ligne</span>
+                    <i class="ph ph-arrow-right -translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all text-brandBlue"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- 10. BOTTOM CTA -->
+        <section class="bg-ink text-paper py-24 md:py-32 px-4 md:px-12 relative overflow-hidden flex flex-col items-center text-center">
+            <h2 class="font-anton uppercase text-[20vw] md:text-[15rem] leading-[0.8] text-outline-light opacity-50 select-none mb-12 cursor-default relative z-10 reveal">
+                DISCUTONS.
+            </h2>
+            
+            <div class="relative z-20 flex flex-col items-center max-w-2xl mt-[-8vw] md:mt-[-5rem] reveal reveal-delay-1">
+                <div class="w-4 h-4 rounded-full bg-brandOrange mb-8 animate-pulse shadow-[0_0_20px_rgba(255,77,0,0.6)]"></div>
+                <p class="text-xl md:text-2xl font-light text-paper/80 mb-10">Prêt à transformer votre présence en ligne ? Notre équipe est disponible pour évaluer votre projet.</p>
+                
+                <div class="flex flex-col sm:flex-row gap-6 items-center mb-12 text-sm font-bold tracking-widest uppercase">
+                    <a href="mailto:hello@overbrand.co" class="hover:text-brandOrange transition-colors flex items-center gap-2">
+                        <i class="ph ph-envelope-simple text-xl"></i> hello@overbrand.com
+                    </a>
+                    <span class="hidden sm:block text-paper/30">/</span>
+                    <a href="tel:+237600000000" class="hover:text-brandOrange transition-colors flex items-center gap-2">
+                        <i class="ph ph-phone text-xl"></i> +237 600 00 00 00
+                    </a>
+                </div>
+
+                <a href="#devis" class="bg-brandOrange text-paper px-10 py-5 uppercase font-bold tracking-wider text-sm hover:bg-paper hover:text-brandOrange transition-colors shadow-[8px_8px_0_0_rgba(244,244,240,0.2)] hover:shadow-[4px_4px_0_0_rgba(244,244,240,0.2)] hover:translate-x-1 hover:translate-y-1">
+                    Demander un devis gratuit
+                </a>
+            </div>
+
+            <!-- Minimal decorative lines -->
+            <div class="absolute inset-0 pointer-events-none grid grid-cols-4 division-x border-hairline-light opacity-10">
+                <div></div><div></div><div></div><div></div>
+            </div>
+        </section>
+
+        <!-- 11. FOOTER -->
+        <footer class="bg-paper border-t border-hairline pt-16 md:pt-24 pb-8 px-4 md:px-12 flex flex-col">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8 mb-24">
+                <div class="md:col-span-2">
+                    <p class="font-outfit text-sm font-medium text-ink/70 max-w-xs leading-relaxed">
+                        Agence de design et développement d'élite basée au Cameroun, opérant mondialement. Nous forgeons l'identité d'entreprises ambitieuses.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold uppercase tracking-widest text-xs mb-6 text-ink">Navigation</h4>
+                    <ul class="space-y-3 text-sm font-medium text-ink/60">
+                        <li><a href="#" class="hover:text-ink transition-colors">Agence</a></li>
+                        <li><a href="#" class="hover:text-ink transition-colors">Expertises</a></li>
+                        <li><a href="#" class="hover:text-ink transition-colors">Études de cas</a></li>
+                        <li><a href="#" class="hover:text-ink transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold uppercase tracking-widest text-xs mb-6 text-ink">Réseaux</h4>
+                    <ul class="space-y-3 text-sm font-medium text-ink/60">
+                        <li><a href="#" class="hover:text-ink transition-colors">Awwwards</a></li>
+                        <li><a href="#" class="hover:text-ink transition-colors">Behance</a></li>
+                        <li><a href="#" class="hover:text-ink transition-colors">LinkedIn</a></li>
+                        <li><a href="#" class="hover:text-ink transition-colors">Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-hairline pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <!-- Massive Footer Logo -->
+                <div class="font-anton uppercase text-5xl md:text-7xl lg:text-9xl text-ink leading-none tracking-tight">
+                    OVERBRAND<span class="text-brandOrange">.</span>
+                </div>
+                
+                <div class="text-xs font-bold uppercase tracking-widest text-ink/40 text-center md:text-right flex flex-col gap-1">
+                    <span>© 2024 Overbrand Agency.</span>
+                    <span>All rights reserved.</span>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Scripts for Intersection Observer -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: "0px",
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("is-visible");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const elementsToReveal = document.querySelectorAll(".reveal");
+            elementsToReveal.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>

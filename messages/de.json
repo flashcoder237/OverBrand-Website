@@ -1,0 +1,774 @@
+{
+  "nav": {
+    "services": "Leistungen",
+    "projects": "Projekte",
+    "about": "Über uns",
+    "process": "Ablauf",
+    "contact": "Kontakt",
+    "team": "Team",
+    "insights": "Insights",
+    "careers": "Karriere",
+    "login": "Anmelden",
+    "dashboard": "Mein Bereich",
+    "quote": "Kostenloses Angebot"
+  },
+  "hero": {
+    "badge": "Kreative Digitalagentur",
+    "line1": "IHRE",
+    "line2": "VISION",
+    "line3": "UMGESETZT.",
+    "description": "Websites, Branding, Anwendungen, SEO — OverBrand macht aus Ihrer digitalen Präsenz einen dauerhaften Wettbewerbsvorteil.",
+    "cta_primary": "Projekt starten",
+    "cta_secondary": "Projekte ansehen",
+    "cursor_label_start": "Loslegen",
+    "cursor_label_projects": "Projekte",
+    "stat_projects": "Gelieferte Projekte",
+    "stat_years": "Jahre Erfahrung",
+    "stat_services": "Leistungen",
+    "badge_premium": "Premium-Design",
+    "badge_custom": "100 % maßgeschneidert"
+  },
+  "services": {
+    "eyebrow": "Was wir tun",
+    "title_1": "UNSERE",
+    "title_2": "LEISTUNGEN",
+    "subtitle": "Von der Konzeption bis zum Livegang — jeder Teil Ihrer digitalen Transformation.",
+    "cta_text": "Sie haben ein konkretes Vorhaben? Sprechen wir darüber.",
+    "cta_button": "Angebot anfragen",
+    "items": {
+      "website": {
+        "title": "Website-Erstellung",
+        "description": "Unternehmensseiten, E-Commerce, Portfolios — modernes Design, das konvertiert."
+      },
+      "software": {
+        "title": "Software & Anwendungen",
+        "description": "Maßgeschneiderte Entwicklung leistungsfähiger Web- und Mobile-Anwendungen."
+      },
+      "hosting": {
+        "title": "Hosting & Betreuung",
+        "description": "Sicheres Hosting, Wartung und laufender technischer Support."
+      },
+      "ads": {
+        "title": "Online-Werbung",
+        "description": "Gezielte Google- und Meta-Ads-Kampagnen für maximalen ROI."
+      },
+      "seo": {
+        "title": "Google-Sichtbarkeit",
+        "description": "Umfassende SEO-Strategie für Spitzenplätze in den Suchergebnissen."
+      },
+      "branding": {
+        "title": "Logo & Markenidentität",
+        "description": "Einprägsame visuelle Identitäten, die Ihr Unternehmen abheben."
+      },
+      "content": {
+        "title": "Content-Produktion",
+        "description": "Visuals, Grafiken und Motion Design für wirkungsvolle Kommunikation."
+      }
+    }
+  },
+  "projects": {
+    "eyebrow": "Unsere Arbeit",
+    "title_1": "AKTUELLE",
+    "title_2": "PROJEKTE",
+    "subtitle": "Einige unserer jüngsten Arbeiten — jedes Projekt ist ein Einzelstück.",
+    "view_all": "Alle Projekte ansehen",
+    "view_project": "Projekt ansehen",
+    "cta_text": "Bereit für Ihr nächstes Projekt?",
+    "cta_button": "Jetzt starten"
+  },
+  "about": {
+    "eyebrow": "Wer wir sind",
+    "title_1": "DIE AGENTUR, DIE",
+    "title_2": "DEN UNTERSCHIED MACHT",
+    "description_1": "OverBrand ist eine kreative Digitalagentur, spezialisiert auf die digitale Transformation von Unternehmen. Wir verbinden Kreativität, Technologie und Strategie, um Ihre Marke voranzubringen.",
+    "description_2": "Unser Team begleitet Start-ups, Mittelstand und Großunternehmen beim Aufbau ihrer digitalen Identität und bei der Entwicklung maßgeschneiderter Lösungen.",
+    "checklist": [
+      "Erfahrenes und engagiertes Team",
+      "Maßgeschneiderte, passgenaue Lösungen",
+      "Begleitung von A bis Z",
+      "Projektfortschritt in Echtzeit einsehbar",
+      "Technischer Support verfügbar"
+    ],
+    "stat_years": "Jahre Erfahrung",
+    "stat_years_sub": "im Digitalbereich",
+    "value_reactivity_title": "Reaktionsschnelligkeit",
+    "value_reactivity_desc": "Eingehaltene Fristen und transparente Kommunikation in jeder Phase.",
+    "value_reliability_title": "Verlässlichkeit",
+    "value_reliability_desc": "Robuste, sichere und langfristig wartbare Lösungen.",
+    "value_performance_title": "Leistung",
+    "value_performance_desc": "Messbare Ergebnisse und ein optimaler Return on Investment."
+  },
+  "stats": {
+    "eyebrow": "In Zahlen",
+    "projects_value": "50+",
+    "projects_label": "Gelieferte Projekte",
+    "clients_value": "40+",
+    "clients_label": "Zufriedene Kunden",
+    "years_value": "5+",
+    "years_label": "Jahre Erfahrung",
+    "services_value": "7",
+    "services_label": "Fachbereiche"
+  },
+  "process": {
+    "eyebrow": "So läuft es ab",
+    "title_1": "KLARER",
+    "title_2": "ABLAUF",
+    "subtitle": "6 Schritte, um Ihre Idee transparent in digitale Realität zu überführen.",
+    "steps": [
+      {
+        "title": "Kostenloses Erstgespräch",
+        "description": "Wir hören zu: Bedürfnisse, Ziele und Budget, um die passende Strategie zu bestimmen."
+      },
+      {
+        "title": "Vorschlag & Angebot",
+        "description": "Sie erhalten ein detailliertes Angebot mit Leistungsumfang, Fristen und transparentem Preis."
+      },
+      {
+        "title": "Konzeption & Design",
+        "description": "Unser Team erstellt Entwürfe und maßgeschneidertes Design zu Ihrer Freigabe."
+      },
+      {
+        "title": "Entwicklung",
+        "description": "Umsetzung der Lösung mit regelmäßigen, transparenten Zwischenständen."
+      },
+      {
+        "title": "Tests & Freigabe",
+        "description": "Gründliche Tests, Korrekturen und finale Abnahme vor dem Livegang."
+      },
+      {
+        "title": "Livegang & Support",
+        "description": "Veröffentlichung, Schulung und laufender Support für Ihren Erfolg."
+      }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "Referenzen",
+    "title_1": "SIE VERTRAUEN",
+    "title_2": "AUF UNS",
+    "subtitle": "Was unsere Kunden über die Zusammenarbeit mit OverBrand sagen.",
+    "items": [
+      {
+        "name": "Sophie Mbeki",
+        "role": "CEO, TechStart",
+        "text": "OverBrand hat unsere Online-Präsenz verwandelt. Unsere Website generiert heute dreimal so viele Leads wie zuvor. Das Team ist reaktionsschnell, professionell und kreativ."
+      },
+      {
+        "name": "Jean-Paul Kofi",
+        "role": "Vertriebsleiter, InnoGroup",
+        "text": "Die mobile App wurde pünktlich geliefert, genau so, wie wir sie uns vorgestellt hatten. Die Fortschrittsverfolgung in Echtzeit ist ein echter Pluspunkt. Uneingeschränkte Empfehlung."
+      },
+      {
+        "name": "Marie Nguyen",
+        "role": "Gründerin, BioShop",
+        "text": "Logo, Website und SEO-Strategie — alles aus einer Hand. Schon im ersten Monat sichtbare Ergebnisse mit 40 % mehr organischem Traffic."
+      }
+    ]
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title_1": "IHRE",
+    "title_2": "FRAGEN",
+    "subtitle": "Alles, was Sie vor dem Projektstart wissen sollten.",
+    "cta": "Mein Projekt starten →",
+    "items": [
+      {
+        "q": "Was kostet eine Website?",
+        "a": "Der Preis richtet sich nach der Komplexität des Projekts. Eine Unternehmensseite beginnt bei 800 €, ein Onlineshop bei 2000 €. Nach dem Erstgespräch erhalten Sie ein kostenloses, detailliertes Angebot."
+      },
+      {
+        "q": "Wie lange dauert die Umsetzung?",
+        "a": "Eine Unternehmensseite wird in der Regel in 2 bis 4 Wochen geliefert. Ein komplexeres Projekt (Anwendung, Onlineshop) dauert je nach Funktionsumfang 4 bis 10 Wochen. Die Fristen werden bei Vertragsschluss festgelegt und eingehalten."
+      },
+      {
+        "q": "Kann ich den Fortschritt meines Projekts verfolgen?",
+        "a": "Ja — jeder Kunde erhält einen gesicherten persönlichen Bereich, in dem er den Fortschritt und alle Aktualisierungen in Echtzeit verfolgen und mit dem Team kommunizieren kann."
+      },
+      {
+        "q": "Bieten Sie Betreuung nach der Lieferung an?",
+        "a": "Selbstverständlich. Wir bieten Pakete für Wartung, Hosting und technischen Support. Außerdem schulen wir Ihre Teams im Umgang mit den gelieferten Werkzeugen."
+      },
+      {
+        "q": "Arbeiten Sie mit internationalen Kunden?",
+        "a": "Ja, wir arbeiten mit Kunden in Frankreich, Deutschland, Europa und weltweit. Die Kommunikation kann auf Französisch, Englisch oder Deutsch erfolgen."
+      },
+      {
+        "q": "Wie läuft das Erstgespräch ab?",
+        "a": "Das Erstgespräch ist kostenlos und unverbindlich. Wir nehmen uns Zeit, Ihre Bedürfnisse, Ziele und Ihr Budget zu verstehen, bevor wir eine passende Lösung vorschlagen."
+      }
+    ]
+  },
+  "cta": {
+    "badge": "Kostenlose Beratung",
+    "title_1": "BEREIT ZU",
+    "title_2": "VERÄNDERN?",
+    "subtitle": "Kostenloses Angebot innerhalb von 24 Stunden. Unverbindlich, ohne versteckte Kosten.",
+    "button_primary": "Angebot anfragen",
+    "button_secondary": "Kontakt aufnehmen"
+  },
+  "footer": {
+    "tagline": "Ihr digitaler Partner, um Ihre Online-Präsenz aufzubauen, auszubauen und sichtbar zu machen.",
+    "services_title": "Leistungen",
+    "company_title": "Unternehmen",
+    "legal_title": "Rechtliches",
+    "copyright": "© 2024 OverBrand. Alle Rechte vorbehalten.",
+    "made_by": "Mit ❤️ gestaltet und entwickelt von OverBrand",
+    "services_items": {
+      "website": "Websites",
+      "software": "Anwendungen",
+      "hosting": "Hosting",
+      "ads": "Werbung",
+      "seo": "SEO",
+      "branding": "Branding",
+      "content": "Content"
+    },
+    "company_items": {
+      "about": "Über uns",
+      "team": "Team",
+      "careers": "Karriere",
+      "insights": "Insights",
+      "contact": "Kontakt"
+    },
+    "legal_links": [
+      "Impressum",
+      "Datenschutzerklärung",
+      "AGB"
+    ],
+    "cta_title_1": "Bereit, Ihren Markt",
+    "cta_title_2": "zu erobern?",
+    "cta_button": "Sprechen wir über Ihr Projekt",
+    "hq_title": "Hauptsitz",
+    "hq_address": "Akwa, Douala",
+    "hq_country": "Kamerun",
+    "contact_title": "Kontakt"
+  },
+  "auth": {
+    "back": "Zurück zur Website",
+    "login_title": "Anmelden",
+    "login_subtitle": "Rufen Sie Ihren Kundenbereich auf, um Ihre Projekte zu verfolgen.",
+    "register_title": "Konto erstellen",
+    "register_subtitle": "Öffnen Sie Ihren Kundenbereich und verfolgen Sie Ihre Projekte in Echtzeit.",
+    "email": "E-Mail",
+    "email_placeholder": "sie@beispiel.com",
+    "password": "Passwort",
+    "password_placeholder": "••••••••",
+    "forgot_password": "Passwort vergessen?",
+    "login_button": "Anmelden",
+    "login_loading": "Anmeldung …",
+    "register_button": "Konto erstellen",
+    "register_loading": "Wird erstellt …",
+    "no_account": "Noch kein Konto?",
+    "create_account": "Konto erstellen",
+    "have_account": "Bereits ein Konto?",
+    "sign_in": "Anmelden",
+    "full_name": "Vollständiger Name",
+    "full_name_placeholder": "Max Mustermann",
+    "company": "Unternehmen",
+    "company_placeholder": "Mein Unternehmen",
+    "phone": "Telefon",
+    "phone_placeholder": "+49 151 00000000",
+    "password_min": "Mindestens 8 Zeichen",
+    "success_title": "Registrierung erfolgreich!",
+    "success_text": "Eine Bestätigungs-E-Mail wurde gesendet an",
+    "success_check": "Bitte prüfen Sie Ihr Postfach, um Ihr Konto zu aktivieren.",
+    "go_to_login": "Zur Anmeldung",
+    "or_continue_with": "Oder fortfahren mit",
+    "google_button": "Mit Google fortfahren",
+    "google_loading": "Weiterleitung …"
+  },
+  "contact": {
+    "eyebrow": "Kontakt",
+    "title_1": "STARTEN WIR",
+    "title_2": "GEMEINSAM",
+    "subtitle": "Beschreiben Sie Ihr Projekt und erhalten Sie innerhalb von 24 Stunden ein kostenloses Angebot.",
+    "info_title": "Kontaktinformationen",
+    "info_phone": "Telefon",
+    "info_response": "Antwort",
+    "info_response_time": "Innerhalb von 24 Werkstunden",
+    "budget_label": "Geschätztes Budget",
+    "field_name": "Vollständiger Name",
+    "field_email": "E-Mail-Adresse",
+    "field_phone": "Telefon",
+    "field_company": "Unternehmen",
+    "field_message": "Beschreiben Sie Ihr Projekt",
+    "submit": "Nachricht senden",
+    "sending": "Wird gesendet …",
+    "success_title": "Nachricht gesendet!",
+    "success_text": "Vielen Dank! Wir antworten innerhalb von 24 Werkstunden.",
+    "send_another": "Weitere Nachricht senden",
+    "error_required": "Dieses Feld ist erforderlich",
+    "error_email": "Ungültige E-Mail-Adresse",
+    "error_send": "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+  },
+  "metadata": {
+    "title": "OverBrand — Kreative Digitalagentur",
+    "description": "OverBrand ist Ihr digitaler Partner für Websites, mobile Anwendungen, Branding, SEO und Online-Werbung."
+  },
+  "servicesPage": {
+    "meta_title": "Leistungen — Websites, Anwendungen, SEO & Branding",
+    "meta_description": "Websites, maßgeschneiderte Anwendungen, SEO, Branding und Online-Werbung. Digitalagentur in Douala und Yaoundé für Marken in Kamerun und Zentralafrika.",
+    "eyebrow": "Leistungen — 2026",
+    "title_1": "Sieben",
+    "title_2": "starke",
+    "title_3": "Disziplinen",
+    "lead": "Von anspruchsvollem visuellem Design bis zu robuster Backend-Entwicklung. Ein Partner für Ihr gesamtes digitales Ökosystem.",
+    "philosophy_title_1": "Strategie. Design.",
+    "philosophy_title_2": "Entwicklung.",
+    "philosophy_highlight": "Ein Partner",
+    "philosophy_body": "Keine Agenturketten, keine Silos. Unsere Designer sprechen täglich mit unseren Entwicklern. Ihre Entscheidungen kommen schnell an — Ihre Ergebnisse pünktlich.",
+    "stack_label": "Stack",
+    "detail_link": "Leistung im Detail ansehen",
+    "expertise_badge": "Leistung",
+    "packs_title_1": "Die Pakete, die sich",
+    "packs_title_2": "bewährt haben",
+    "packs": [
+      {
+        "name": "STARTUP",
+        "desc": "Eine Marke von Grund auf starten: Logo, Unternehmensseite, erste SEO-Strategie.",
+        "price": "Ab 3.500 €"
+      },
+      {
+        "name": "SCALE-UP",
+        "desc": "Vollständiger E-Commerce mit Branding, Google- und Meta-Werbung, laufender Wartung.",
+        "price": "Ab 12.000 €"
+      },
+      {
+        "name": "RENAISSANCE",
+        "desc": "Kompletter Neuaufbau einer bestehenden Marke: neue Website, neue Identität, neues SEO.",
+        "price": "Auf Anfrage"
+      }
+    ],
+    "pack_link": "Mehr erfahren →",
+    "cta_title_1": "Ein Projekt, das mehrere",
+    "cta_title_2": "Disziplinen umfasst?",
+    "cta_highlight": "Sprechen wir darüber",
+    "cta_button": "Kostenloses Angebot anfragen"
+  },
+  "serviceDetail": {
+    "not_found": "Leistung nicht gefunden",
+    "breadcrumb_home": "Startseite",
+    "breadcrumb_services": "Leistungen",
+    "eyebrow_expertise": "Leistung",
+    "cta_quote": "Angebot anfragen",
+    "cta_work": "Referenzen ansehen",
+    "aside_duration": "Zeitrahmen",
+    "aside_from": "Preis",
+    "aside_tech": "Technologien",
+    "aside_deliverables": "Leistungen",
+    "aside_items": "{count}+ Positionen",
+    "pull_1": "Wir liefern keine Leistung.",
+    "pull_2": "Wir liefern einen Hebel",
+    "deliverables_title": "Was Sie konkret bekommen.",
+    "pricing_title": "Transparente Preise.",
+    "tier_launch_desc": "Das Wesentliche für den Start.",
+    "tier_signature_desc": "Maßgeschneidert, mit CMS, Animation und SEO.",
+    "tier_enterprise_price": "Auf Anfrage",
+    "tier_enterprise_desc": "Mehrsprachig, Integrationen, dedizierter Support.",
+    "tier_choose": "Dieses Paket wählen",
+    "related_title": "Ergänzende Leistungen.",
+    "related_link": "Entdecken →",
+    "bottom_title": "SPRECHEN WIR.",
+    "bottom_lead": "Bereit für <service>{name}</service>?",
+    "bottom_button": "Kostenloses Angebot anfragen"
+  },
+  "projectsHub": {
+    "meta_title": "Projekte — Produkte im Einsatz",
+    "meta_description": "OverBrand-Fallstudien: Buy'N'Sellem, Cœurs Braves, INSES, AfriDienst e.V. sowie unsere eigenen Produkte EventEz und TKAMS — sechs Plattformen live, von der Konzeption bis zum Betrieb.",
+    "collection_name": "OverBrand-Projekte",
+    "breadcrumb_home": "Startseite",
+    "breadcrumb_projects": "Projekte",
+    "eyebrow": "Projekte — 2025 → 2026",
+    "title_1": "Produkte",
+    "title_2": "im",
+    "title_3": "Einsatz",
+    "lead": "Keine Entwürfe: Plattformen, die live sind und täglich genutzt werden. Ein Marktplatz, ein dreisprachiger Verein, ein Ausbildungsinstitut, eine NGO — dazu unsere eigenen Produkte EventEz und TKAMS. So sind sie entstanden.",
+    "filters": [
+      "Alle",
+      "Marktplatz",
+      "Eigene Produkte",
+      "EdTech",
+      "Verein",
+      "NGO",
+      "Mobile",
+      "Relaunch"
+    ],
+    "count_label": "Projekte angezeigt",
+    "featured_badge": "Featured",
+    "read_case": "Fallstudie lesen",
+    "solution_label": "OverBrand-Produkt",
+    "explore": "Entdecken →",
+    "metric_platforms": "Plattformen im Einsatz",
+    "metric_solutions": "OverBrand-Produkte (EventEz, TKAMS)",
+    "metric_cities": "Abgedeckte Städte (Buy'N'Sellem)",
+    "metric_languages": "Gelieferte Sprachen (Cœurs Braves)",
+    "cta_title_1": "Ihr Projekt hier",
+    "cta_title_2": "im Jahr 2026?",
+    "cta_button": "Sprechen wir darüber"
+  },
+  "projectDetail": {
+    "case_title_suffix": "OverBrand-Fallstudie",
+    "not_found": "Projekt nicht gefunden",
+    "generic_description": "{category}-Projekt, umgesetzt von OverBrand.",
+    "back_to_projects": "Zurück zu den Projekten",
+    "label_year": "Jahr",
+    "label_client": "Kunde",
+    "label_category": "Kategorie",
+    "view_project": "Projekt ansehen",
+    "about_project": "Über das Projekt",
+    "similar_project": "EIN ÄHNLICHES PROJEKT?",
+    "request_quote": "Angebot anfragen",
+    "video": "Video",
+    "watch_video": "Video ansehen",
+    "gallery": "Galerie",
+    "visual": "Abbildung",
+    "similar_body": "Sprechen wir über Ihr Projekt und wie wir Sie unterstützen können.",
+    "breadcrumb_home": "Startseite",
+    "breadcrumb_projects": "Projekte"
+  },
+  "caseStudy": {
+    "chapter": "Kapitel",
+    "case_study_ref": "Fallstudie",
+    "meta_client": "Kunde",
+    "meta_year": "Jahr",
+    "meta_services": "Leistungen",
+    "meta_duration": "Dauer",
+    "challenge_label": "Herausforderung: ",
+    "phase": "Phase",
+    "impact": "Gemessene Wirkung",
+    "chapter_01": "Die ausgelieferte Oberfläche",
+    "fig_caption": "Abb. 1.0 — {url}, im Einsatz.",
+    "chapter_02": "Das Farbsystem",
+    "chapter_03": "Abläufe & Screens",
+    "chapter_04": "Projekt-Credits",
+    "deliverables": "Leistungen",
+    "outcomes_title": "Was sich geändert hat",
+    "lead_badge": "Lead",
+    "next_project": "Nächstes Projekt",
+    "all_projects": "Alle Projekte",
+    "start_project": "Projekt starten",
+    "alt_interface": "{title} — Oberfläche",
+    "alt_screen": "{title} — Screen {n}",
+    "breadcrumb_home": "Startseite",
+    "mandate_1": "Der",
+    "mandate_2": "Auftrag",
+    "spec_1": "Technisches",
+    "spec_2": "Datenblatt"
+  },
+  "aboutPage": {
+    "meta_title": "Über uns — Digitalagentur in Douala & Yaoundé",
+    "meta_description": "OverBrand ist eine kamerunische Digitalagentur, gegründet 2019, mit Sitz in Douala (Akwa) und Yaoundé (Bastos). Ein Team von 12 Personen für ambitionierte Marken.",
+    "eyebrow": "Über uns — seit 2019",
+    "title_1": "Eine Agentur",
+    "title_2": "für die neue",
+    "title_3": "afrikanische",
+    "title_highlight": "Wirtschaft",
+    "studio_label": "Studio — Douala",
+    "manifesto": "Wir glauben, dass eine Marke vor allem ein Versprechen ist. Und dass sie durch Design, Code und Strategie eingelöst wird.",
+    "manifesto_author": "— Cédric Tefoye, Gründer",
+    "stat_projects": "Gelieferte Projekte",
+    "stat_clients": "Zufriedene Kunden",
+    "stat_years": "Jahre",
+    "stat_experts": "Fachleute",
+    "history_title_1": "Unsere",
+    "history_title_2": "Geschichte",
+    "timeline": [
+      {
+        "year": "2019",
+        "title": "Gründung in Douala",
+        "desc": "Drei Gründer, ein erster Kunde und sehr viel Kaffee."
+      },
+      {
+        "year": "2020",
+        "title": "Erster Großkunde",
+        "desc": "Ein regionaler Telekomanbieter vertraut uns seinen kompletten Relaunch an."
+      },
+      {
+        "year": "2021",
+        "title": "Büro in Yaoundé eröffnet",
+        "desc": "Ein strategischer Schritt, um die Hauptstadt abzudecken."
+      },
+      {
+        "year": "2022",
+        "title": "8 Personen · 20+ Projekte",
+        "desc": "Das Team verdoppelt sich. Die Methodik nimmt Form an."
+      },
+      {
+        "year": "2023",
+        "title": "Motion-Studio gestartet",
+        "desc": "Eine neue Disziplin kommt hinzu."
+      },
+      {
+        "year": "2025",
+        "title": "50+ Projekte · 12 Länder",
+        "desc": "Kunden in Kamerun, an der Elfenbeinküste, in Frankreich, der Schweiz und im Senegal."
+      }
+    ],
+    "values_title_1": "Was uns",
+    "values_title_2": "leitet",
+    "values": [
+      {
+        "n": "01",
+        "title": "Sorgfalt",
+        "desc": "Ergebnisse, die im Betrieb bestehen, nicht nur im Entwurf."
+      },
+      {
+        "n": "02",
+        "title": "Transparenz",
+        "desc": "Offene Preise, geteilter Zeitplan, wöchentliche Reports."
+      },
+      {
+        "n": "03",
+        "title": "Kreativität",
+        "desc": "Jedes Projekt verdient seine eigene Art Direction."
+      },
+      {
+        "n": "04",
+        "title": "Nähe",
+        "desc": "Eine Erweiterung Ihres Teams, kein entfernter Dienstleister."
+      }
+    ],
+    "how_title": "Wie wir arbeiten",
+    "how_items": [
+      "Montag: Team-Stand-up (30 Min.)",
+      "Donnerstag: teamübergreifende Design-Kritik",
+      "Freitag: Kundendemo + interne Retro",
+      "Liefertakte von sechs Wochen",
+      "Wöchentliche Kundenreports"
+    ],
+    "refuse_title": "Was wir ablehnen",
+    "refuse_items": [
+      "Kostenlose Arbeit „für die Sichtbarkeit“",
+      "Versprechen, die wir nicht halten können",
+      "Technische Architektur als Blackbox",
+      "Design „per Komitee“ ohne Richtung",
+      "Unrealistische Fristen aus Gefälligkeit"
+    ],
+    "team_eyebrow": "Das Team",
+    "team_title_1": "Ein Team aus",
+    "team_title_highlight": "12 Personen",
+    "team_title_2": "in Douala und remote.",
+    "team_link": "Das Team kennenlernen",
+    "cta_title_1": "Lernen wir uns ",
+    "cta_title_2": "kennen",
+    "cta_button": "Termin vereinbaren"
+  },
+  "teamPage": {
+    "meta_title": "Team — Die Mitgründer von OverBrand",
+    "meta_description": "Die fünf Mitgründer von OverBrand: Produkt, Entwicklung, Cloud, Marketing und Betrieb. Mit Sitz in Douala und Yaoundé sowie remote zwischen Afrika und Europa.",
+    "eyebrow": "Team — {count} Mitgründer",
+    "title_1": "Die Gesichter",
+    "title_2": "hinter",
+    "lead": "Produkt, Entwicklung, Cloud, Marketing, Betrieb. Fünf Mitgründer, mit Sitz in Douala und Yaoundé sowie remote zwischen Afrika und Europa.",
+    "stat_founders": "Mitgründer",
+    "stat_founded": "Gegründet",
+    "stat_offices": "Standorte",
+    "stat_languages": "Arbeitssprachen",
+    "default_role": "Gründer",
+    "hiring_title": "WIR STELLEN EIN.",
+    "hiring_lead": "Senior React Developer · Brand Designer · Growth Lead — heute drei offene Stellen.",
+    "hiring_button": "Alle Stellen ansehen"
+  },
+  "careersPage": {
+    "meta_title": "Karriere — Bei OverBrand in Douala einsteigen",
+    "meta_description": "OverBrand sucht Designer, Entwickler und Strategen in Douala, Yaoundé und remote. Offene Stellen und wie das Team arbeitet.",
+    "eyebrow": "Karriere — 2026 · 5 offene Stellen",
+    "title_1": "Bauen Sie",
+    "title_2": "die besten Projekte",
+    "title_3": "des",
+    "title_highlight": "Kontinents",
+    "lead": "Das Team von OverBrand wächst. Kommen Sie zu 12 Kreativen und Entwicklern, die für ambitionierte Marken in Afrika und Europa liefern.",
+    "benefits": [
+      {
+        "n": "01",
+        "title": "Ambitionierte Projekte",
+        "desc": "Für Marken, die ihren Markt prägen wollen — keine Broschürenseiten."
+      },
+      {
+        "n": "02",
+        "title": "Transparente Vergütung",
+        "desc": "Offene Gehaltsbänder · jährliche Reviews · keine undurchsichtigen Verhandlungen."
+      },
+      {
+        "n": "03",
+        "title": "Vier-Tage-Woche",
+        "desc": "Seit 2022. Freitags Zeit für eigene Projekte."
+      },
+      {
+        "n": "04",
+        "title": "2.000 €/Jahr Weiterbildung",
+        "desc": "Konferenzen, Kurse, Bücher — Sie wählen, wir zahlen."
+      }
+    ],
+    "positions_title_1": "Offene",
+    "positions_title_2": "Stellen",
+    "positions": [
+      {
+        "role": "Senior React/Next.js Developer",
+        "location": "Douala / Remote Afrika",
+        "type": "Festanstellung",
+        "salary": "35 – 55K EUR"
+      },
+      {
+        "role": "Brand Designer",
+        "location": "Douala",
+        "type": "Festanstellung",
+        "salary": "25 – 40K EUR"
+      },
+      {
+        "role": "Growth Lead",
+        "location": "Remote",
+        "type": "Festanstellung",
+        "salary": "30 – 45K EUR"
+      },
+      {
+        "role": "Motion Designer",
+        "location": "Douala",
+        "type": "Festanstellung",
+        "salary": "22 – 35K EUR"
+      },
+      {
+        "role": "Praktikant Frontend",
+        "location": "Douala",
+        "type": "6-monatiges Praktikum",
+        "salary": "Vergütet + Abschlussbonus"
+      }
+    ],
+    "process_title_1": "Unser",
+    "process_title_2": "Bewerbungsprozess",
+    "process_lead": "Eine Antwort innerhalb von höchstens fünf Tagen, wie sie auch ausfällt.",
+    "process": [
+      {
+        "n": "01",
+        "title": "Bewerbung",
+        "desc": "Lebenslauf + Portfolio + kurzes Anschreiben (unter 300 Wörtern)."
+      },
+      {
+        "n": "02",
+        "title": "30-Minuten-Call",
+        "desc": "Ein erstes Gespräch mit einem Gründer und einer Kollegin oder einem Kollegen."
+      },
+      {
+        "n": "03",
+        "title": "Bezahlter Technik-Test",
+        "desc": "Ein Tag, mit 200 € vergütet, direkt weiterverwendbar."
+      },
+      {
+        "n": "04",
+        "title": "Team-Gespräch",
+        "desc": "2 Std. mit 3 Teammitgliedern, Studiobesuch, Entscheidung in 48 Std."
+      }
+    ],
+    "seek_title": "Wir suchen",
+    "seek_items": [
+      "Neugier und Lust zu lernen",
+      "Einen obsessiven Blick fürs Detail",
+      "Klares Schreiben (wir schreiben viel)",
+      "Eigenständigkeit im Ungewissen",
+      "Den Drang zu liefern statt zu diskutieren"
+    ],
+    "avoid_title": "Wir suchen nicht",
+    "avoid_items": [
+      "Expertinnen und Experten für alles (die gibt es nicht)",
+      "10+ Jahre als harte Bedingung",
+      "Menschen, die auf Anweisungen warten",
+      "Corporate-Sprech in Meetings",
+      "Verkapptes Impostor-Syndrom"
+    ],
+    "cta_eyebrow": "Keine passende Stelle dabei?",
+    "cta_title_1": "Wir warten auf",
+    "cta_title_2": "Ihre Bewerbung",
+    "cta_button": "Initiativbewerbung senden"
+  },
+  "contactPage": {
+    "meta_title": "Kontakt — Digitalagentur Douala & Yaoundé",
+    "meta_description": "Sprechen wir über Ihr Projekt. Büros in Douala (Boulevard de la Liberté, Akwa) und Yaoundé (Bastos). Antwort innerhalb von 24 Werkstunden — +237 652 761 931.",
+    "eyebrow": "Kontakt — Antwort in 24 Std.",
+    "title_1": "Starten wir",
+    "title_2": "etwas",
+    "title_3": "Ungewöhnliches",
+    "lead_before": "Erzählen Sie uns alles über Ihr Projekt. Wir melden uns innerhalb von ",
+    "lead_strong": "24 Werkstunden",
+    "lead_after": " mit einer ersten Einschätzung und einem Terminvorschlag.",
+    "why_title": "Warum uns schreiben?",
+    "why_items": [
+      "Sie stoßen mit Ihrer heutigen Oberfläche an die Grenze.",
+      "Sie bringen ein Produkt auf den Markt, das den Standard schlagen muss.",
+      "Sie suchen einen technischen Partner ohne gestalterische Kompromisse."
+    ],
+    "shortcuts_title": "Direkte Wege",
+    "book_call": "30 Minuten buchen",
+    "ticker_days": "MO–FR",
+    "ticker_hours": "8—18 UHR",
+    "ticker_zone": "WAT (GMT+1) — IDEAL FÜR EUROPA",
+    "offices_title": "Studios.",
+    "office_douala_address": "Boulevard de la Liberté, Akwa — Postfach 1541",
+    "office_douala_hours": "Mo–Fr · 08:00 — 18:00",
+    "office_yaounde_address": "Viertel Bastos, Rue 1.839",
+    "office_yaounde_hours": "Nach Vereinbarung — technischer Betrieb",
+    "country": "Kamerun",
+    "metric_response_time": "Durchschnittliche Antwortzeit",
+    "metric_response_rate": "Antwortquote",
+    "metric_free_consult": "Kostenlose Beratung",
+    "metric_detailed_quote": "Detailliertes Angebot"
+  },
+  "insightsPage": {
+    "meta_title": "Insights — Essays, Analysen, Inspiration",
+    "meta_description": "Was wir beim Bau digitaler Produkte in Zentralafrika lernen. Essays und Analysen aus dem OverBrand-Team.",
+    "eyebrow": "Insights — 2026",
+    "title_1": "Essays,",
+    "title_2": "Analysen,",
+    "title_3": "Inspiration",
+    "lead": "Was wir beim Arbeiten für ambitionierte Marken lernen. Strategische Dekonstruktion, technische Deep Dives und Designkultur.",
+    "filters": [
+      "Alle",
+      "Design",
+      "Dev",
+      "Strategie",
+      "Business",
+      "Afrika",
+      "Tutorials"
+    ],
+    "newsletter_eyebrow": "Wochenarchiv",
+    "newsletter_title_1": "Der Newsletter, der Ihnen",
+    "newsletter_highlight": "30 Minuten",
+    "newsletter_title_2": "pro Woche spart."
+  },
+  "contactForm": {
+    "budget_label": "Geschätztes Budget",
+    "service_label": "Gewünschte Leistung",
+    "placeholder_name": "Ihr Name",
+    "placeholder_email": "sie@unternehmen.com",
+    "placeholder_phone": "+237 6 00 00 00 00",
+    "placeholder_company": "Ihr Unternehmen",
+    "placeholder_message": "Erzählen Sie uns von Ihrem Projekt…",
+    "required": "Pflichtfeld",
+    "sent_title_1": "Angekommen.",
+    "sent_title_2": "Wir melden uns schnell.",
+    "sent_body": "Ihre Nachricht ist da. Ein Gründer liest sie innerhalb von 24 Werkstunden und schlägt Ihnen einen Termin vor.",
+    "sent_again": "Weitere Nachricht senden",
+    "label_name": "Vollständiger Name *",
+    "label_email": "E-Mail *",
+    "label_company": "Unternehmen",
+    "label_phone": "Telefon (optional)",
+    "label_budget": "Geschätztes Budget *",
+    "label_types": "Projektart (Mehrfachauswahl)",
+    "label_deadline": "Gewünschter Termin",
+    "label_message": "Erzählen Sie uns von Ihrem Projekt *",
+    "ph_name": "Max Mustermann",
+    "ph_email": "max@unternehmen.com",
+    "ph_company": "Name des Unternehmens",
+    "ph_phone": "+237 6 00 00 00 00",
+    "ph_message": "Beschreiben Sie den Kontext, Ihre Ziele und mögliche technische Einschränkungen…",
+    "gdpr": "Ich stimme zu, dass meine Daten im Rahmen meiner Kontaktanfrage verarbeitet werden (DSGVO).",
+    "submit": "Senden — Antwort in 24 Std.",
+    "sending": "Wird gesendet…",
+    "project_types": [
+      "Unternehmensseite",
+      "E-Commerce",
+      "Mobile App",
+      "Relaunch",
+      "Markenidentität",
+      "SEO-Strategie",
+      "Sonstiges"
+    ]
+  }
+}

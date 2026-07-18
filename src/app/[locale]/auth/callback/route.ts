@@ -1,5 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse, type NextRequest } from 'next/server'
+import { routing } from '@/i18n/routing'
+
+const LOCALE_PREFIX = new RegExp(`^/(${routing.locales.join('|')})(?=/|$)`)
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -8,8 +11,8 @@ export async function GET(request: NextRequest) {
 
   // Extract locale from the URL path
   const pathname = new URL(request.url).pathname
-  const localeMatch = pathname.match(/^\/(fr|en)/)
-  const locale = localeMatch ? localeMatch[1] : 'fr'
+  const localeMatch = pathname.match(LOCALE_PREFIX)
+  const locale = localeMatch ? localeMatch[1] : routing.defaultLocale
 
   if (code) {
     const supabase = await createClient()

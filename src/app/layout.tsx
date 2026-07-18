@@ -1,16 +1,26 @@
-import { Bebas_Neue, Montserrat } from 'next/font/google'
+import { Anton, Outfit, Playfair_Display } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme/theme-provider'
 
-const bebasNeue = Bebas_Neue({
+const anton = Anton({
   variable: '--font-display',
   subsets: ['latin'],
   weight: '400',
+  display: 'swap',
 })
 
-const montserrat = Montserrat({
+const outfit = Outfit({
   variable: '--font-sans',
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+})
+
+const playfair = Playfair_Display({
+  variable: '--font-serif',
+  subsets: ['latin'],
+  weight: ['400', '600'],
+  style: ['italic'],
+  display: 'swap',
 })
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -19,13 +29,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#2855a0" />
+        <meta name="theme-color" content="#F4F4F0" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="OverBrand" />
       </head>
       <body
-        className={`${bebasNeue.variable} ${montserrat.variable} antialiased`}
+        className={`${anton.variable} ${outfit.variable} ${playfair.variable} antialiased`}
         suppressHydrationWarning
       >
         <ThemeProvider>{children}</ThemeProvider>

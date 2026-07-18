@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expertises | OverBrand Agency</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Setup -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ob: {
+                            cream: '#F4F4F0',
+                            ink: '#0A0A0A',
+                            blue: '#2855A0',
+                            orange: '#FF4D00'
+                        }
+                    },
+                    fontFamily: {
+                        anton: ['Anton', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif'],
+                        mono: ['Menlo', 'Monaco', 'Courier New', 'monospace']
+                    },
+                    spacing: {
+                        'rail': '64px',
+                    },
+                    transitionTimingFunction: {
+                        'spring': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Micro-Architecture & Physics -->
+    <style>
+        /* Base Genetics */
+        :root {
+            --grain-url: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        body {
+            background-color: #F4F4F0;
+            color: #0A0A0A;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* The Grain Layer */
+        .system-grain {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: var(--grain-url);
+            opacity: 0.035;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Typography Tools */
+        .text-stroke-ink {
+            -webkit-text-stroke: 1px #0A0A0A;
+            color: transparent;
+        }
+        .text-stroke-cream {
+            -webkit-text-stroke: 1px #F4F4F0;
+            color: transparent;
+        }
+        .text-stroke-2-ink {
+            -webkit-text-stroke: 2px #0A0A0A;
+            color: transparent;
+        }
+        
+        /* Interaction Physics */
+        .hover-lift {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-4px);
+        }
+        .active-press:active {
+            transform: scale(0.98);
+            transition: transform 0.1s ease;
+        }
+
+        /* Layout Utilities */
+        .writing-vertical {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+        }
+        
+        /* Hide scrollbar structurally */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F4F4F0;
+            border-left: 1px solid rgba(10,10,10,0.15);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0A0A0A;
+        }
+
+        /* Animation Keyframes */
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 25s linear infinite;
+        }
+        
+        /* Service Block Distinct Treatments */
+        .image-treatment-duotone {
+            background-color: #2855A0;
+            position: relative;
+        }
+        .image-treatment-duotone img {
+            mix-blend-mode: luminosity;
+            opacity: 0.8;
+            filter: contrast(1.2);
+        }
+        .image-treatment-grayscale img {
+            filter: grayscale(100%) contrast(1.1);
+        }
+        .clip-mask-tech {
+            clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
+        }
+        
+        /* Custom Bullet Data lists */
+        .data-list li {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        .data-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 6px;
+            height: 6px;
+            background-color: #0A0A0A;
+            border-radius: 1px;
+            transition: background-color 0.3s;
+        }
+        .data-list li:hover::before {
+            background-color: #FF4D00;
+        }
+    </style>
+</head>
+<body class="font-outfit relative">
+
+    <!-- Global Grain -->
+    <div class="system-grain"></div>
+
+    <!-- MACRO: Fixed Left Rail Environment -->
+    <aside class="fixed top-0 left-0 w-rail h-[100dvh] border-r border-ob-ink/15 hidden md:flex flex-col items-center justify-between py-12 z-50 bg-ob-cream">
+        <div class="writing-vertical text-xs font-mono tracking-widest text-ob-ink/60 uppercase">
+            EST. 2019
+        </div>
+        <div class="writing-vertical text-xs font-mono tracking-widest text-ob-ink uppercase">
+            Douala/Yaoundé — Cameroun
+        </div>
+        <div class="w-3 h-3 rounded-full bg-ob-orange animate-pulse shadow-[0_0_15px_rgba(255,77,0,0.4)]"></div>
+    </aside>
+
+    <!-- MAIN CONTAINER (Offsets rail on larger screens) -->
+    <div class="w-full md:ml-rail md:w-[calc(100%-64px)] overflow-x-hidden flex flex-col min-h-[100dvh]">
+
+        <!-- HEADER -->
+        <header class="sticky top-0 w-full z-40 bg-ob-cream/90 backdrop-blur-md border-b border-ob-ink/15 transition-all duration-300">
+            <div class="px-6 md:px-12 h-20 flex items-center justify-between">
+                <a href="#" class="font-anton text-3xl tracking-wide text-ob-ink group active-press">
+                    OVERBRAND<span class="text-ob-orange group-hover:text-ob-blue transition-colors">.</span>
+                </a>
+                
+                <nav class="hidden lg:flex items-center gap-10">
+                    <a href="#" class="text-xs font-semibold uppercase tracking-[0.2em] hover:text-ob-blue transition-colors">Agence</a>
+                    <a href="#" class="text-xs font-semibold uppercase tracking-[0.2em] text-ob-blue">Expertises</a>
+                    <a href="#" class="text-xs font-semibold uppercase tracking-[0.2em] hover:text-ob-blue transition-colors">Processus</a>
+                    <a href="#" class="text-xs font-semibold uppercase tracking-[0.2em] hover:text-ob-blue transition-colors">Contact</a>
+                </nav>
+
+                <a href="#contact" class="hidden md:inline-flex items-center justify-center bg-ob-ink text-ob-cream text-xs font-semibold uppercase tracking-widest px-8 py-3 rounded-full hover:bg-ob-blue transition-colors active-press hover-lift">
+                    Démarrer un projet
+                </a>
+                
+                <!-- Mobile Menu btn -->
+                <button class="md:hidden flex flex-col gap-[6px] p-2">
+                    <span class="block w-6 h-[2px] bg-ob-ink"></span>
+                    <span class="block w-6 h-[2px] bg-ob-ink"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- SEC 1: HERO -->
+        <section class="min-h-[90dvh] flex flex-col justify-end px-6 md:px-12 py-16 md:py-24 border-b border-ob-ink/15">
+            <div class="mb-4">
+                <span class="px-3 py-1 border border-ob-ink/20 rounded-full text-xs font-mono uppercase tracking-widest bg-ob-cream text-ob-ink">
+                    Nos Expertises
+                </span>
+            </div>
+            
+            <h1 class="font-anton text-[15vw] md:text-[11vw] leading-[0.85] uppercase -tracking-[0.02em] text-ob-ink mb-12 max-w-[1400px]">
+                SEPT /<br>
+                TERRAINS DE JEU<span class="text-ob-orange">.</span>
+            </h1>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-0 max-w-[1400px] w-full">
+                <div class="lg:col-span-5 lg:pr-12">
+                    <p class="text-lg md:text-xl font-light leading-relaxed text-ob-ink/80">
+                        Nous ne concevons pas de simples livrables. Nous construisons des écosystèmes digitaux robustes, performants et esthétiquement intraitables pour les marques ambitieuses. Une expertise senior, de la première ligne de code au lancement.
+                    </p>
+                </div>
+                
+                <div class="lg:col-span-7 lg:border-l lg:border-ob-ink/15 lg:pl-12 flex flex-col justify-end">
+                    <p class="text-xs font-mono uppercase tracking-widest text-ob-ink/50 mb-6">Index des services ↓</p>
+                    <ul class="flex flex-wrap gap-x-6 gap-y-3 font-outfit font-medium text-sm md:text-base">
+                        <li><a href="#srv-01" class="group flex items-center hover:text-ob-orange transition-colors"><span class="text-ob-ink/40 mr-2 font-mono text-xs">01</span> Web <span class="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-1 transition-all ml-1 w-3 h-3 text-ob-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a></li>
+                        <li><a href="#srv-02" class="group flex items-center hover:text-ob-orange transition-colors"><span class="text-ob-ink/40 mr-2 font-mono text-xs">02</span> Apps <span class="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-1 transition-all ml-1 w-3 h-3 text-ob-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a></li>
+                        <li><a href="#srv-03" class="group flex items-center hover:text-ob-orange transition-colors"><span class="text-ob-ink/40 mr-2 font-mono text-xs">03</span> Hébergement <span class="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-1 transition-all ml-1 w-3 h-3 text-ob-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a></li>
+                        <li><a href="#srv-04" class="group flex items-center hover:text-ob-orange transition-colors"><span class="text-ob-ink/40 mr-2 font-mono text-xs">04</span> Publicité <span class="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-1 transition-all ml-1 w-3 h-3 text-ob-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a></li>
+                        <li><a href="#srv-05" class="group flex items-center hover:text-ob-orange transition-colors"><span class="text-ob-ink/40 mr-2 font-mono text-xs">05</span> SEO <span class="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-1 transition-all ml-1 w-3 h-3 text-ob-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a></li>
+                        <li><a href="#srv-06" class="group flex items-center hover:text-ob-orange transition-colors"><span class="text-ob-ink/40 mr-2 font-mono text-xs">06</span> Branding <span class="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-1 transition-all ml-1 w-3 h-3 text-ob-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a></li>
+                        <li><a href="#srv-07" class="group flex items-center hover:text-ob-orange transition-colors"><span class="text-ob-ink/40 mr-2 font-mono text-xs">07</span> Contenu <span class="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-1 transition-all ml-1 w-3 h-3 text-ob-orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEC 2: PHILOSOPHY STRIP (Brutalist Type) -->
+        <section class="py-16 md:py-32 border-b border-ob-ink/15 overflow-hidden bg-ob-ink flex flex-col justify-center">
+            <div class="px-6 md:px-12 w-full flex flex-col gap-6 relative">
+                <!-- Mobile standard text, Desktop outlined massive text -->
+                <div class="hidden md:block absolute top-1/2 -translate-y-1/2 left-0 whitespace-nowrap opacity-10 pointer-events-none">
+                    <h2 class="font-anton text-[20vw] leading-[0.8] uppercase text-stroke-2-cream -tracking-tighter">
+                        SYNERGIE ABSOLUE
+                    </h2>
+                </div>
+                
+                <h2 class="font-anton text-4xl md:text-[5vw] leading-[0.9] uppercase text-ob-cream relative z-10 max-w-5xl">
+                    Stratégie. Design. Ingénierie.<br>
+                    <span class="text-ob-orange">Un seul partenaire.</span>
+                </h2>
+                
+                <div class="flex flex-col md:flex-row gap-8 mt-8 border-t border-ob-cream/20 pt-8 relative z-10 max-w-5xl">
+                    <p class="text-ob-cream/70 font-light max-w-md">
+                        Nous refusons le modèle de l'agence fragmentée. En centralisant technique et esthétique, nous éliminons les frictions entre la vision et l'exécution.
+                    </p>
+                    <p class="text-ob-cream/70 font-light max-w-md">
+                        C'est ainsi que naissent les expériences digitales qui laissent une empreinte. Moins d'intermédiaires, plus d'impact.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEC 3: THE 7 SERVICE BLOCKS -->
+        <main class="w-full">
+
+            <!-- SERVICE 01: WEB (L Content / R Duotone Image) -->
+            <article id="srv-01" class="grid grid-cols-1 lg:grid-cols-2 min-h-[80vh] border-b border-ob-ink/15 group/row">
+                <!-- Data Col -->
+                <div class="p-8 md:p-16 lg:p-20 flex flex-col justify-center lg:border-r border-ob-ink/15 bg-ob-cream">
+                    <div class="mb-8">
+                        <span class="font-anton text-[8rem] leading-[0.7] text-ob-ink/10 -tracking-wider block mb-4">01</span>
+                        <h3 class="font-anton text-4xl md:text-5xl uppercase tracking-wide text-ob-ink">Création de<br>Sites Web</h3>
+                    </div>
+                    <p class="text-lg font-light mb-12 text-ob-ink/80">
+                        Vitrines haut de gamme, e-commerce, portfolios. Nous transformons votre présence en ligne en un outil d'acquisition redoutable.
+                    </p>
+                    
+                    <div class="mb-12">
+                        <p class="text-xs font-mono uppercase tracking-widest text-ob-ink/50 mb-4 border-b border-ob-ink/15 pb-2">Livrables clés</p>
+                        <ul class="data-list space-y-3 font-medium text-sm">
+                            <li>Design UI/UX responsive & sur mesure</li>
+                            <li>Intégration Headless CMS (gestion autonome)</li>
+                            <li>Optimisation Core Web Vitals (performance)</li>
+                            <li>Analytics & plan de taggage intégré</li>
+                        </ul>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-6 mt-auto">
+                        <div class="flex gap-2">
+                            <span class="px-2 py-1 bg-ob-ink/5 text-ob-ink font-mono text-[10px] uppercase rounded">Next.js</span>
+                            <span class="px-2 py-1 bg-ob-ink/5 text-ob-ink font-mono text-[10px] uppercase rounded">Webflow</span>
+                            <span class="px-2 py-1 bg-ob-ink/5 text-ob-ink font-mono text-[10px] uppercase rounded">Shopify</span>
+                        </div>
+                        <div class="h-4 w-[1px] bg-ob-ink/20 hidden md:block"></div>
+                        <p class="font-mono text-sm tracking-tight"><span class="text-ob-ink/50">Base:</span> À partir de 800€</p>
+                    </div>
+                    
+                    <a href="#" class="mt-12 inline-flex items-center text-sm font-bold uppercase tracking-widest text-ob-blue group-hover/row:text-ob-orange transition-colors w-fit pb-1 border-b-2 border-transparent hover:border-currentColor">
+                        Voir la prestation <svg class="w-4 h-4 ml-2 transform transition-transform group-hover/row:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+                <!-- Visual Col -->
+                <div class="image-treatment-duotone min-h-[40vh] lg:min-h-full overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1600&q=80" alt="Code at a workstation" class="w-full h-full object-cover transition-transform duration-1000 group-hover/row:scale-105">
+                    <!-- Overlay structure -->
+                    <div class="absolute inset-0 border-[1rem] md:border-[2rem] border-ob-cream/10 z-10 pointer-events-none"></div>
+                </div>
+            </article>
+
+            <!-- SERVICE 02: APPS (R Content / L Grayscale + Typo mask) -->
+            <article id="srv-02" class="grid grid-cols-1 lg:grid-cols-2 min-h-[80vh] border-b border-ob-ink/15 group/row bg-ob-cream">
+                <!-- Visual Col (Order 1 on Desktop) -->
+                <div class="lg:order-first image-treatment-grayscale relative min-h-[40vh] lg:min-h-full overflow-hidden flex items-center justify-center p-8 md:p-16 border-b lg:border-b-0 lg:border-r border-ob-ink/15 bg-[#E8E8E6]">
+                    <div class="absolute inset-y-0 flex flex-col justify-center w-[200%] opacity-20 pointer-events-none z-0">
+                        <div class="animate-marquee font-anton text-[8vw] text-transparent text-stroke-ink uppercase leading-none">
+                            REACT SCALING LOGIC NODEJS DATABASES API ROUTES 
+                        </div>
+                        <div class="animate-marquee font-anton text-[8vw] text-ob-ink uppercase leading-none" style="animation-direction: reverse;">
+                            MOBILE FIRST INTERFACES SUPABASE CLOUD
+                        </div>
+                    </div>
+                    <div class="relative z-10 w-full h-full max-h-[500px] clip-mask-tech overflow-hidden shadow-2xl">
+                         <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80" alt="Data dashboard on screens" class="w-full h-full object-cover transition-transform duration-700 group-hover/row:scale-110">
+                    </div>
+                </div>
+                <!-- Data Col -->
+                <div class="p-8 md:p-16 lg:p-20 flex flex-col justify-center">
+                    <div class="mb-8">
+                        <span class="font-anton text-[8rem] leading-[0.7] text-ob-ink/10 -tracking-wider block mb-4">02</span>
+                        <h3 class="font-anton text-4xl md:text-5xl uppercase tracking-wide text-ob-ink">Logiciels &<br>Applications</h3>
+                    </div>
+                    <p class="text-lg font-light mb-12 text-ob-ink/80">
+                        Apps web et mobiles sur mesure. Des architectures logicielles évolutives conçues pour résoudre des problèmes métiers complexes.
+                    </p>
+                    
+                    <div class="mb-12">
+                        <p class="text-xs font-mono uppercase tracking-widest text-ob-ink/50 mb-4 border-b border-ob-ink/15 pb-2">Livrables clés</p>
+                        <ul class="data-list space-y-3 font-medium text-sm">
+                            <li>Développement Frontend & Backend</li>
+                            <li>Déploiement App Store / Google Play</li>
+                            <li>Conception de base de données (SQL/NoSQL)</li>
+                            <li>Intégration d'API tierces (Stripe, Twilio...)</li>
+                            <li>Tests automatisés & QA</li>
+                        </ul>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-6 mt-auto">
+                        <div class="flex gap-2">
+                            <span class="px-2 py-1 bg-ob-ink text-ob-cream font-mono text-[10px] uppercase rounded">React Native</span>
+                            <span class="px-2 py-1 border border-ob-ink/20 text-ob-ink font-mono text-[10px] uppercase rounded">Node.js</span>
+                            <span class="px-2 py-1 border border-ob-ink/20 text-ob-ink font-mono text-[10px] uppercase rounded">Supabase</span>
+                        </div>
+                        <div class="h-4 w-[1px] bg-ob-ink/20 hidden md:block"></div>
+                        <p class="font-mono text-sm tracking-tight"><span class="text-ob-ink/50">Base:</span> À partir de 3 500€</p>
+                    </div>
+                    
+                    <a href="#" class="mt-12 inline-flex items-center text-sm font-bold uppercase tracking-widest text-ob-blue group-hover/row:text-ob-orange transition-colors w-fit pb-1 border-b-2 border-transparent hover:border-currentColor">
+                         Voir la prestation <svg class="w-4 h-4 ml-2 transform transition-transform group-hover/row:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </article>
+
+            <!-- SERVICE 03: HOSTING (L Content / R Structured tech pattern) -->
+            <article id="srv-03" class="grid grid-cols-1 lg:grid-cols-2 min-h-[80vh] border-b border-ob-ink/15 group/row bg-ob-cream">
+                 <!-- Data Col -->
+                 <div class="p-8 md:p-16 lg:p-20 flex flex-col justify-center lg:border-r border-ob-ink/15">
+                    <div class="mb-8">
+                        <span class="font-anton text-[8rem] leading-[0.7] text-ob-ink/10 -tracking-wider block mb-4">03</span>
+                        <h3 class="font-anton text-4xl md:text-5xl uppercase tracking-wide text-ob-ink">Hébergement<br>& Gestion</h3>
+                    </div>
+                    <p class="text-lg font-light mb-12 text-ob-ink/80">
+                        Infogérance, sécurité, CDN. Ne laissez pas une infrastructure fragile compromettre votre croissance. Nous verrouillons l'accès et garantissons l'uptime.
+                    </p>
+                    
+                    <div class="mb-12">
+                        <p class="text-xs font-mono uppercase tracking-widest text-ob-ink/50 mb-4 border-b border-ob-ink/15 pb-2">Livrables clés</p>
+                        <ul class="data-list space-y-3 font-medium text-sm">
+                            <li>Migration sans interruption (Zero Downtime)</li>
+                            <li>Configuration CDN & Caching agressif</li>
+                            <li>Monitoring de sécurité 24/7</li>
+                            <li>Backups automatisés quotidiens</li>
+                            <li>Certificats SSL & gestion DNS</li>
+                        </ul>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-6 mt-auto">
+                        <div class="flex gap-2">
+                            <span class="px-2 py-1 bg-ob-ink/5 text-ob-ink font-mono text-[10px] uppercase rounded">Vercel</span>
+                            <span class="px-2 py-1 bg-ob-ink/5 text-ob-ink font-mono text-[10px] uppercase rounded">OVH</span>
+                            <span class="px-2 py-1 bg-ob-ink/5 text-ob-ink font-mono text-[10px] uppercase rounded">Cloudflare</span>
+                        </div>
+                        <div class="h-4 w-[1px] bg-ob-ink/20 hidden md:block"></div>
+                        <p class="font-mono text-sm tracking-tight"><span class="text-ob-ink/50">Base:</span> À partir de 49€/mois</p>
+                    </div>
+                    
+                    <a href="#" class="mt-12 inline-flex items-center text-sm font-bold uppercase tracking-widest text-ob-blue group-hover/row:text-ob-orange transition-colors w-fit pb-1 border-b-2 border-transparent hover:border-currentColor">
+                        Voir la prestation <svg class="w-4 h-4 ml-2 transform transition-transform group-hover/row:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+                <!-- Visual Col: Terminal aesthetic -->
+                <div class="bg-ob-ink min-h-[40vh] lg:min-h-full p-8 md:p-16 flex flex-col justify-end relative overflow-hidden">
+                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80')] mix-blend-overlay opacity-20 bg-cover bg-center"></div>
+                    <div class="relative z-10 w-full border border-ob-cream/20 bg-black/60 backdrop-blur-sm p-6 rounded font-mono text-xs md:text-sm text-[#00FF41] leading-relaxed">
+                        <div class="flex gap-2 mb-4 border-b border-[#00FF41]/20 pb-2">
+                            <div class="w-3 h-3 rounded-full bg-[#FF5F56]"></div>
+                            <div class="w-3 h-3 rounded-full bg-[#FFBD2E]"></div>
+                            <div class="w-3 h-3 rounded-full bg-[#27C93F]"></div>
+                        </div>
+                        <p>> init overbrand_infrastructure</p>
+                        <p class="text-ob-cream/50">[OK] Allocating dedicated resources...</p>
+                        <p class="text-ob-cream/50">[OK] Establishing SSL handshakes...</p>
+                        <p>> ping production_server</p>
+                        <p>64 bytes from 104.21.25.14: icmp_seq=1 ttl=55 time=12.2 ms</p>
+                        <p>64 bytes from 104.21.25.14: icmp_seq=2 ttl=55 time=11.8 ms</p>
+                        <p class="mt-4 animate-pulse">_</p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- SERVICE 04: ADS (R Content / L Split-pane collage) -->
+            <article id="srv-04" class="grid grid-cols-1 lg:grid-cols-2 min-h-[80vh] border-b border-ob-ink/15 group/row bg-ob-cream">
+                 <!-- Visual Col -->
+                 <div class="lg:order-first min-h-[40vh] lg:min-h-full p-8 md:p-16 border-b lg:border-b-0 lg:border-r border-ob-ink/15 relative overflow-hidden flex items-center justify-center bg-[#f0f0ed]">
+                    <div class="relative w-full aspect-square max-w-[500px]">
+                        <!-- Image 1 -->
+                        <div class="absolute top-0 right-10 w-2/3 h-[70%] border-4 border-ob-cream shadow-2xl z-10 transform rotate-[-3deg] transition-transform duration-500 group-hover/row:rotate-0">
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" alt="Data analytics charts" class="w-full h-full object-cover">
+                        </div>
+                        <!-- Image 2 -->
+                        <div class="absolute bottom-0 left-0 w-3/4 h-[60%] border-4 border-ob-cream shadow-2xl z-20 transform rotate-[4deg] transition-transform duration-500 group-hover/row:rotate-0">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="Mobile user interface" class="w-full h-full object-cover filter grayscale contrast-125">
+                            <div class="absolute top-4 left-4 bg-ob-orange text-ob-cream text-xs font-mono font-bold px-3 py-1 uppercase tracking-widest">+ 340% ROI</div>
+                        </div>
+                    </div>
+                 </div>
+                 <!-- Data Col -->
+                 <div class="p-8 md:p-16 lg:p-20 flex flex-col justify-center bg-ob-cream">
+                    <div class="mb-8">
+                        <span class="font-anton text-[8rem] leading-[0.7] text-ob-ink/10 -tracking-wider block mb-4">04</span>
+                        <h3 class="font-anton text-4xl md:text-5xl uppercase tracking-wide text-ob-ink">Publicité<br>en Ligne</h3>
+                    </div>
+                    <p class="text-lg font-light mb-12 text-ob-ink/80">
+                        Google Ads & Meta Ads. Nous gérons votre budget publicitaire de manière chirurgicale, transformant chaque clic en une opportunité d'affaire qualifiée.
+                    </p>
+                    
+                    <div class="mb-12">
+                        <p class="text-xs font-mono uppercase tracking-widest text-ob-ink/50 mb-4 border-b border-ob-ink/15 pb-2">Livrables clés</p>
+                        <ul class="data-list space-y-3 font-medium text-sm">
+                            <li>Création & gestion campagnes Google/Meta</li>
+                            <li>A/B Testing en continu des créatives</li>
+                            <li>Mise en place de tableaux de bord (Looker)</li>
+                            <li>Optimisation des Coûts par Acquisition (CPA)</li>
+                            <li>Retargeting stratégique multi-canaux</li>
+                        </ul>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-6 mt-auto">
+                        <div class="flex gap-2">
+                            <span class="px-2 py-1 bg-[#4285F4]/10 text-[#4285F4] border border-[#4285F4]/20 font-mono text-[10px] uppercase rounded font-bold">Google Ads</span>
+                            <span class="px-2 py-1 bg-[#0668E1]/10 text-[#0668E1] border border-[#0668E1]/20 font-mono text-[10px] uppercase rounded font-bold">Meta Ads</span>
+                        </div>
+                        <div class="h-4 w-[1px] bg-ob-ink/20 hidden md:block"></div>
+                        <p class="font-mono text-sm tracking-tight"><span class="text-ob-ink/50">Base:</span> À part. 600€/mois + média</p>
+                    </div>
+                    
+                    <a href="#" class="mt-12 inline-flex items-center text-sm font-bold uppercase tracking-widest text-ob-blue group-hover/row:text-ob-orange transition-colors w-fit pb-1 border-b-2 border-transparent hover:border-currentColor">
+                         Voir la prestation <svg class="w-4 h-4 ml-2 transform transition-transform group-hover/row:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </article>
+
+            <!-- SERVICE 05: SEO (L Content / R Circle Mask + Orange graphic) -->
+            <article id="srv-05" class="grid grid-cols-1 lg:grid-cols-2 min-h-[80vh] border-b border-ob-ink/15 group/row bg-ob-cream">
+                <!-- Data Col -->
+                <div class="p-8 md:p-16 lg:p-20 flex flex-col justify-center lg:border-r border-ob-ink/15">
+                   <div class="mb-8">
+                       <span class="font-anton text-[8rem] leading-[0.7] text-ob-ink/10 -tracking-wider block mb-4">05</span>
+                       <h3 class="font-anton text-4xl md:text-5xl uppercase tracking-wide text-ob-ink">Visibilité<br>Google (SEO)</h3>
+                   </div>
+                   <p class="text-lg font-light mb-12 text-ob-ink/80">
+                       Audit, contenu, netlinking, SEO technique. Un trafic organique pérenne qui consolide votre position de leader sur votre marché de niche.
+                   </p>
+                   
+                   <div class="mb-12">
+                       <p class="text-xs font-mono uppercase tracking-widest text-ob-ink/50 mb-4 border-b border-ob-ink/15 pb-2">Livrables clés</p>
+                       <ul class="data-list space-y-3 font-medium text-sm">
+                           <li>Audit sémantique et technique complet</li>
+                           <li>Stratégie éditoriale (Cocon Sémantique)</li>
+                           <li>Campagnes de Netlinking (Backlinks)</li>
+                           <li>Optimisation de la vitesse (Core Web Vitals)</li>
+                           <li>Rapports de positionnement mensuels</li>
+                       </ul>
+                   </div>
+
+                   <div class="flex flex-wrap items-center gap-6 mt-auto">
+                       <div class="flex gap-2">
+                           <span class="px-2 py-1 bg-[#FF8000]/10 text-ob-ink font-mono text-[10px] uppercase rounded border border-[#FF8000]/30 font-bold">Ahrefs</span>
+                           <span class="px-2 py-1 border border-ob-ink/20 text-ob-ink font-mono text-[10px] uppercase rounded">Search Console</span>
+                       </div>
+                       <div class="h-4 w-[1px] bg-ob-ink/20 hidden md:block"></div>
+                       <p class="font-mono text-sm tracking-tight"><span class="text-ob-ink/50">Base:</span> À partir de 900€/mois</p>
+                   </div>
+                   
+                   <a href="#" class="mt-12 inline-flex items-center text-sm font-bold uppercase tracking-widest text-ob-blue group-hover/row:text-ob-orange transition-colors w-fit pb-1 border-b-2 border-transparent hover:border-currentColor">
+                       Voir la prestation <svg class="w-4 h-4 ml-2 transform transition-transform group-hover/row:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                   </a>
+               </div>
+               <!-- Visual Col: Graphic Circle Mask -->
+               <div class="min-h-[40vh] lg:min-h-full p-8 md:p-16 flex items-center justify-center relative bg-ob-cream overflow-hidden">
+                   <!-- Abstract shapes -->
+                    <div class="absolute w-[80%] aspect-square bg-ob-orange mix-blend-multiply opacity-20 rounded-full blur-3xl transform translate-x-1/4 -translate-y-1/4"></div>
+                    <div class="absolute w-[60%] aspect-square bg-ob-blue mix-blend-multiply opacity-20 rounded-full blur-3xl transform -translate-x-1/4 translate-y-1/4"></div>
+                    
+                    <div class="relative w-full max-w-[400px] aspect-square rounded-full overflow-hidden shadow-[0_0_0_1px_rgba(10,10,10,0.15)] group-hover/row:shadow-[0_0_0_15px_rgba(40,85,160,0.1)] transition-all duration-700">
+                        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=80" alt="Strategy meeting" class="w-full h-full object-cover filter grayscale contrast-125 transition-transform duration-1000 group-hover/row:scale-110">
+                        <div class="absolute inset-0 border-4 border-ob-cream rounded-full pointer-events-none"></div>
+                    </div>
+                    
+                    <!-- Decorative Target lines -->
+                    <div class="absolute w-full h-[1px] bg-ob-ink/10 top-1/2"></div>
+                    <div class="absolute h-full w-[1px] bg-ob-ink/10 left-1/2"></div>
+               </div>
+           </article>
+
+           <!-- SERVICE 06: BRANDING (R Content / L Typography block) -->
+            <article id="srv-06" class="grid grid-cols-1 lg:grid-cols-2 min-h-[80vh] border-b border-ob-ink/15 group/row bg-ob-cream">
+                <!-- Visual Col: Structural Typography -->
+                <div class="lg:order-first min-h-[40vh] lg:min-h-full border-b lg:border-b-0 lg:border-r border-ob-ink/15 relative overflow-hidden bg-ob-ink flex items-center justify-center">
+                    <div class="absolute inset-0 bg-ob-blue clip-mask-tech opacity-10"></div>
+                    <div class="relative z-10 text-center flex flex-col items-center">
+                        <span class="font-anton text-[30vw] md:text-[20vw] leading-[0.7] text-transparent text-stroke-2-cream -tracking-tighter block hover:text-ob-cream transition-colors duration-500 cursor-default">O<span class="text-ob-orange">B</span>.</span>
+                        <div class="mt-4 px-6 py-2 border-2 border-ob-cream text-ob-cream font-mono text-xs uppercase tracking-widest transform rotate-[-5deg]">
+                            Identité Visuelle
+                        </div>
+                    </div>
+                </div>
+                <!-- Data Col -->
+                <div class="p-8 md:p-16 lg:p-20 flex flex-col justify-center border-ob-ink/15 bg-ob-cream">
+                    <div class="mb-8">
+                        <span class="font-anton text-[8rem] leading-[0.7] text-ob-ink/10 -tracking-wider block mb-4">06</span>
+                        <h3 class="font-anton text-4xl md:text-5xl uppercase tracking-wide text-ob-ink">Logo & Identité<br>de Marque</h3>
+                    </div>
+                    <p class="text-lg font-light mb-12 text-ob-ink/80">
+                        Design brutal, esthétique intemporelle. Nous créons des marques qui se distinguent par leur audace architecturale et leur cohérence absolue.
+                    </p>
+                    
+                    <div class="mb-12">
+                        <p class="text-xs font-mono uppercase tracking-widest text-ob-ink/50 mb-4 border-b border-ob-ink/15 pb-2">Livrables clés</p>
+                        <ul class="data-list space-y-3 font-medium text-sm">
+                            <li>Création logotype (symbole & wordmark)</li>
+                            <li>Charte graphique exhaustive (Brand Book)</li>
+                            <li>Sélection typographique & palette couleurs</li>
+                            <li>Déclinaisons papeterie & assets sociaux</li>
+                            <li>Guidelines d'utilisation stricts</li>
+                        </ul>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-6 mt-auto">
+                        <div class="flex gap-2">
+                            <span class="px-2 py-1 bg-[#F24E1E]/10 text-[#F24E1E] border border-[#F24E1E]/30 font-mono text-[10px] uppercase rounded font-bold">Figma</span>
+                            <span class="px-2 py-1 bg-[#FF9A00]/10 text-[#FF9A00] border border-[#FF9A00]/30 font-mono text-[10px] uppercase rounded font-bold">Illustrator</span>
+                        </div>
+                        <div class="h-4 w-[1px] bg-ob-ink/20 hidden md:block"></div>
+                        <p class="font-mono text-sm tracking-tight"><span class="text-ob-ink/50">Base:</span> À partir de 1 200€</p>
+                    </div>
+                    
+                    <a href="#" class="mt-12 inline-flex items-center text-sm font-bold uppercase tracking-widest text-ob-blue group-hover/row:text-ob-orange transition-colors w-fit pb-1 border-b-2 border-transparent hover:border-currentColor">
+                         Voir la prestation <svg class="w-4 h-4 ml-2 transform transition-transform group-hover/row:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </article>
+
+            <!-- SERVICE 07: CONTENT (L Content / R Cinematic fill) -->
+            <article id="srv-07" class="grid grid-cols-1 lg:grid-cols-2 min-h-[80vh] border-b border-ob-ink/15 group/row bg-ob-cream">
+                 <!-- Data Col -->
+                 <div class="p-8 md:p-16 lg:p-20 flex flex-col justify-center lg:border-r border-ob-ink/15">
+                    <div class="mb-8">
+                        <span class="font-anton text-[8rem] leading-[0.7] text-ob-ink/10 -tracking-wider block mb-4">07</span>
+                        <h3 class="font-anton text-4xl md:text-5xl uppercase tracking-wide text-ob-ink">Création<br>de Contenus</h3>
+                    </div>
+                    <p class="text-lg font-light mb-12 text-ob-ink/80">
+                        Motion, graphisme, photo produit. L'attention est la monnaie reine. Nous produisons des assets visuels à haute valeur ajoutée pour capter vos audiences.
+                    </p>
+                    
+                    <div class="mb-12">
+                        <p class="text-xs font-mono uppercase tracking-widest text-ob-ink/50 mb-4 border-b border-ob-ink/15 pb-2">Livrables clés</p>
+                        <ul class="data-list space-y-3 font-medium text-sm">
+                            <li>Vidéos Motion Design (Explicatives, UI)</li>
+                            <li>Direction artistique & Photographie produit</li>
+                            <li>Templates Social Media (Instagram, LinkedIn)</li>
+                            <li>Rédaction SEO & Copywriting publicitaire</li>
+                            <li>Formation éditoriale aux équipes internes</li>
+                        </ul>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-6 mt-auto">
+                        <div class="flex gap-2">
+                            <span class="px-2 py-1 bg-[#9999FF]/10 text-[#9999FF] border border-[#9999FF]/30 font-mono text-[10px] uppercase rounded font-bold">After Effects</span>
+                            <span class="px-2 py-1 bg-[#EA77FF]/10 text-[#EA77FF] border border-[#EA77FF]/30 font-mono text-[10px] uppercase rounded font-bold">Premiere</span>
+                        </div>
+                        <div class="h-4 w-[1px] bg-ob-ink/20 hidden md:block"></div>
+                        <p class="font-mono text-sm tracking-tight"><span class="text-ob-ink/50">Base:</span> Forfait sur mesure</p>
+                    </div>
+                    
+                    <a href="#" class="mt-12 inline-flex items-center text-sm font-bold uppercase tracking-widest text-ob-blue group-hover/row:text-ob-orange transition-colors w-fit pb-1 border-b-2 border-transparent hover:border-currentColor">
+                        Voir la prestation <svg class="w-4 h-4 ml-2 transform transition-transform group-hover/row:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+                <!-- Visual Col: Cinematic Full Bleed -->
+                <div class="relative min-h-[40vh] lg:min-h-full bg-ob-ink overflow-hidden group/video cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1605371924599-2d0365da26f5?auto=format&fit=crop&w=1600&q=80" alt="Video editing timeline" class="w-full h-full object-cover opacity-60 transition-transform duration-1000 group-hover/video:scale-105 group-hover/video:opacity-40">
+                    <!-- Play UI Overlay -->
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-20 h-20 md:w-24 md:h-24 rounded-full border border-ob-cream/30 backdrop-blur-sm flex items-center justify-center transition-all duration-300 group-hover/video:bg-ob-orange group-hover/video:border-ob-orange hover-lift">
+                            <div class="w-0 h-0 border-t-[10px] border-t-transparent border-l-[16px] border-l-ob-cream border-b-[10px] border-b-transparent ml-1"></div>
+                        </div>
+                    </div>
+                    <!-- Fake timebar -->
+                    <div class="absolute bottom-0 left-0 w-full h-1 bg-ob-cream/20">
+                        <div class="h-full bg-ob-orange w-1/3"></div>
+                    </div>
+                </div>
+            </article>
+        </main>
+
+        <!-- SEC 4: BUNDLES -->
+        <section class="py-24 px-6 md:px-12 border-b border-ob-ink/15 bg-ob-cream">
+            <h2 class="font-anton text-4xl md:text-6xl text-ob-ink uppercase tracking-wide mb-2">Les packs qui<br>ont fait leurs preuves</h2>
+            <p class="text-ob-ink/60 font-mono text-sm uppercase tracking-widest mb-16">Combinaisons Stratégiques</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Bundle 1 -->
+                <div class="border-t-[6px] border-ob-ink pt-8 flex flex-col group hover:border-ob-blue transition-colors duration-300 bg-white p-6 md:p-8 shadow-sm">
+                    <span class="text-xs font-mono font-bold text-ob-orange uppercase tracking-widest mb-2">MVP / Lancement</span>
+                    <h3 class="font-anton text-3xl uppercase tracking-wide mb-6">STARTUP</h3>
+                    <ul class="flex-grow space-y-4 font-light text-sm mb-12">
+                        <li class="flex items-start"><svg class="w-4 h-4 text-ob-blue mr-3 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Identité de marque (Mini Charte)</li>
+                        <li class="flex items-start"><svg class="w-4 h-4 text-ob-blue mr-3 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Site Web (One-pager ou 3 pages clés)</li>
+                        <li class="flex items-start"><svg class="w-4 h-4 text-ob-blue mr-3 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Hébergement géré (3 mois inclus)</li>
+                    </ul>
+                    <div class="border-t border-ob-ink/10 pt-6">
+                        <p class="font-mono text-sm mb-4"><span class="text-ob-ink/50">Estimation:</span> 1 500€ - 3 000€</p>
+                        <a href="#" class="w-full inline-flex justify-center items-center py-3 bg-ob-ink text-ob-cream text-xs uppercase font-bold tracking-widest hover:bg-ob-blue transition-colors active-press">En savoir plus</a>
+                    </div>
+                </div>
+
+                <!-- Bundle 2 -->
+                <div class="border-t-[6px] border-ob-blue pt-8 flex flex-col group bg-ob-blue text-ob-cream p-6 md:p-8 shadow-xl transform md:-translate-y-4">
+                    <span class="text-xs font-mono font-bold text-ob-orange uppercase tracking-widest mb-2">Croissance Agressive</span>
+                    <h3 class="font-anton text-3xl uppercase tracking-wide mb-6">SCALE-UP</h3>
+                    <ul class="flex-grow space-y-4 font-light text-sm mb-12 text-ob-cream/90">
+                        <li class="flex items-start"><svg class="w-4 h-4 text-ob-orange mr-3 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Application Web / SaaS métier</li>
+                        <li class="flex items-start"><svg class="w-4 h-4 text-ob-orange mr-3 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Structure Base de données complexe</li>
+                        <li class="flex items-start"><svg class="w-4 h-4 text-ob-orange mr-3 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Infrastructure Scalable (AWS/Vercel)</li>
+                        <li class="flex items-start"><svg class="w-4 h-4 text-ob-orange mr-3 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Campagnes d'acquisition (Ads)</li>
+                    </ul>
+                    <div class="border-t border-ob-cream/20 pt-6">
+                        <p class="font-mono text-sm mb-4"><span class="text-ob-cream/50">Estimation:</span> 5 000€ - 15 000€+</p>
+                        <a href="#" class="w-full inline-flex justify-center items-center py-3 bg-ob-cream text-ob-blue text-xs uppercase font-bold tracking-widest hover:bg-ob-orange hover:text-ob-cream transition-colors active-press">En savoir plus</a>
+                    </div>
+                </div>
+
+                <!-- Bundle 3 -->
+                <div class="border-t-[6px] border-ob-ink pt-8 flex flex-col group hover:border-ob-blue transition-colors duration-300 bg-white p-6 md:p-8 shadow-sm">
+                    <span class="text-xs font-mono font-bold text-ob-orange uppercase tracking-widest mb-2">Modernisation</span>
+                    <h3 class="font-anton text-3xl uppercase tracking-wide mb-6">RENAISSANCE</h3>
+                    <ul class="flex-grow space-y-4 font-light text-sm mb-12">
+                        <li class="flex items-start"><svg class="w-4 h-4 text-ob-blue mr-3 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Refonte totale UX / UI</li>
+                        <li class="flex items-start"><svg class="w-4 h-4 text-ob-blue mr-3 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Migration vers architecture Headless</li>
+                        <li class="flex items-start"><svg class="w-4 h-4 text-ob-blue mr-3 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Audit & Reprise stratégique SEO</li>
+                        <li class="flex items-start"><svg class="w-4 h-4 text-ob-blue mr-3 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Réécriture du contenu clé</li>
+                    </ul>
+                    <div class="border-t border-ob-ink/10 pt-6">
+                        <p class="font-mono text-sm mb-4"><span class="text-ob-ink/50">Estimation:</span> 3 500€ - 8 000€</p>
+                        <a href="#" class="w-full inline-flex justify-center items-center py-3 bg-ob-ink text-ob-cream text-xs uppercase font-bold tracking-widest hover:bg-ob-blue transition-colors active-press">En savoir plus</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEC 5: TECH STACK -->
+        <section class="py-16 md:py-24 px-6 md:px-12 border-b border-ob-ink/15 overflow-hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-6">
+                <div>
+                    <h2 class="font-anton text-2xl uppercase tracking-wide">La Stack Technologique</h2>
+                    <p class="text-sm font-light text-ob-ink/60">Une vélocité d'exécution dictée par les meilleurs outils.</p>
+                </div>
+            </div>
+            
+            <!-- Dense masonry/wrap grid of tools -->
+            <div class="flex flex-wrap gap-2 md:gap-3">
+                <!-- Data Array mapped to HTML -->
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-ob-ink hover:text-ob-cream transition-colors cursor-default">React</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-ob-ink hover:text-ob-cream transition-colors cursor-default">Next.js</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-ob-ink hover:text-ob-cream transition-colors cursor-default">TypeScript</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-ob-ink hover:text-ob-cream transition-colors cursor-default">Tailwind CSS</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-[#F24E1E] hover:text-white transition-colors cursor-default">Figma</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-[#96BF48] hover:text-white transition-colors cursor-default">Shopify</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-[#4353FF] hover:text-white transition-colors cursor-default">Webflow</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-[#3ECF8E] hover:text-white transition-colors cursor-default">Supabase</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-ob-ink hover:text-ob-cream transition-colors cursor-default">Node.js</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-[#FF8000] hover:text-white transition-colors cursor-default">Ahrefs</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-black hover:text-white transition-colors cursor-default">Vercel</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-[#F38020] hover:text-white transition-colors cursor-default">Cloudflare</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-[#4285F4] hover:text-white transition-colors cursor-default">Google Ads</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-[#0668E1] hover:text-white transition-colors cursor-default">Meta</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-ob-ink hover:text-ob-cream transition-colors cursor-default">GA4</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-[#9999FF] hover:text-white transition-colors cursor-default">After Effects</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-[#FF9A00] hover:text-white transition-colors cursor-default">Illustrator</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-[#FF3366] hover:text-white transition-colors cursor-default">Sanity CMS</span>
+                <span class="px-4 py-2 border border-ob-ink/20 font-mono text-sm uppercase hover:bg-ob-ink hover:text-ob-cream transition-colors cursor-default">Stripe</span>
+            </div>
+        </section>
+
+        <!-- SEC 6: PROCESS TEASER -->
+        <section class="py-16 md:py-24 border-b border-ob-ink/15 overflow-hidden">
+            <div class="px-6 md:px-12 mb-12 flex justify-between items-end">
+                 <h2 class="font-anton text-4xl md:text-5xl uppercase tracking-wide">Comment nous opérons</h2>
+                 <a href="/processus" class="hidden md:inline-flex items-center text-xs font-bold uppercase tracking-widest text-ob-blue hover:text-ob-orange transition-colors">
+                    Voir la méthode en détail <svg class="w-4 h-4 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+
+            <div class="w-full overflow-x-auto pb-8 hide-scrollbar px-6 md:px-12">
+                <div class="flex min-w-[800px] relative">
+                    <!-- The Track Line -->
+                    <div class="absolute top-[30px] left-0 w-full h-[1px] bg-ob-ink/20 z-0"></div>
+                    
+                    <!-- Steps -->
+                    <div class="flex-1 relative z-10 pr-8 group">
+                        <div class="w-16 h-16 bg-ob-cream border border-ob-ink/20 rounded-full flex items-center justify-center font-anton text-2xl text-ob-ink/50 group-hover:bg-ob-blue group-hover:text-ob-cream group-hover:border-ob-blue transition-colors mb-4">1</div>
+                        <h4 class="font-bold text-sm uppercase mb-1">Découverte</h4>
+                        <p class="text-xs text-ob-ink/60 font-light">Audit & définition des KPI.</p>
+                    </div>
+                    <div class="flex-1 relative z-10 pr-8 group">
+                        <div class="w-16 h-16 bg-ob-cream border border-ob-ink/20 rounded-full flex items-center justify-center font-anton text-2xl text-ob-ink/50 group-hover:bg-ob-blue group-hover:text-ob-cream group-hover:border-ob-blue transition-colors mb-4">2</div>
+                        <h4 class="font-bold text-sm uppercase mb-1">Stratégie</h4>
+                        <p class="text-xs text-ob-ink/60 font-light">Architecture & Wireframes.</p>
+                    </div>
+                    <div class="flex-1 relative z-10 pr-8 group">
+                        <div class="w-16 h-16 bg-ob-cream border border-ob-ink/20 rounded-full flex items-center justify-center font-anton text-2xl text-ob-ink/50 group-hover:bg-ob-blue group-hover:text-ob-cream group-hover:border-ob-blue transition-colors mb-4">3</div>
+                        <h4 class="font-bold text-sm uppercase mb-1">Design UI/UX</h4>
+                        <p class="text-xs text-ob-ink/60 font-light">Direction artistique & Proto.</p>
+                    </div>
+                    <div class="flex-1 relative z-10 pr-8 group">
+                        <div class="w-16 h-16 bg-ob-cream border border-ob-ink/20 rounded-full flex items-center justify-center font-anton text-2xl text-ob-ink/50 group-hover:bg-ob-orange group-hover:text-ob-cream group-hover:border-ob-orange transition-colors mb-4">4</div>
+                        <h4 class="font-bold text-sm uppercase mb-1">Ingénierie</h4>
+                        <p class="text-xs text-ob-ink/60 font-light">Développement & Intégration.</p>
+                    </div>
+                    <div class="flex-1 relative z-10 pr-8 group">
+                        <div class="w-16 h-16 bg-ob-cream border border-ob-ink/20 rounded-full flex items-center justify-center font-anton text-2xl text-ob-ink/50 group-hover:bg-ob-blue group-hover:text-ob-cream group-hover:border-ob-blue transition-colors mb-4">5</div>
+                        <h4 class="font-bold text-sm uppercase mb-1">Assurance QA</h4>
+                        <p class="text-xs text-ob-ink/60 font-light">Tests de charge & Débogage.</p>
+                    </div>
+                    <div class="flex-1 relative z-10 pr-8 group">
+                        <div class="w-16 h-16 bg-ob-ink border border-ob-ink rounded-full flex items-center justify-center font-anton text-2xl text-ob-cream group-hover:bg-ob-orange group-hover:border-ob-orange transition-colors mb-4">6</div>
+                        <h4 class="font-bold text-sm uppercase mb-1">Lancement</h4>
+                        <p class="text-xs text-ob-ink/60 font-light">Mise en prod & Formation.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="px-6 mt-4 md:hidden">
+                <a href="/processus" class="inline-flex items-center text-xs font-bold uppercase tracking-widest text-ob-blue hover:text-ob-orange transition-colors">
+                    Voir la méthode en détail →
+                </a>
+            </div>
+        </section>
+
+        <!-- SEC 7: STICKY CTA BAND -->
+        <a href="#contact" class="block w-full bg-ob-orange text-ob-cream py-6 md:py-8 overflow-hidden group hover:bg-[#E64500] transition-colors relative z-20">
+            <div class="flex items-center whitespace-nowrap">
+                <div class="animate-marquee font-anton text-3xl md:text-5xl uppercase tracking-wide flex items-center gap-8 px-4">
+                    <span>Un projet qui recouvre plusieurs expertises ? Parlons-en.</span>
+                    <svg class="w-8 h-8 md:w-12 md:h-12 transform group-hover:translate-x-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="square" stroke-linejoin="miter" d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                    <span>Un projet qui recouvre plusieurs expertises ? Parlons-en.</span>
+                    <svg class="w-8 h-8 md:w-12 md:h-12 transform group-hover:translate-x-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="square" stroke-linejoin="miter" d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                </div>
+            </div>
+        </a>
+
+        <!-- SEC 8: FOOTER (System Match) -->
+        <footer id="contact" class="bg-ob-ink text-ob-cream pt-24 pb-12 px-6 md:px-12 relative z-10 border-t border-ob-ink overflow-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-32 max-w-[1400px]">
+                <div class="lg:col-span-1">
+                    <p class="font-mono text-xs uppercase tracking-widest text-ob-cream/50 mb-6">Bureau Central</p>
+                    <p class="font-light text-sm mb-1">Douala, Cameroun</p>
+                    <p class="font-light text-sm mb-6">Akwa, Rue Drouot</p>
+                    <a href="mailto:hello@overbrand.cm" class="font-medium hover:text-ob-orange transition-colors block mb-1">hello@overbrand.cm</a>
+                    <a href="tel:+237699999999" class="font-medium hover:text-ob-orange transition-colors block">+237 6 00 00 00 00</a>
+                </div>
+                
+                <div class="lg:col-span-1">
+                    <p class="font-mono text-xs uppercase tracking-widest text-ob-cream/50 mb-6">Nav</p>
+                    <ul class="space-y-3 text-sm font-light">
+                        <li><a href="#" class="hover:text-ob-orange transition-colors block">Agence</a></li>
+                        <li><a href="#" class="hover:text-ob-orange transition-colors block">Expertises</a></li>
+                        <li><a href="#" class="hover:text-ob-orange transition-colors block">Processus</a></li>
+                        <li><a href="#" class="hover:text-ob-orange transition-colors block">Studio</a></li>
+                    </ul>
+                </div>
+
+                <div class="lg:col-span-1">
+                    <p class="font-mono text-xs uppercase tracking-widest text-ob-cream/50 mb-6">Social</p>
+                    <ul class="space-y-3 text-sm font-light">
+                        <li><a href="#" class="hover:text-ob-orange transition-colors block">LinkedIn</a></li>
+                        <li><a href="#" class="hover:text-ob-orange transition-colors block">Instagram</a></li>
+                        <li><a href="#" class="hover:text-ob-orange transition-colors block">Behance</a></li>
+                        <li><a href="#" class="hover:text-ob-orange transition-colors block">Awwwards</a></li>
+                    </ul>
+                </div>
+
+                <div class="lg:col-span-1">
+                    <p class="font-mono text-xs uppercase tracking-widest text-ob-cream/50 mb-6">Legal</p>
+                    <ul class="space-y-3 text-sm font-light">
+                        <li><a href="#" class="hover:text-ob-cream/70 transition-colors block">Mentions Légales</a></li>
+                        <li><a href="#" class="hover:text-ob-cream/70 transition-colors block">CGV</a></li>
+                        <li><a href="#" class="hover:text-ob-cream/70 transition-colors block">Politique de Confidentialité</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Giant Outlined Wordmark -->
+            <div class="w-full text-center relative select-none pointer-events-none">
+                <span class="font-anton text-[16vw] md:text-[18vw] leading-none text-transparent text-stroke-cream block -tracking-tighter">
+                    OVERBRAND
+                </span>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-ob-cream/10 flex flex-col md:flex-row justify-between items-center text-xs font-mono text-ob-cream/30">
+                <p>&copy; 2019-2024 OverBrand Agency.</p>
+                <p>All Rights Reserved.</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Initialization / Optional Scripts -->
+    <script>
+        // Simple script to duplicate marquee content for seamless looping
+        document.addEventListener('DOMContentLoaded', () => {
+            const marquees = document.querySelectorAll('.animate-marquee');
+            marquees.forEach(marquee => {
+                const content = marquee.innerHTML;
+                marquee.innerHTML = content + content; // Duplicate content
+            });
+        });
+    </script>
+</body>
+</html>

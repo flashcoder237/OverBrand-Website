@@ -16,13 +16,9 @@ import {
 } from '@/lib/graphql/queries'
 
 // Below-the-fold — lazy loaded (reduces initial JS bundle)
-const StatsSection       = dynamic(() => import('@/components/sections/stats').then(m => ({ default: m.StatsSection })))
-const AboutSection       = dynamic(() => import('@/components/sections/about').then(m => ({ default: m.AboutSection })))
-const ProcessSection     = dynamic(() => import('@/components/sections/process').then(m => ({ default: m.ProcessSection })))
+const StatsSection        = dynamic(() => import('@/components/sections/stats').then(m => ({ default: m.StatsSection })))
+const ProcessSection      = dynamic(() => import('@/components/sections/process').then(m => ({ default: m.ProcessSection })))
 const TestimonialsSection = dynamic(() => import('@/components/sections/testimonials').then(m => ({ default: m.TestimonialsSection })))
-const FAQSection         = dynamic(() => import('@/components/sections/faq').then(m => ({ default: m.FAQSection })))
-const ContactSection     = dynamic(() => import('@/components/sections/contact').then(m => ({ default: m.ContactSection })))
-const CTASection         = dynamic(() => import('@/components/sections/cta').then(m => ({ default: m.CTASection })))
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://overbrand.net'
 
@@ -127,30 +123,18 @@ export default async function HomePage({
       <main>
         {/* ── Above the fold — immediate ── */}
         <HeroSection />
-        <ServicesSection />
-        <ProjectsSection projects={showcaseProjects ?? []} />
 
         {/* ── Below the fold — lazy loaded ── */}
         <Suspense fallback={<SectionSkeleton />}>
           <StatsSection />
         </Suspense>
-        <Suspense fallback={<SectionSkeleton />}>
-          <AboutSection />
-        </Suspense>
+        <ServicesSection />
+        <ProjectsSection projects={showcaseProjects ?? []} />
         <Suspense fallback={<SectionSkeleton />}>
           <ProcessSection />
         </Suspense>
         <Suspense fallback={<SectionSkeleton />}>
           <TestimonialsSection />
-        </Suspense>
-        <Suspense fallback={<SectionSkeleton />}>
-          <FAQSection />
-        </Suspense>
-        <Suspense fallback={<SectionSkeleton />}>
-          <ContactSection />
-        </Suspense>
-        <Suspense fallback={<SectionSkeleton />}>
-          <CTASection />
         </Suspense>
       </main>
       <Footer />

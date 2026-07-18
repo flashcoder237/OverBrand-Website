@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="fr" class="antialiased font-outfit text-ink bg-paper scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Équipe — OverBrand Agency</title>
+    
+    <!-- aesthetic_dna: Brutalist Agency Paradigm / Editorial Grid -->
+    <!-- ui_paradigm: Architectural Web / Asymmetric Bento Structure -->
+    <!-- palette: Paper (#F4F4F0), Ink (#0A0A0A), Blue (#2855A0), Orange (#FF4D00) -->
+
+    <!-- Fonts: Anton (Display), Outfit (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        paper: '#F4F4F0',
+                        ink: '#0A0A0A',
+                        brandBlue: '#2855A0',
+                        brandOrange: '#FF4D00',
+                    },
+                    fontFamily: {
+                        anton: ['Anton', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif'],
+                    },
+                    borderWidth: {
+                        custom: '1px',
+                    },
+                    borderColor: {
+                        default: 'rgba(10, 10, 10, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* CSS Utilities & Engine */
+        :root {
+            --hairline: rgba(10, 10, 10, 0.15);
+            --hairline-light: rgba(244, 244, 240, 0.15);
+        }
+
+        body {
+            /* Keep scrollbar clean */
+            scrollbar-width: thin;
+            scrollbar-color: var(--ink) var(--paper);
+        }
+
+        /* SVG Noise Texture Overlay */
+        .noise-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.4;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* typography constraints */
+        .text-outline-dark {
+            color: transparent;
+            -webkit-text-stroke: 1px #0A0A0A;
+        }
+        .text-outline-light {
+            color: transparent;
+            -webkit-text-stroke: 1px #F4F4F0;
+        }
+
+        /* Bento Grid Structural Classes */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1px; /* The hairline gap */
+            background-color: var(--hairline);
+            border-top: 1px solid var(--hairline);
+            border-bottom: 1px solid var(--hairline);
+        }
+        
+        @media (min-width: 768px) {
+            .bento-grid {
+                grid-template-columns: repeat(3, 1fr);
+                grid-auto-rows: minmax(320px, auto);
+            }
+            .bento-tall { grid-row: span 2; }
+            .bento-wide { grid-column: span 2; }
+            .bento-huge { grid-row: span 2; grid-column: span 2; }
+        }
+        
+        @media (min-width: 1024px) {
+            .bento-grid {
+                grid-template-columns: repeat(4, 1fr);
+                grid-auto-rows: 400px;
+            }
+        }
+
+        .bento-item {
+            background-color: var(--paper);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Custom Image Grayscale filter that reacts well to hardware acceleration */
+        .img-filter-wrap img {
+            filter: grayscale(100%) contrast(1.1);
+            transition: filter 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transform: scale(1.02);
+            transform-origin: center 30%;
+        }
+        
+        .bento-item:hover .img-filter-wrap img,
+        .founder-card:hover .img-filter-wrap img {
+            filter: grayscale(0%) contrast(1);
+            transform: scale(1);
+        }
+
+        /* Orange Frame Engine */
+        .orange-frame {
+            position: absolute;
+            inset: 0;
+            border: 0px solid transparent;
+            transition: border-width 0px, border-color 0.3s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .bento-item:hover .orange-frame {
+            border: 2px solid var(--brandOrange);
+        }
+
+        /* Animation Keyframes */
+        .reveal-element {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.215, 0.610, 0.355, 1.000), 
+                        transform 0.8s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        }
+        .reveal-element.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Delay utilities for cascade */
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        .vertical-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+        }
+        
+        /* Smooth underline links */
+        .link-underline {
+            position: relative;
+        }
+        .link-underline::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 1px;
+            bottom: 0;
+            left: 0;
+            background-color: currentColor;
+            transform-origin: bottom right;
+            transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .link-underline:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+    </style>
+</head>
+<body class="selection:bg-brandOrange selection:text-paper relative overflow-x-hidden">
+
+    <!-- Global Noise -->
+    <div class="noise-bg"></div>
+
+    <!-- Layout Shell -->
+    <div class="flex min-h-[100dvh] w-full">
+
+        <!-- 64px Fixed Left Rail -->
+        <aside class="w-16 h-[100dvh] border-r border-default fixed left-0 top-0 flex flex-col items-center justify-between py-8 bg-paper z-40 hidden md:flex">
+            <div class="flex flex-col gap-6">
+                <div class="w-8 h-8 bg-ink rounded-full flex items-center justify-center text-paper font-anton text-xl leading-none pt-1">O</div>
+                <div class="w-px h-12 bg-default mx-auto"></div>
+            </div>
+            
+            <span class="vertical-text font-outfit text-xs font-semibold tracking-[0.2em] uppercase text-ink/40">Équipe — 12 Humains</span>
+            
+            <div class="flex flex-col gap-4">
+                <a href="#" class="grid place-items-center w-10 h-10 hover:text-brandOrange transition-colors"><i class="ph ph-linkedin-logo text-xl"></i></a>
+                <a href="#" class="grid place-items-center w-10 h-10 hover:text-brandOrange transition-colors"><i class="ph ph-twitter-logo text-xl"></i></a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 md:ml-16 w-full max-w-[1600px] mx-auto flex flex-col">
+            
+            <!-- Mobile Header (Visible only < md) -->
+            <header class="md:hidden flex justify-between items-center p-4 border-b border-default sticky top-0 bg-paper/90 backdrop-blur z-40">
+                <div class="w-8 h-8 bg-ink rounded-full flex items-center justify-center text-paper font-anton text-xl leading-none pt-1">O</div>
+                <button class="font-outfit uppercase text-xs tracking-widest font-semibold border border-ink py-2 px-4 rounded-full">Menu</button>
+            </header>
+
+            <!-- 1. HERO SECTION -->
+            <section class="px-6 md:px-12 pt-20 md:pt-40 pb-20 md:pb-32 min-h-[85dvh] flex flex-col justify-end relative reveal-element">
+                <div class="flex items-center gap-4 text-xs font-semibold tracking-widest uppercase mb-12">
+                    <span class="text-ink/50"><i class="ph ph-house"></i> OVERBRAND</span>
+                    <span class="text-ink/30">/</span>
+                    <span class="text-brandOrange">ÉQUIPE — 12 HUMAINS</span>
+                </div>
+
+                <h1 class="font-anton text-[5rem] md:text-[8rem] lg:text-[11rem] leading-[0.8] tracking-tight uppercase flex flex-col">
+                    <span>Les Visages</span>
+                    <span class="text-outline-dark ml-0 md:ml-24">Derrière</span>
+                    <span class="ml-0 md:ml-48">OverBrand<span class="text-brandOrange">.</span></span>
+                </h1>
+
+                <div class="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+                    <p class="md:col-start-7 md:col-span-6 font-outfit text-xl md:text-2xl leading-snug text-ink/80 max-w-2xl font-light">
+                        Designers, développeurs, stratèges, motion artists. Une équipe multi-disciplinaire d'élite, basée à <span class="font-medium text-ink">Douala</span> et en remote à travers l'Afrique. Nous construisons l'internet de demain.
+                    </p>
+                </div>
+            </section>
+
+            <!-- 2. TEAM HEADCOUNT STRIP -->
+            <section class="grid grid-cols-2 md:grid-cols-4 border-y border-default divide-x divide-y md:divide-y-0 divide-default bg-paper sticky top-0 md:top-0 z-30 reveal-element">
+                <div class="p-6 md:p-8 flex flex-col justify-between h-32 md:h-40 group cursor-default">
+                    <span class="font-outfit text-xs font-semibold tracking-[0.2em] uppercase text-ink/50 group-hover:text-brandBlue transition-colors">Département</span>
+                    <div class="flex items-end justify-between">
+                        <span class="font-anton text-4xl md:text-5xl">DESIGN</span>
+                        <span class="font-outfit text-xl md:text-2xl text-brandBlue font-light border border-default rounded-full w-10 h-10 flex items-center justify-center">4</span>
+                    </div>
+                </div>
+                <!-- Dev -->
+                <div class="p-6 md:p-8 flex flex-col justify-between h-32 md:h-40 group cursor-default">
+                    <span class="font-outfit text-xs font-semibold tracking-[0.2em] uppercase text-ink/50 group-hover:text-brandOrange transition-colors">Département</span>
+                    <div class="flex items-end justify-between">
+                        <span class="font-anton text-4xl md:text-5xl">DEV</span>
+                        <span class="font-outfit text-xl md:text-2xl text-brandOrange font-light border border-default rounded-full w-10 h-10 flex items-center justify-center">5</span>
+                    </div>
+                </div>
+                <!-- Strategy -->
+                <div class="p-6 md:p-8 flex flex-col justify-between h-32 md:h-40 group cursor-default">
+                    <span class="font-outfit text-xs font-semibold tracking-[0.2em] uppercase text-ink/50 group-hover:text-ink transition-colors">Département</span>
+                    <div class="flex items-end justify-between">
+                        <span class="font-anton text-4xl md:text-5xl">STRATEGY</span>
+                        <span class="font-outfit text-xl md:text-2xl text-ink font-light border border-default rounded-full w-10 h-10 flex items-center justify-center">2</span>
+                    </div>
+                </div>
+                <!-- Motion -->
+                <div class="p-6 md:p-8 flex flex-col justify-between h-32 md:h-40 group cursor-default">
+                    <span class="font-outfit text-xs font-semibold tracking-[0.2em] uppercase text-ink/50 group-hover:text-ink transition-colors">Département</span>
+                    <div class="flex items-end justify-between">
+                        <span class="font-anton text-4xl md:text-5xl relative">
+                            MOTION
+                            <span class="absolute -right-3 top-1 w-2 h-2 bg-brandBlue rounded-full animate-pulse"></span>
+                        </span>
+                        <span class="font-outfit text-xl md:text-2xl text-ink font-light border border-default rounded-full w-10 h-10 flex items-center justify-center">1</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. FEATURED LEADERSHIP -->
+            <section class="flex flex-col">
+                <!-- Founder 1 -->
+                <article class="grid grid-cols-1 lg:grid-cols-12 min-h-[80dvh] border-b border-default founder-card group">
+                    <div class="lg:col-span-5 border-r border-default relative overflow-hidden bg-ink img-filter-wrap min-h-[50vh] lg:min-h-0">
+                        <!-- Pulse dot -->
+                        <div class="absolute top-8 left-8 w-4 h-4 rounded-full bg-brandOrange z-20 shadow-[0_0_20px_rgba(255,77,0,0.5)] group-hover:scale-150 transition-transform duration-500"></div>
+                        <span class="absolute top-8 left-16 z-20 font-outfit text-xs tracking-[0.2em] text-paper font-medium uppercase drop-shadow-md">Leadership</span>
+                        <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=1200" alt="Cédric Tefoye portrait" class="w-full h-full object-cover">
+                    </div>
+                    <div class="lg:col-span-7 p-8 md:p-16 flex flex-col justify-center bg-paper reveal-element">
+                        <h2 class="font-anton text-[4rem] md:text-[6rem] leading-[0.8] tracking-tight uppercase mb-4">Cédric Tefoye</h2>
+                        <h3 class="font-outfit text-xl md:text-2xl font-semibold mb-10 text-brandBlue">Fondateur & Direction Artistique</h3>
+                        
+                        <div class="font-outfit text-lg text-ink/80 space-y-6 max-w-2xl mb-12">
+                            <p>Ancien directeur créatif dans des agences parisiennes, Cédric a fondé OverBrand avec une vision brutale : éradiquer le design générique du paysage numérique africain et global.</p>
+                            <p>Il ne croit pas aux compromis esthétiques. Son approche fusionne l'art contemporain, le brutalisme architectural et une obsession maladive pour la typographie. Il dirige l'équipe créative d'une main de fer dans un gant d'acier.</p>
+                            <p>Quand il ne pousse pas des pixels à 3h du matin, il collectionne des affiches suisses des années 70.</p>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2 mb-12">
+                            <span class="border border-default px-4 py-1.5 rounded-full text-sm font-medium tracking-wide">Brand strategy</span>
+                            <span class="border border-default px-4 py-1.5 rounded-full text-sm font-medium tracking-wide">Art direction</span>
+                            <span class="border border-default px-4 py-1.5 rounded-full text-sm font-medium tracking-wide min-w-[2px] bg-brandOrange border-brandOrange text-paper">Business</span>
+                        </div>
+
+                        <div class="flex items-center gap-6 font-outfit font-medium text-sm tracking-widest uppercase">
+                            <a href="#" class="link-underline flex items-center gap-2"><i class="ph ph-linkedin-logo text-lg"></i> LinkedIn</a>
+                            <a href="#" class="link-underline flex items-center gap-2"><i class="ph ph-envelope text-lg"></i> Email</a>
+                            <a href="#" class="link-underline flex items-center gap-2"><i class="ph ph-twitter-logo text-lg"></i> Twitter</a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Founder 2 (Mirrored roughly for tension) -->
+                <article class="grid grid-cols-1 lg:grid-cols-12 min-h-[80dvh] border-b border-default founder-card group">
+                    <div class="lg:col-span-7 p-8 md:p-16 flex flex-col justify-center bg-paper lg:order-1 order-2 reveal-element">
+                        <h2 class="font-anton text-[4rem] md:text-[6rem] leading-[0.8] tracking-tight uppercase mb-4">Marlyse Ngono</h2>
+                        <h3 class="font-outfit text-xl md:text-2xl font-semibold mb-10 text-brandOrange">Co-fondatrice & Direction Technique</h3>
+                        
+                        <div class="font-outfit text-lg text-ink/80 space-y-6 max-w-2xl mb-12">
+                            <p>Marlyse est l'architecte derrière les expériences digitales fluides produites par l'agence. Ingénieure logicielle de formation, elle traduit la folie créative de Cédric en code performant, accessible et robuste.</p>
+                            <p>Experte en écosystèmes modernes (React, Next.js, WebGL), elle milite pour un web où la performance n'est pas l'ennemie du beau. Sous sa direction, l'équipe technique d'OverBrand déploie des infrastructures serverless qui encaissent des millions de requêtes.</p>
+                            <p>Oratrice tech respectée et mentor pour les product builders locaux.</p>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2 mb-12">
+                            <span class="border border-default px-4 py-1.5 rounded-full text-sm font-medium tracking-wide">Next.js / React</span>
+                            <span class="border border-default px-4 py-1.5 rounded-full text-sm font-medium tracking-wide">System Architecture</span>
+                            <span class="border border-default px-4 py-1.5 rounded-full text-sm font-medium tracking-wide min-w-[2px] bg-brandBlue border-brandBlue text-paper">DevOps</span>
+                        </div>
+
+                        <div class="flex items-center gap-6 font-outfit font-medium text-sm tracking-widest uppercase">
+                            <a href="#" class="link-underline flex items-center gap-2"><i class="ph ph-linkedin-logo text-lg"></i> LinkedIn</a>
+                            <a href="#" class="link-underline flex items-center gap-2"><i class="ph ph-github-logo text-lg"></i> GitHub</a>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-5 border-l border-default relative overflow-hidden bg-ink img-filter-wrap lg:order-2 order-1 min-h-[50vh] lg:min-h-0">
+                        <div class="absolute top-8 right-8 w-4 h-4 rounded-full bg-brandBlue z-20 shadow-[0_0_20px_rgba(40,85,160,0.5)] group-hover:scale-150 transition-transform duration-500"></div>
+                        <span class="absolute top-8 right-16 z-20 font-outfit text-xs tracking-[0.2em] text-paper font-medium uppercase drop-shadow-md">Engineering</span>
+                        <img src="https://images.unsplash.com/photo-1531123897727-8f129e1bfa8ea?auto=format&fit=crop&q=80&w=1200" alt="Marlyse Ngono portrait" class="w-full h-full object-cover">
+                    </div>
+                </article>
+            </section>
+
+            <!-- 4. THE FULL TEAM GRID (ASYMMETRIC BENTO) -->
+            <section class="bg-paper py-24">
+                <div class="px-6 md:px-12 mb-16 reveal-element">
+                    <h2 class="font-anton text-4xl md:text-[5xl] uppercase flex items-center gap-4">
+                        <span class="w-8 h-[2px] bg-ink block"></span>
+                        La Force Opérationnelle
+                    </h2>
+                </div>
+
+                <div class="bento-grid">
+                    <!-- Person 1: Sandrine (Square) -->
+                    <div class="bento-item group p-6 reveal-element">
+                        <div class="orange-frame"></div>
+                        <div class="absolute inset-0 img-filter-wrap opacity-30 group-hover:opacity-100 transition-opacity duration-300 z-0">
+                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600" alt="Sandrine Biya" class="w-full h-full object-cover">
+                        </div>
+                        <div class="relative z-10 flex flex-col justify-between h-full group-hover:text-paper transition-colors duration-300">
+                            <div class="flex justify-between items-start w-full">
+                                <span class="bg-paper text-ink text-[10px] font-bold px-2 py-1 uppercase tracking-widest leading-none drop-shadow-sm line-clamp-1">Pixel Perfector</span>
+                                <a href="#" class="w-8 h-8 rounded-full bg-paper text-ink flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><i class="ph-fill ph-linkedin-logo"></i></a>
+                            </div>
+                            <div class="mt-40 md:mt-0 p-4 bg-paper/90 backdrop-blur-sm group-hover:bg-ink/80 transition-colors duration-300">
+                                <h3 class="font-anton text-3xl uppercase leading-none mb-1">Sandrine Biya</h3>
+                                <p class="font-outfit text-sm font-medium text-brandOrange tracking-wide">Designer UI/UX</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Person 2: Éric (Tall) -->
+                    <div class="bento-item bento-tall group p-6 reveal-element delay-100 bg-ink">
+                        <div class="orange-frame"></div>
+                        <div class="absolute inset-0 img-filter-wrap opacity-50 group-hover:opacity-100 transition-opacity duration-300 z-0 mix-blend-luminosity group-hover:mix-blend-normal">
+                            <img src="https://images.unsplash.com/photo-1506803682981-6e718a9dd3ee?auto=format&fit=crop&q=80&w=800" alt="Éric Mbappe" class="w-full h-full object-cover object-top">
+                        </div>
+                        <div class="relative z-10 flex flex-col justify-between h-full text-paper">
+                            <div class="flex justify-between items-start w-full">
+                                <span class="bg-brandBlue text-paper text-[10px] font-bold px-2 py-1 uppercase tracking-widest leading-none">Code Machine</span>
+                                <a href="#" class="w-8 h-8 rounded-full bg-paper text-ink flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><i class="ph-fill ph-linkedin-logo"></i></a>
+                            </div>
+                            <div class="mt-48 p-4 bg-ink/70 backdrop-blur-md border px-4 py-3 border-paper/10">
+                                <h3 class="font-anton text-4xl uppercase leading-none mb-1">Éric Mbappe</h3>
+                                <p class="font-outfit text-sm font-medium text-paper/70 tracking-wide">Développeur Full-stack Senior</p>
+                                <p class="font-outfit text-xs mt-3 text-paper/50 italic">"Je refactorise ton code pendant que tu dors."</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Person 3: Aïcha (Square) -->
+                    <div class="bento-item group p-6 reveal-element delay-200">
+                        <div class="orange-frame"></div>
+                        <div class="absolute inset-0 img-filter-wrap opacity-30 group-hover:opacity-100 transition-opacity duration-300 z-0">
+                            <img src="https://images.unsplash.com/photo-1589156280159-27698a70f29e?auto=format&fit=crop&q=80&w=600" alt="Aïcha Traoré" class="w-full h-full object-cover">
+                        </div>
+                         <div class="relative z-10 flex flex-col justify-between h-full group-hover:text-paper transition-colors duration-300">
+                            <div class="flex justify-between items-start w-full">
+                                <span class="bg-paper text-ink text-[10px] font-bold px-2 py-1 uppercase tracking-widest leading-none">Traffic Master</span>
+                                <a href="#" class="w-8 h-8 rounded-full bg-paper text-ink flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><i class="ph-fill ph-linkedin-logo"></i></a>
+                            </div>
+                            <div class="mt-40 md:mt-0 p-3 bg-paper/90 backdrop-blur-sm group-hover:bg-ink/80 transition-colors duration-300">
+                                <h3 class="font-anton text-3xl uppercase leading-none mb-1">Aïcha Traoré</h3>
+                                <p class="font-outfit text-sm font-medium text-ink/60 group-hover:text-paper/70 tracking-wide">SEO & Content Lead</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Person 4: Kwame (Wide) -->
+                    <div class="bento-item bento-wide group p-6 reveal-element">
+                        <div class="orange-frame"></div>
+                        <div class="absolute inset-0 img-filter-wrap opacity-20 group-hover:opacity-100 transition-opacity duration-300 z-0">
+                            <img src="https://images.unsplash.com/photo-1549473448-5d71c8fa79f4?auto=format&fit=crop&q=80&w=1000" alt="Kwame Asante" class="w-full h-full object-cover object-center">
+                        </div>
+                        <div class="relative z-10 flex flex-col md:flex-row justify-between items-end h-full w-full">
+                            <div class="mb-4 md:mb-0 bg-paper/90 p-4 border border-default group-hover:border-paper/10 group-hover:bg-ink/90 group-hover:text-paper transition-colors duration-300 max-w-md">
+                                <h3 class="font-anton text-4xl uppercase leading-none mb-2">Kwame Asante</h3>
+                                <p class="font-outfit text-sm font-medium text-brandBlue tracking-wide mb-2">Brand Designer</p>
+                                <p class="font-outfit text-xs opacity-70">Spécialiste de l'identité visuelle qui claque. Il voit le monde en codes hexadécimaux et pleure devant du Comic Sans.</p>
+                            </div>
+                            <a href="#" class="w-10 h-10 rounded-full bg-ink text-paper flex items-center justify-center hover:bg-brandOrange transition-colors shrink-0"><i class="ph-fill ph-linkedin-logo text-xl"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Person 5: Fatou (Square) -->
+                    <div class="bento-item group p-6 bg-brandOrange text-paper reveal-element border-none">
+                        <div class="orange-frame !border-white"></div>
+                        <div class="absolute inset-0 img-filter-wrap opacity-40 group-hover:opacity-100 transition-opacity duration-300 z-0 mix-blend-multiply group-hover:mix-blend-normal">
+                            <img src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&q=80&w=600" alt="Fatou Diallo" class="w-full h-full object-cover">
+                        </div>
+                        <div class="relative z-10 flex flex-col justify-between h-full">
+                            <div class="flex justify-between items-start w-full">
+                                <span class="bg-ink text-paper text-[10px] font-bold px-2 py-1 uppercase tracking-widest leading-none">Keyframe God</span>
+                                <i class="ph ph-video-camera text-2xl drop-shadow-md"></i>
+                            </div>
+                             <div class="mt-40 md:mt-0 p-3 bg-brandOrange/80 backdrop-blur-sm group-hover:bg-ink/80 transition-colors duration-300">
+                                <h3 class="font-anton text-3xl uppercase leading-none mb-1">Fatou Diallo</h3>
+                                <p class="font-outfit text-sm font-medium tracking-wide opacity-90">Motion Designer</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Person 6: David (Square) -->
+                    <div class="bento-item group p-6 reveal-element delay-100">
+                        <div class="orange-frame"></div>
+                        <div class="absolute inset-0 img-filter-wrap opacity-30 group-hover:opacity-100 transition-opacity duration-300 z-0">
+                            <img src="https://images.unsplash.com/photo-1507038772120-7fdf2f133568?auto=format&fit=crop&q=80&w=600" alt="David Onana" class="w-full h-full object-cover">
+                        </div>
+                        <div class="relative z-10 flex flex-col justify-between h-full group-hover:text-paper transition-colors duration-300">
+                            <div class="flex justify-end items-start w-full opacity-0 group-hover:opacity-100 transition-opacity">
+                                <a href="#" class="w-8 h-8 rounded-full bg-paper text-ink flex items-center justify-center"><i class="ph-fill ph-linkedin-logo"></i></a>
+                            </div>
+                            <div class="mt-40 md:mt-0">
+                                <h3 class="font-anton text-3xl uppercase leading-none -mb-1 bg-paper/90 group-hover:bg-ink inline-block px-2 pt-2">David</h3><br>
+                                <h3 class="font-anton text-3xl uppercase leading-none bg-paper/90 group-hover:bg-ink inline-block px-2 pb-1">Onana</h3>
+                                <p class="font-outfit text-xs font-semibold text-ink group-hover:text-paper bg-brandOrange/20 group-hover:bg-brandOrange mt-1 inline-block px-2 py-1 uppercase tracking-widest">iOS & Mobile Eng</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Person 7: Chimène (Tall - Text Heavy) -->
+                    <div class="bento-item bento-tall group p-8 reveal-element delay-200 bg-paper">
+                        <div class="orange-frame"></div>
+                        <div class="w-24 h-24 rounded-full overflow-hidden mb-8 border border-default img-filter-wrap shrink-0">
+                            <img src="https://images.unsplash.com/photo-1558222218-b7b54eede3f3?auto=format&fit=crop&q=80&w=300" alt="Chimène Fotso" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1 flex flex-col relative z-10">
+                            <i class="ph-fill ph-quotes text-3xl text-default mb-4"></i>
+                            <p class="font-outfit text-2xl font-light leading-snug text-ink mb-8">
+                                "Les mots sont des interfaces. Si le copywriting n'est pas aligné avec l'UX, le design est creux. Je sculpte la voix de la marque dans chaque micro-interaction."
+                            </p>
+                            <div class="mt-auto border-t border-default pt-4 flex justify-between items-end">
+                                <div>
+                                    <h3 class="font-anton text-3xl uppercase leading-none mb-1 group-hover:text-brandBlue transition-colors">Chimène Fotso</h3>
+                                    <p class="font-outfit text-sm font-medium text-ink/60 tracking-wide uppercase">Content Strategist</p>
+                                </div>
+                                <a href="#" class="text-ink hover:text-brandBlue"><i class="ph-fill ph-linkedin-logo text-2xl"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                     <!-- Person 8: Patrice (Square) -->
+                     <div class="bento-item group reveal-element bg-ink text-paper">
+                        <div class="orange-frame"></div>
+                        <div class="absolute inset-0 img-filter-wrap opacity-50 group-hover:opacity-100 transition-opacity duration-300 z-0 mix-blend-luminosity">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=600" alt="Patrice Nkomo" class="w-full h-full object-cover">
+                        </div>
+                        <div class="relative z-10 w-full h-full flex flex-col justify-end p-6 bg-gradient-to-t from-ink via-ink/20 to-transparent">
+                            <h3 class="font-anton text-3xl uppercase leading-none mb-1">Patrice Nkomo</h3>
+                            <p class="font-outfit text-sm font-medium text-brandBlue tracking-wide">DevOps & Infra</p>
+                        </div>
+                    </div>
+
+                    <!-- Person 9: Lola (Square) -->
+                    <div class="bento-item group p-6 reveal-element delay-100">
+                        <div class="orange-frame"></div>
+                        <div class="absolute inset-0 img-filter-wrap opacity-30 group-hover:opacity-100 transition-opacity duration-300 z-0">
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600" alt="Lola Ebale" class="w-full h-full object-cover object-top">
+                        </div>
+                         <div class="relative z-10 flex flex-col justify-between h-full group-hover:text-paper transition-colors duration-300">
+                            <div class="flex justify-end items-start w-full">
+                                <a href="#" class="w-8 h-8 rounded-full bg-paper text-ink flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><i class="ph-fill ph-linkedin-logo"></i></a>
+                            </div>
+                            <div class="mt-40 md:mt-0 p-3 bg-paper/90 backdrop-blur-sm group-hover:bg-ink/80 transition-colors duration-300">
+                                <h3 class="font-anton text-3xl uppercase leading-none mb-1">Lola Ebale</h3>
+                                <p class="font-outfit text-sm font-medium text-ink/60 group-hover:text-paper/70 tracking-wide">Customer Success</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Person 10: Yves (Wide) -->
+                    <div class="bento-item bento-wide group p-8 reveal-element bg-paper line-pattern">
+                        <!-- Custom CSS pattern for bg instead of image -->
+                        <div class="absolute inset-0" style="background-image: linear-gradient(var(--hairline) 1px, transparent 1px), linear-gradient(90deg, var(--hairline) 1px, transparent 1px); background-size: 20px 20px; opacity: 0.5;"></div>
+                        <div class="orange-frame"></div>
+                        
+                        <div class="relative z-10 flex flex-col md:flex-row items-center gap-8 h-full">
+                            <div class="w-32 h-32 md:w-48 md:h-48 rounded-none overflow-hidden border border-default img-filter-wrap shrink-0 shadow-[8px_8px_0_rgba(10,10,10,1)] group-hover:shadow-[4px_4px_0_#FF4D00] transition-shadow duration-300 bg-ink">
+                                <img src="https://images.unsplash.com/photo-1583195764036-6dc248ac07d9?auto=format&fit=crop&q=80&w=600" alt="Yves Atangana" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1 bg-paper/80 backdrop-blur p-4">
+                                <h3 class="font-anton text-4xl md:text-5xl uppercase leading-none mb-2">Yves Atangana</h3>
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                                    <p class="font-outfit text-sm font-bold uppercase tracking-widest text-ink">Project Manager / Le Chef d'Orchestre</p>
+                                </div>
+                                <p class="font-outfit text-sm text-ink/70">Il traduit le chaos créatif en tickets Jira. Sans lui, nous serions encore en train de débattre de la nuance parfaite de noir (spoiler: c'est #0A0A0A).</p>
+                                <a href="#" class="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-brandBlue hover:text-brandOrange transition-colors"><i class="ph-fill ph-linkedin-logo text-lg"></i> Connect</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. WE'RE HIRING STRIP -->
+            <section class="bg-ink text-paper py-20 md:py-32 px-6 md:px-12 border-y border-default flex flex-col md:flex-row gap-12 items-center justify-between group overflow-hidden relative">
+                <!-- Hover light effect -->
+                <div class="absolute inset-0 bg-brandOrange opacity-0 group-hover:opacity-5 transition-opacity duration-1000 pointer-events-none"></div>
+
+                <div class="reveal-element">
+                    <h2 class="font-anton text-[4rem] md:text-[7rem] leading-[0.8] tracking-tight text-outline-light uppercase">On Recrute<span class="text-brandOrange text-stroke-0">.</span></h2>
+                    <p class="font-outfit text-xl font-light text-paper/70 mt-6 max-w-sm">Rejoignez le gang. On cherche des talents qui n'ont pas peur de casser les codes.</p>
+                </div>
+
+                <div class="w-full md:w-auto flex flex-col gap-0 border-t border-paper/20 min-w-[300px] reveal-element delay-200">
+                    <a href="#" class="flex items-center justify-between py-6 border-b border-paper/20 group/link hover:pl-4 transition-all duration-300">
+                        <span class="font-outfit text-xl font-medium tracking-wide">Senior React Dev</span>
+                        <i class="ph ph-arrow-right text-brandOrange opacity-0 -translate-x-4 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300"></i>
+                    </a>
+                    <a href="#" class="flex items-center justify-between py-6 border-b border-paper/20 group/link hover:pl-4 transition-all duration-300">
+                        <span class="font-outfit text-xl font-medium tracking-wide">Brand Designer Volant</span>
+                        <i class="ph ph-arrow-right text-brandBlue opacity-0 -translate-x-4 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300"></i>
+                    </a>
+                    <a href="#" class="flex items-center justify-between py-6 border-b border-white group/link hover:pl-4 transition-all duration-300">
+                        <span class="font-outfit text-xl font-medium tracking-wide opacity-50">Growth Lead (Pourvu)</span>
+                        <i class="ph ph-lock-key text-paper opacity-50"></i>
+                    </a>
+                    <a href="#" class="mt-8 font-outfit text-sm font-semibold uppercase tracking-[0.2em] text-brandOrange inline-flex items-center gap-2 link-underline w-max">
+                        Voir toutes les offres <i class="ph ph-arrow-up-right"></i>
+                    </a>
+                </div>
+            </section>
+
+            <!-- 6. CULTURE PHOTO GRID -->
+            <section class="py-24 px-6 md:px-12 bg-paper">
+                <div class="mb-16 reveal-element">
+                    <h2 class="font-anton text-6xl uppercase leading-none mb-4">La vraie vie.</h2>
+                    <p class="font-outfit text-lg text-ink/60 uppercase tracking-widest max-w-xl">Pas de babyfoot de startup cliché. Juste du travail acharné, beaucoup de caféine et de la passion.</p>
+                </div>
+
+                <!-- Masonry-ish CSS grid fallback -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 reveal-element">
+                    <!-- Photo 1 -->
+                    <figure class="flex flex-col gap-3 group">
+                        <div class="aspect-[4/3] bg-default overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=800" alt="Séance de brainstorming sur tableau blanc" class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500 scale-105 group-hover:scale-100">
+                        </div>
+                        <figcaption class="font-outfit text-sm border-t border-default pt-2 text-ink/70">
+                            <strong>01.</strong> Architecture système au tableau noir. 8h du matin.
+                        </figcaption>
+                    </figure>
+                    <!-- Photo 2 -->
+                    <figure class="flex flex-col gap-3 group md:mt-12">
+                        <div class="aspect-square bg-default overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800" alt="Revue de design d'équipe" class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500 scale-105 group-hover:scale-100">
+                        </div>
+                        <figcaption class="font-outfit text-sm border-t border-default pt-2 text-ink/70">
+                            <strong>02.</strong> Design review hebdomadaire. Cédric détruit aimablement une maquette.
+                        </figcaption>
+                    </figure>
+                    <!-- Photo 3 -->
+                    <figure class="flex flex-col gap-3 group">
+                        <div class="aspect-[3/4] bg-default overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800" alt="Collaborateurs qui travaillent en pair programming" class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500 scale-105 group-hover:scale-100">
+                        </div>
+                        <figcaption class="font-outfit text-sm border-t border-default pt-2 text-ink/70">
+                            <strong>03.</strong> Pair programming intense pour rattraper une deadline impossible.
+                        </figcaption>
+                    </figure>
+                     <!-- Photo 4 -->
+                     <figure class="flex flex-col gap-3 group">
+                        <div class="aspect-square bg-default overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800" alt="Café de l'agence" class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500 scale-105 group-hover:scale-100">
+                        </div>
+                        <figcaption class="font-outfit text-sm border-t border-default pt-2 text-ink/70">
+                            <strong>04.</strong> Le carburant officiel d'OverBrand. Grain noir uniquement.
+                        </figcaption>
+                    </figure>
+                    <!-- Photo 5 -->
+                     <figure class="flex flex-col gap-3 group md:mt-12 lg:mt-0 lg:-mt-12">
+                        <div class="aspect-[4/3] bg-default overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&q=80&w=800" alt="Moment de détente d'équipe" class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500 scale-105 group-hover:scale-100">
+                        </div>
+                        <figcaption class="font-outfit text-sm border-t border-default pt-2 text-ink/70">
+                            <strong>05.</strong> Célébration post-déploiement. Zéro bug détecté (presque).
+                        </figcaption>
+                    </figure>
+                    <!-- Photo 6 -->
+                    <figure class="flex flex-col gap-3 group md:mt-12">
+                        <div class="aspect-[3/4] bg-default overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1621839673705-6617adf9e890?auto=format&fit=crop&q=80&w=800" alt="Espace de travail" class="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-500 scale-105 group-hover:scale-100">
+                        </div>
+                        <figcaption class="font-outfit text-sm border-t border-default pt-2 text-ink/70">
+                            <strong>06.</strong> L'antre de la bête. Setup multi-écrans obligatoire pour le lab.
+                        </figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <!-- 7. VALUES / QUOTES (Meso-Architecture depth) -->
+            <section class="border-y border-default flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-default bg-paper reveal-element">
+                <div class="p-8 md:p-12 flex-1 flex flex-col justify-between group hover:bg-ink hover:text-paper transition-colors duration-500">
+                    <i class="ph-fill ph-quotes text-4xl mb-6 text-brandOrange"></i>
+                    <p class="font-outfit text-xl xl:text-3xl font-light italic leading-tight mb-12">"Ce que j'aime ici, c'est l'absence de hiérarchie pour les bonnes idées. Le meilleur pixel ou la meilleure ligne de code gagne, peu importe qui la propose."</p>
+                    <div>
+                        <hr class="border-default group-hover:border-paper/20 mb-4 transition-colors duration-500">
+                        <span class="font-anton text-xl uppercase tracking-wider block">David Onana</span>
+                        <span class="font-outfit text-xs font-medium uppercase tracking-[0.2em] opacity-60">iOS Eng</span>
+                    </div>
+                </div>
+                
+                <div class="p-8 md:p-12 flex-1 flex flex-col justify-between group hover:bg-ink hover:text-paper transition-colors duration-500 delay-100">
+                    <i class="ph-fill ph-quotes text-4xl mb-6 text-brandBlue"></i>
+                    <p class="font-outfit text-xl xl:text-3xl font-light italic leading-tight mb-12">"L'exigence est folle. Au début c'est dur, mais quand tu vois le produit final en ligne et la réaction du client, tu comprends pourquoi on a sué le sang sur la v14."</p>
+                    <div>
+                        <hr class="border-default group-hover:border-paper/20 mb-4 transition-colors duration-500">
+                        <span class="font-anton text-xl uppercase tracking-wider block">Fatou Diallo</span>
+                        <span class="font-outfit text-xs font-medium uppercase tracking-[0.2em] opacity-60">Motion</span>
+                    </div>
+                </div>
+
+                <div class="p-8 md:p-12 flex-1 flex flex-col justify-between group hover:bg-ink hover:text-paper transition-colors duration-500 delay-200">
+                    <!-- Blank visual block to offset the quotes -->
+                    <div class="w-16 h-16 bg-ink flex items-center justify-center text-paper group-hover:bg-paper group-hover:text-ink transition-colors duration-500 rounded-full mb-6">
+                        <i class="ph-fill ph-asterisk text-2xl animate-spin-slow" style="animation-duration: 4s;"></i>
+                    </div>
+                    <p class="font-outfit text-xl xl:text-3xl font-light italic leading-tight mb-12">"OverBrand n'est pas une agence, c'est un culte dédié à la perfection numérique. Et oui, on force tout le monde à utiliser la police Anton."</p>
+                    <div>
+                        <hr class="border-default group-hover:border-paper/20 mb-4 transition-colors duration-500">
+                        <span class="font-anton text-xl uppercase tracking-wider block">Sandrine Biya</span>
+                        <span class="font-outfit text-xs font-medium uppercase tracking-[0.2em] opacity-60">Design UI</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. MENTORS / NETWORK (Adding agency seniority weight) -->
+            <section class="py-16 px-6 md:px-12 bg-paper flex flex-col md:flex-row gap-12 items-center justify-between reveal-element border-b border-default">
+                <div class="shrink-0">
+                    <h3 class="font-anton text-2xl uppercase tracking-wider">Advisory Board</h3>
+                    <p class="font-outfit text-sm text-ink/60">Épaulés par les géants.</p>
+                </div>
+                
+                <div class="flex-1 flex flex-wrap gap-4 md:gap-8 justify-start md:justify-end">
+                    <div class="flex items-center gap-3 border border-default p-2 pr-6 rounded-full bg-white hover:border-brandBlue transition-colors">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=150" alt="Mentor" class="w-10 h-10 rounded-full object-cover filter grayscale">
+                        <div class="flex flex-col">
+                            <span class="font-anton text-sm uppercase">Jean-Marc T.</span>
+                            <span class="font-outfit text-[10px] uppercase font-bold text-ink/50 tracking-widest">Ex-Google VP</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 border border-default p-2 pr-6 rounded-full bg-white hover:border-brandOrange transition-colors">
+                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=150" alt="Mentor" class="w-10 h-10 rounded-full object-cover filter grayscale">
+                        <div class="flex flex-col">
+                            <span class="font-anton text-sm uppercase">Sarah L.</span>
+                            <span class="font-outfit text-[10px] uppercase font-bold text-ink/50 tracking-widest">Ex-Ogilvy CD</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 9. BOTTOM CTA -->
+            <section class="bg-ink text-paper py-32 px-6 md:px-12 flex flex-col items-center text-center reveal-element">
+                <span class="font-outfit text-sm font-semibold tracking-[0.3em] uppercase text-brandOrange mb-8"><i class="ph-fill ph-hand-pointing-down mr-2 inline-block animate-bounce"></i> Vous voulez en être ?</span>
+                <h2 class="font-anton text-[5rem] md:text-[9rem] leading-[0.8] tracking-tight uppercase flex flex-col group cursor-pointer mb-16">
+                    <span class="text-outline-light group-hover:text-paper group-hover:-webkit-text-stroke-0 transition-all duration-500">On Attend</span>
+                    <span>Votre CV<span class="text-brandBlue">.</span></span>
+                </h2>
+
+                <div class="flex flex-col sm:flex-row gap-6">
+                    <a href="#" class="px-8 py-5 bg-paper text-ink font-anton text-2xl uppercase tracking-wider hover:bg-brandOrange hover:text-paper transition-colors duration-300 transform hover:scale-[0.98] active:scale-95 shadow-[8px_8px_0_rgba(255,77,0,0.5)]">
+                        Voir les Carrières
+                    </a>
+                    <a href="#" class="px-8 py-5 border border-paper text-paper font-anton text-2xl uppercase tracking-wider hover:bg-paper/10 transition-colors duration-300 transform hover:scale-[0.98] active:scale-95">
+                        Candidature Spontanée
+                    </a>
+                </div>
+            </section>
+
+            <!-- 10. FOOTER -->
+            <footer class="bg-paper border-t border-default py-12 px-6 md:px-12 flex flex-col gap-12 lg:gap-24">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 font-outfit text-sm">
+                    <!-- Col 1 -->
+                    <div class="flex flex-col gap-4">
+                        <div class="w-12 h-12 bg-ink text-paper font-anton text-3xl flex items-center justify-center rounded-full mb-4">O</div>
+                        <p class="font-medium text-lg leading-tight uppercase font-anton tracking-wide">L'Agence Digitale<br>Radicale.</p>
+                        <p class="text-ink/60 mt-4">Basée à Douala.<br>Opérant Mondialement.</p>
+                    </div>
+                    <!-- Col 2 -->
+                    <div class="flex flex-col gap-4">
+                        <h4 class="font-semibold text-ink/40 tracking-widest uppercase mb-2">Navigation</h4>
+                        <a href="#" class="font-medium hover:text-brandOrange hover:translate-x-2 transition-transform w-fit">Projets</a>
+                        <a href="#" class="font-medium hover:text-brandOrange hover:translate-x-2 transition-transform w-fit">Expertise</a>
+                        <a href="#" class="font-medium text-brandOrange w-fit">Équipe (C'est ici)</a>
+                        <a href="#" class="font-medium hover:text-brandOrange hover:translate-x-2 transition-transform w-fit">Contact</a>
+                    </div>
+                    <!-- Col 3 -->
+                    <div class="flex flex-col gap-4">
+                        <h4 class="font-semibold text-ink/40 tracking-widest uppercase mb-2">Social</h4>
+                        <a href="#" class="font-medium hover:text-brandBlue hover:translate-x-2 transition-transform w-fit">LinkedIn</a>
+                        <a href="#" class="font-medium hover:text-brandBlue hover:translate-x-2 transition-transform w-fit">Instagram</a>
+                        <a href="#" class="font-medium hover:text-brandBlue hover:translate-x-2 transition-transform w-fit">Twitter / X</a>
+                        <a href="#" class="font-medium hover:text-brandBlue hover:translate-x-2 transition-transform w-fit">Behance</a>
+                    </div>
+                    <!-- Col 4 -->
+                    <div class="flex flex-col gap-4 relative">
+                        <h4 class="font-semibold text-ink/40 tracking-widest uppercase mb-2">Newsletter</h4>
+                        <p class="text-ink/60 mb-2">Zéro spam. Uniquement de l'art brut et de l'architecture web.</p>
+                        <form class="flex border-b border-ink/30 focus-within:border-ink transition-colors pb-2">
+                            <input type="email" placeholder="email@exemple.com" class="bg-transparent outline-none flex-1 font-outfit text-sm placeholder:text-ink/30">
+                            <button type="submit" class="font-anton uppercase tracking-widest hover:text-brandOrange transition-colors">Sign</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="border-t border-default pt-8 pb-4 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="font-outfit text-xs text-ink/50 uppercase tracking-widest">© 2024 OverBrand Agency. Tous droits réservés.</p>
+                    <div class="flex gap-4 font-outfit text-xs font-semibold uppercase tracking-widest">
+                        <a href="#" class="hover:text-brandOrange transition-colors">Légal</a>
+                        <a href="#" class="hover:text-brandOrange transition-colors">Cookies</a>
+                    </div>
+                </div>
+
+                <!-- Giant Footer Text -->
+                <div class="w-full overflow-hidden flex justify-center -mt-8 md:-mt-16 pointer-events-none select-none opacity-10">
+                   <span class="font-anton text-[15vw] leading-[0.75] tracking-tighter uppercase whitespace-nowrap">OverBrand</span>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Micro-Interaction JS Engine -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Smooth reveal on scroll interceptor mimicking spring physics
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -10% 0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Small delay logic handled by CSS classes (.delay-100, etc)
+                        requestAnimationFrame(() => {
+                            entry.target.classList.add('revealed');
+                        });
+                        observer.unobserve(entry.target); // Only trigger once
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal-element').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Prevent empty link jumps
+            document.querySelectorAll('a[href="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

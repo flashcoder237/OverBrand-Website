@@ -35,7 +35,7 @@ export default function MentionsLegales() {
                 <li><strong style={{ color: 'var(--text)' }}>Email :</strong>{' '}
                   <a href="mailto:contact@overbrand.net" style={{ color: 'var(--primary)' }}>contact@overbrand.net</a>
                 </li>
-                <li><strong style={{ color: 'var(--text)' }}>Téléphone :</strong> +237 652 761 931</li>
+                <li><strong style={{ color: 'var(--text)' }}>Téléphone :</strong> +237 652 761 931 (Cameroun) · +41 79 360 36 49 (Europe)</li>
               </ul>
             </section>
 

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr" class="antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insights | OverBrand Digital Agency</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                colors: { paper: '#F4F4F0', ink: '#0A0A0A', overblue: '#2855A0', overorange: '#FF4D00' },
+                fontFamily: { display: ['Anton', 'sans-serif'], body: ['Outfit', 'sans-serif'] },
+                spacing: { 'rail': '64px' }
+            } }
+        }
+    </script>
+    <style>
+        .noise-overlay::before { content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; opacity: 0.04; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        .text-outline { color: transparent; -webkit-text-stroke: 1px #0A0A0A; }
+        .text-outline-white { color: transparent; -webkit-text-stroke: 1px #F4F4F0; }
+        .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { scrollbar-width: none; }
+        .js-reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); } .js-reveal.is-visible { opacity: 1; transform: translateY(0); }
+        .grid-hairlines { display: grid; gap: 1px; background-color: #0A0A0A; border: 1px solid #0A0A0A; } .grid-hairlines > * { background-color: #F4F4F0; }
+        .img-hover-effect img { transition: transform 0.6s ease, filter 0.6s ease; filter: grayscale(100%) contrast(1.1); } .img-hover-effect:hover img { transform: scale(1.05); filter: grayscale(0%); }
+    </style>
+</head>
+<body class="bg-paper text-ink font-body noise-overlay overflow-x-hidden selection:bg-overorange selection:text-paper">
+<aside class="fixed top-0 left-0 h-[100dvh] w-rail border-r border-ink bg-paper z-50 flex flex-col justify-between items-center py-6">
+    <a href="#" class="text-ink hover:text-overblue transition-colors"><i class="ph ph-squares-four text-2xl"></i></a>
+    <div class="flex-1 flex items-center justify-center -rotate-180" style="writing-mode: vertical-rl;"><span class="font-display text-xl tracking-wider text-ink uppercase">OverBrand.</span></div>
+    <a href="#" class="text-ink hover:text-overorange transition-colors"><i class="ph ph-magnifying-glass text-2xl"></i></a>
+</aside>
+
+<main class="ml-rail min-h-[100dvh]">
+    <section class="border-b border-ink px-4 md:px-12 py-20 pb-16 flex flex-col justify-end min-h-[50vh] md:min-h-[60vh] relative js-reveal">
+        <div class="max-w-6xl">
+            <div class="flex items-center gap-3 mb-8"><span class="w-10 h-[1px] bg-ink"></span><span class="font-body text-xs font-bold tracking-[0.2em] uppercase text-overorange">Insights — 2025</span></div>
+            <h1 class="font-display text-6xl md:text-[8vw] leading-[0.85] uppercase tracking-tight mb-8"><span class="block text-ink">Essais,</span><span class="block text-outline">Analyses,</span><span class="block text-ink">Inspirations.</span></h1>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8"><div class="md:col-start-7 md:col-span-6 border-l border-ink pl-6"><p class="text-lg md:text-xl font-medium leading-relaxed max-w-lg">Ce qu'on apprend en construisant pour des marques ambitieuses. Déconstructions stratégiques, deep dives techniques et culture du design.</p></div></div>
+        </div>
+    </section>
+
+    <section class="border-b border-ink relative overflow-hidden group h-[70vh] flex items-end js-reveal">
+        <div class="absolute inset-0 img-hover-effect"><img src="https://images.unsplash.com/photo-1541888049103-128f773ff17c?auto=format&fit=crop&w=2000&q=80" alt="" class="w-full h-full object-cover"><div class="absolute inset-0 bg-ink/40 bg-gradient-to-t from-ink/90 to-transparent mix-blend-multiply"></div></div>
+        <div class="relative z-10 p-4 md:p-12 w-full flex flex-col md:flex-row justify-between items-end gap-8">
+            <div class="max-w-4xl">
+                <div class="flex flex-wrap items-center gap-3 mb-6 text-xs font-bold font-body text-paper/80 uppercase"><span class="bg-paper text-ink px-3 py-1 rounded-full">Dossier</span><span>Cédric Tefoye</span><span class="w-1 h-1 rounded-full bg-paper/50"></span><span>12 min</span><span class="w-1 h-1 rounded-full bg-paper/50"></span><span>15 mars 2025</span></div>
+                <h2 class="font-display text-4xl md:text-7xl text-paper uppercase leading-[0.9] tracking-tight mb-0">Pourquoi le Design System est Mort.<br><span class="text-outline-white">Vive le Design System.</span></h2>
+            </div>
+            <a href="#" class="shrink-0 bg-overorange hover:bg-paper text-paper hover:text-ink transition-colors px-6 py-4 border border-transparent hover:border-ink font-body font-bold text-sm uppercase flex items-center gap-2">Lire l'essai <i class="ph ph-arrow-up-right text-lg"></i></a>
+        </div>
+    </section>
+
+    <div class="border-b border-ink bg-paper sticky top-0 z-40 js-reveal">
+        <div class="px-4 md:px-12 py-4 flex gap-3 overflow-x-auto no-scrollbar items-center">
+            <span class="text-xs font-bold uppercase tracking-widest mr-4">Filtres</span>
+            <button class="shrink-0 bg-ink text-paper border border-ink rounded-full px-5 py-[0.4rem] text-sm font-semibold">Tous</button>
+            <button class="shrink-0 border border-ink text-ink rounded-full px-5 py-[0.4rem] text-sm font-semibold hover:bg-ink hover:text-paper transition-colors">Design</button>
+            <button class="shrink-0 border border-ink text-ink rounded-full px-5 py-[0.4rem] text-sm font-semibold hover:bg-ink hover:text-paper transition-colors">Dev</button>
+            <button class="shrink-0 border border-ink text-ink rounded-full px-5 py-[0.4rem] text-sm font-semibold hover:bg-ink hover:text-paper transition-colors">Stratégie</button>
+            <button class="shrink-0 border border-ink text-ink rounded-full px-5 py-[0.4rem] text-sm font-semibold hover:bg-ink hover:text-paper transition-colors">Business</button>
+            <button class="shrink-0 border border-ink text-ink rounded-full px-5 py-[0.4rem] text-sm font-semibold hover:bg-ink hover:text-paper transition-colors">Afrique</button>
+            <button class="shrink-0 border border-ink text-ink rounded-full px-5 py-[0.4rem] text-sm font-semibold hover:bg-ink hover:text-paper transition-colors">Tutos</button>
+        </div>
+    </div>
+
+    <section class="grid grid-cols-1 lg:grid-cols-12 border-b border-ink js-reveal">
+        <article class="lg:col-span-8 lg:border-r border-b lg:border-b-0 border-ink group cursor-pointer h-full flex flex-col">
+            <div class="p-8 pb-4 flex justify-between items-start"><span class="bg-overblue text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1">Édito</span><i class="ph ph-arrow-up-right text-2xl text-ink font-bold"></i></div>
+            <div class="px-8 pb-8 flex-1 flex flex-col justify-end"><h3 class="font-display text-4xl md:text-5xl uppercase leading-none tracking-tight mb-4 group-hover:text-overblue transition-colors">L'état du web au Cameroun en 2025</h3><p class="font-body text-ink/70 font-medium max-w-xl text-lg relative pl-4 border-l-2 border-overorange">Entre infrastructures en mutation et une génération de créatifs qui repousse les limites techniques.</p></div>
+            <div class="w-full h-80 border-t border-ink overflow-hidden img-hover-effect"><img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80" alt="" class="w-full h-full object-cover grayscale"></div>
+        </article>
+        <div class="lg:col-span-4 flex flex-col bg-paper">
+            <article class="flex-1 border-b border-ink p-8 group cursor-pointer flex flex-col justify-between relative overflow-hidden bg-white"><div class="relative z-10"><span class="text-ink border border-ink text-[10px] font-bold uppercase tracking-wider px-2 py-1 mb-6 inline-block">Dev</span><h3 class="font-display text-2xl md:text-3xl uppercase leading-tight tracking-tight mb-4">Migration 50 sites vers Next.js 15</h3><p class="font-body text-sm font-medium text-ink/80">Retours d'expérience et architecture d'une refonte massive.</p></div></article>
+            <article class="flex-1 p-8 group cursor-pointer flex flex-col justify-between hover:bg-ink hover:text-paper transition-colors duration-300"><div><span class="text-overorange border border-overorange text-[10px] font-bold uppercase tracking-wider px-2 py-1 mb-6 inline-block">Interview</span><h3 class="font-display text-2xl md:text-3xl uppercase leading-tight tracking-tight mb-4 group-hover:text-paper text-ink">Interview : Marie Nguyen, directrice UX BioShop</h3><p class="font-body text-sm font-medium group-hover:text-paper/80 text-ink/80 mb-6">Comment aligner éthique et conversion e-commerce en 2025.</p></div><div class="flex items-center gap-3 text-xs font-bold uppercase tracking-widest opacity-60"><span>Lire</span> <i class="ph ph-arrow-right"></i></div></article>
+        </div>
+    </section>
+
+    <section class="grid-hairlines grid-cols-1 md:grid-cols-2 xl:grid-cols-3 js-reveal">
+        <article class="p-6 md:p-8 flex flex-col group cursor-pointer relative overflow-hidden bg-paper"><div class="mb-auto"><div class="flex items-center gap-2 mb-4"><span class="w-2 h-2 bg-overblue rounded-full"></span><span class="text-[10px] font-bold uppercase tracking-widest">Tech</span></div><h3 class="font-display text-2xl uppercase leading-[1.1] tracking-tight mb-3 group-hover:underline underline-offset-4">Le SEO technique en 2025 : checklist absolue</h3><p class="font-body text-sm text-ink/70 leading-relaxed line-clamp-3">Core Web Vitals, API rendering, structure sémantique.</p></div><div class="mt-8 pt-4 border-t border-ink/20 flex flex-wrap justify-between items-center text-xs font-medium uppercase text-ink/60"><span>Aïcha Traoré</span><span>18 min</span></div></article>
+        <article class="flex flex-col group cursor-pointer bg-paper overflow-hidden"><div class="h-48 border-b border-ink/20 overflow-hidden img-hover-effect"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-full object-cover"></div><div class="p-6 md:p-8 flex-1 flex flex-col"><div class="flex items-center gap-2 mb-4"><span class="w-2 h-2 bg-overorange rounded-full"></span><span class="text-[10px] font-bold uppercase tracking-widest">Design</span></div><h3 class="font-display text-2xl uppercase leading-[1.1] tracking-tight mb-3">Motion design : 5 principes physiques pour UI</h3><div class="mt-auto pt-4 flex flex-wrap justify-between items-center text-xs font-medium uppercase text-ink/60"><span>Fatou Diallo</span><span>10 min</span></div></div></article>
+        <article class="p-6 md:p-8 flex flex-col group cursor-pointer bg-ink text-paper"><div class="mb-auto"><div class="flex items-center gap-2 mb-4"><span class="w-2 h-2 bg-[#10B981] rounded-full"></span><span class="text-[10px] font-bold uppercase tracking-widest text-paper/70">Business</span></div><h3 class="font-display text-3xl uppercase leading-[1.1] tracking-tight mb-3 text-paper">Pourquoi on publie nos prix publiquement</h3><p class="font-body text-sm text-paper/70 leading-relaxed line-clamp-3">Fini le "sur devis". Comment la transparence tarifaire est devenue notre meilleur filtre client.</p></div><div class="mt-12 pt-4 border-t border-paper/20 flex flex-wrap justify-between items-center text-xs font-medium uppercase text-paper/60"><span>Cédric Tefoye</span><span>8 min</span></div></article>
+        <article class="p-6 md:p-8 flex flex-col group cursor-pointer bg-paper"><div class="mb-auto"><div class="flex items-center gap-2 mb-4"><span class="w-2 h-2 bg-overorange rounded-full"></span><span class="text-[10px] font-bold uppercase tracking-widest">Design</span></div><h3 class="font-display text-2xl uppercase leading-[1.1] tracking-tight mb-3 group-hover:text-overorange transition-colors">Le design system de BioShop : dissection</h3><p class="font-body text-sm text-ink/70 leading-relaxed line-clamp-2">Des tokens Figma à l'implémentation React.</p></div><div class="mt-8 pt-4 border-t border-ink/20 flex flex-wrap justify-between items-center text-xs font-medium uppercase text-ink/60"><span>Sandrine Biya</span><span>12 min</span></div></article>
+        <article class="p-6 md:p-8 flex flex-col group cursor-pointer bg-paper"><div class="mb-auto"><div class="flex items-center gap-2 mb-4"><span class="w-2 h-2 bg-overblue rounded-full"></span><span class="text-[10px] font-bold uppercase tracking-widest">Tech</span></div><h3 class="font-display text-2xl uppercase leading-[1.1] tracking-tight mb-3">Next.js 16 : ce qu'il faut absolument retenir</h3><p class="font-body text-sm text-ink/70 leading-relaxed">Analyse du dernier patch et implications pour nos productions.</p></div><div class="mt-8 pt-4 border-t border-ink/20 flex flex-wrap justify-between items-center text-xs font-medium uppercase text-ink/60"><span>Éric Mbappe</span><span>6 min</span></div></article>
+        <article class="p-6 md:p-8 flex flex-col group cursor-pointer bg-[#D5D5CF]"><div class="mb-auto"><div class="flex items-center gap-2 mb-4"><span class="w-2 h-2 bg-[#8B5CF6] rounded-full"></span><span class="text-[10px] font-bold uppercase tracking-widest">Stratégie</span></div><h3 class="font-display text-3xl uppercase leading-[1.1] tracking-tight mb-3">Brand strategy pour les startups en Afrique</h3><p class="font-body text-sm text-ink/80 font-medium leading-relaxed">Éviter les clichés visuels. Comment construire une identité de marque globale avec un ancrage local fort.</p></div><div class="mt-8 pt-4 border-t border-ink/20 flex flex-wrap justify-between items-center text-xs font-medium uppercase text-ink/60"><span>Cédric Tefoye</span><span>14 min</span></div></article>
+        <article class="p-6 md:p-8 flex flex-col group cursor-pointer bg-paper"><div class="mb-auto"><div class="flex items-center gap-2 mb-4"><span class="w-2 h-2 bg-ink rounded-full"></span><span class="text-[10px] font-bold uppercase tracking-widest">Dev</span></div><h3 class="font-display text-2xl uppercase leading-[1.1] tracking-tight mb-3">WCAG 2.2 en pratique : l'accessibilité n'est pas une option</h3><p class="font-body text-sm text-ink/70 leading-relaxed">Tests automatisés et navigation clavier. Notre standard d'agence.</p></div><div class="mt-8 pt-4 border-t border-ink/20 flex flex-wrap justify-between items-center text-xs font-medium uppercase text-ink/60"><span>Patrice Nkomo</span><span>15 min</span></div></article>
+        <article class="flex flex-col group cursor-pointer bg-paper overflow-hidden relative h-full min-h-[320px]"><div class="absolute inset-0 img-hover-effect"><img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-full object-cover"></div><div class="p-6 md:p-8 flex-1 flex flex-col absolute inset-0 justify-end bg-gradient-to-t from-paper via-paper/80 to-transparent"><div class="flex items-center gap-2 mb-2"><span class="w-2 h-2 bg-[#F59E0B] rounded-full"></span><span class="text-[10px] font-bold uppercase tracking-widest">Tuto</span></div><h3 class="font-display text-2xl uppercase leading-[1.1] tracking-tight">Photographie produit studio à moins de 500€</h3></div></article>
+        <article class="p-6 md:p-8 flex flex-col group cursor-pointer bg-paper"><div class="mb-auto"><div class="flex items-center gap-2 mb-4"><span class="w-2 h-2 bg-[#10B981] rounded-full"></span><span class="text-[10px] font-bold uppercase tracking-widest">Business</span></div><h3 class="font-display text-2xl uppercase leading-[1.1] tracking-tight mb-3">Pricing SaaS : les erreurs qu'on a faites pour vous</h3><p class="font-body text-sm text-ink/70 leading-relaxed">Psychologie des prix et architecture des plans tarifaires B2B.</p></div><div class="mt-8 pt-4 border-t border-ink/20 flex flex-wrap justify-between items-center text-xs font-medium uppercase text-ink/60"><span>Marlyse Ngono</span><span>11 min</span></div></article>
+    </section>
+
+    <section class="border-b border-ink py-16 flex justify-center bg-paper js-reveal">
+        <button class="font-display text-3xl uppercase tracking-widest px-12 py-4 border-2 border-ink hover:bg-ink hover:text-paper transition-all duration-300 flex items-center gap-4">Charger Plus <i class="ph ph-arrow-down"></i></button>
+    </section>
+
+    <section class="grid grid-cols-1 lg:grid-cols-12 border-b border-ink js-reveal">
+        <div class="lg:col-span-7 border-b lg:border-b-0 lg:border-r border-ink p-8 md:p-16 flex flex-col justify-center bg-paper relative overflow-hidden">
+            <h3 class="font-body text-xs font-bold uppercase tracking-[0.2em] mb-12 text-overorange">Radar Thématique</h3>
+            <div class="flex flex-wrap gap-4 items-center justify-center leading-none text-center">
+                <a href="#" class="font-display uppercase hover:text-overblue transition-colors text-6xl">Design</a>
+                <a href="#" class="font-display uppercase text-outline hover:text-ink transition-colors text-5xl">React</a>
+                <a href="#" class="font-display uppercase hover:text-overorange transition-colors text-4xl">Afrique</a>
+                <a href="#" class="font-display uppercase hover:text-overblue transition-colors pl-4 text-7xl">NextJS</a>
+                <a href="#" class="font-display uppercase text-ink/40 hover:text-ink transition-colors text-3xl">Stratégie</a>
+                <a href="#" class="font-display uppercase text-outline hover:text-ink transition-colors text-6xl">Figma</a>
+                <a href="#" class="font-display uppercase hover:text-overorange transition-colors text-5xl">Typography</a>
+                <a href="#" class="font-display uppercase hover:text-overblue transition-colors text-3xl">SEO</a>
+                <a href="#" class="font-display uppercase text-outline hover:text-ink transition-colors pr-8 text-7xl">UX/UI</a>
+                <a href="#" class="font-display uppercase hover:text-ink transition-colors text-4xl text-overorange">Brutalism</a>
+                <a href="#" class="font-display uppercase text-ink/30 hover:text-ink transition-colors text-4xl">Business</a>
+                <a href="#" class="font-display uppercase hover:text-overblue transition-colors text-5xl">Motion</a>
+                <a href="#" class="font-display uppercase text-outline hover:text-ink transition-colors text-4xl">WebGL</a>
+            </div>
+        </div>
+        <div class="lg:col-span-5 p-8 md:p-16 bg-paper flex flex-col">
+            <h3 class="font-body text-xs font-bold uppercase tracking-[0.2em] mb-8 text-ink/50 border-b border-ink/20 pb-4">Top Articles Ce Mois</h3>
+            <ol class="flex flex-col">
+                <li class="py-6 border-b border-ink/20 group cursor-pointer flex gap-6 items-center"><span class="font-display text-4xl text-ink/20 group-hover:text-overorange transition-colors">01</span><div><h4 class="font-display text-xl uppercase tracking-tight leading-tight">Migration 50 sites vers Next.js 15</h4><span class="font-body text-xs text-ink/50 mt-1 block">42,5k vues</span></div></li>
+                <li class="py-6 border-b border-ink/20 group cursor-pointer flex gap-6 items-center"><span class="font-display text-4xl text-ink/20 group-hover:text-overblue transition-colors">02</span><div><h4 class="font-display text-xl uppercase tracking-tight leading-tight">Pourquoi on publie nos prix</h4><span class="font-body text-xs text-ink/50 mt-1 block">38,1k vues</span></div></li>
+                <li class="py-6 border-b border-ink/20 group cursor-pointer flex gap-6 items-center"><span class="font-display text-4xl text-ink/20">03</span><div><h4 class="font-display text-xl uppercase tracking-tight leading-tight">Le design system est Mort. Vive le DS.</h4><span class="font-body text-xs text-ink/50 mt-1 block">29,8k vues</span></div></li>
+                <li class="py-6 border-b border-ink/20 group cursor-pointer flex gap-6 items-center"><span class="font-display text-4xl text-ink/20">04</span><div><h4 class="font-display text-xl uppercase tracking-tight leading-tight">Photographie produit à 500€</h4><span class="font-body text-xs text-ink/50 mt-1 block">18,2k vues</span></div></li>
+                <li class="py-6 group cursor-pointer flex gap-6 items-center"><span class="font-display text-4xl text-ink/20">05</span><div><h4 class="font-display text-xl uppercase tracking-tight leading-tight">L'état du web au Cameroun en 2025</h4><span class="font-body text-xs text-ink/50 mt-1 block">15,4k vues</span></div></li>
+            </ol>
+        </div>
+    </section>
+
+    <section class="bg-ink text-paper border-b border-ink py-16 px-4 md:px-12 js-reveal">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-12 md:gap-24 items-start md:items-center">
+            <div class="flex-1"><span class="font-body text-xs font-bold uppercase tracking-[0.2em] text-paper/60 mb-4 block">Archive Hebdo</span><h2 class="font-display text-5xl md:text-7xl uppercase leading-[0.9] tracking-tight">La newsletter qui fait gagner <span class="text-overblue">30 min</span> par semaine.</h2></div>
+            <div class="w-full md:w-[400px] shrink-0">
+                <form class="flex flex-col gap-6" onsubmit="event.preventDefault();">
+                    <input type="email" placeholder="adresse@email.com" class="w-full bg-transparent border-b-2 border-paper/30 pb-4 text-xl font-body placeholder:text-paper/20 focus:outline-none focus:border-overorange transition-colors rounded-none" required>
+                    <div class="flex items-center justify-between"><span class="font-body text-xs text-paper/40 font-bold uppercase tracking-wider">+ 2 400 abonnés</span><button type="submit" class="font-display text-xl uppercase tracking-wider flex items-center gap-2 hover:text-overorange transition-colors">S'abonner <i class="ph ph-arrow-right"></i></button></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-paper text-ink px-4 md:px-12 py-20 pb-8 js-reveal">
+        <div class="flex flex-col md:flex-row justify-between items-start mb-24 gap-12">
+            <h2 class="font-display text-6xl md:text-9xl uppercase tracking-tighter leading-none">OVERBRAND.</h2>
+            <div class="grid grid-cols-2 gap-12 font-body font-medium text-sm md:text-base">
+                <ul class="flex flex-col gap-3"><li class="text-xs uppercase font-bold tracking-widest text-ink/50 mb-2">Agence</li><li><a href="#" class="hover:text-overblue">Projets</a></li><li><a href="#" class="hover:text-overblue">Services</a></li><li><a href="#" class="hover:text-overblue">À propos</a></li><li><a href="#" class="hover:text-overblue">Contact</a></li></ul>
+                <ul class="flex flex-col gap-3"><li class="text-xs uppercase font-bold tracking-widest text-ink/50 mb-2">Sociaux</li><li><a href="#" class="hover:text-overorange">LinkedIn</a></li><li><a href="#" class="hover:text-overorange">Instagram</a></li><li><a href="#" class="hover:text-overorange">Behance</a></li></ul>
+            </div>
+        </div>
+        <div class="border-t border-ink pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-body font-bold uppercase tracking-widest text-ink/50">
+            <span>© 2025 OverBrand Digital Agency</span>
+            <div class="flex gap-6"><a href="#" class="hover:text-ink">Légal</a><a href="#" class="hover:text-ink">Confidentialité</a></div>
+            <span>Douala — Yaoundé</span>
+        </div>
+    </footer>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.js-reveal').forEach(el => observer.observe(el));
+    });
+</script>
+</body>
+</html>
