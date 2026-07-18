@@ -105,6 +105,14 @@ type PageMetaInput = {
   description: string
   /** Absolute URL or site-root-relative path. Falls back to the generated OG image. */
   image?: string
+  /** Small uppercase label above the title on the generated OG card. */
+  eyebrow?: string
+  /**
+   * Site-relative path to a screenshot used as the OG card background. The card
+   * is still generated (branded, 1200×630) rather than serving the raw file,
+   * which would be the wrong aspect ratio and carry no title.
+   */
+  ogBackground?: string
   type?: 'website' | 'article'
   publishedTime?: string
   noIndex?: boolean
@@ -123,16 +131,23 @@ export function pageMetadata({
   title,
   description,
   image,
+  eyebrow,
+  ogBackground,
   type = 'website',
   publishedTime,
   noIndex = false,
 }: PageMetaInput): Metadata {
   const url = `${SITE_URL}/${locale}${path}`
-  const ogImage = image
-    ? image.startsWith('http')
-      ? image
-      : `${SITE_URL}${image}`
-    : `${SITE_URL}/api/og?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`
+
+  let ogImage: string
+  if (image) {
+    ogImage = image.startsWith('http') ? image : `${SITE_URL}${image}`
+  } else {
+    const q = new URLSearchParams({ title, description })
+    if (eyebrow) q.set('eyebrow', eyebrow)
+    if (ogBackground) q.set('image', ogBackground)
+    ogImage = `${SITE_URL}/api/og?${q.toString()}`
+  }
 
   const languages: Record<string, string> = Object.fromEntries(
     LOCALES.map((l) => [l, `${SITE_URL}/${l}${path}`]),

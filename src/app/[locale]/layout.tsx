@@ -12,6 +12,7 @@ import { FloatingButtons } from '@/components/layout/floating-buttons'
 import { Loader } from '@/components/layout/loader'
 import { LenisProvider } from '@/components/layout/lenis-provider'
 import { SideRail } from '@/components/layout/side-rail'
+import { LanguagePicker } from '@/components/layout/language-picker'
 import { siteSchema } from '@/lib/schema'
 import { ORG } from '@/lib/seo'
 
@@ -149,6 +150,8 @@ export default async function LocaleLayout({
       <FloatingButtons />
       {/* Editorial side rail (lg+) */}
       <SideRail />
+      {/* First-visit language chooser */}
+      <LanguagePicker />
       {/* Reveal-on-scroll driver for aidesigner's .reveal elements */}
       {/* Page content with transitions */}
       <PageTransition>

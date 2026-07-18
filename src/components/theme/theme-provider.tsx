@@ -17,7 +17,11 @@ function ColorProvider({ children }: { children: React.ReactNode }) {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   return (
-    <NextThemesProvider attribute="class" defaultTheme="dark" enableSystem>
+    // Light is the default: the editorial design is paper-first, and the dark
+    // variant is an opt-in. `enableSystem` is off deliberately — with it on, a
+    // visitor whose OS is in dark mode would land on the dark theme regardless
+    // of `defaultTheme`. The toggle still works and the choice is persisted.
+    <NextThemesProvider attribute="class" defaultTheme="light" enableSystem={false}>
       <ColorProvider>{children}</ColorProvider>
     </NextThemesProvider>
   )

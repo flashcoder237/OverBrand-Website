@@ -35,7 +35,9 @@ export async function generateMetadata({
     // phrased with the city, so it belongs in the title.
     title: `${service.title} — Douala & Yaoundé`,
     description: `${service.tagline} ${service.description}`.slice(0, 300),
-    image: service.image,
+    // Branded card rather than `service.image`: those are generic stock photos
+    // and carried no title when shared.
+    eyebrow: 'Expertise',
   })
 }
 

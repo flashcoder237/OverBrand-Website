@@ -22,7 +22,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     path: '/projets',
     title: t('meta_title'),
     description: t('meta_description'),
-    image: '/projets/buynsellem-01.jpg',
+    eyebrow: 'Projets',
+    ogBackground: '/projets/buynsellem-01.jpg',
   })
 }
 

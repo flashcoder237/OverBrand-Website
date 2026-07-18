@@ -13,7 +13,7 @@ import { CaseStudyView } from './case-study'
 import { CASE_SLUGS, getCaseStudy } from '@/lib/projects-data'
 // Aliased: this file already declares a local `breadcrumbSchema` for the
 // Supabase-backed branch further down.
-import { breadcrumbSchema as buildBreadcrumbs } from '@/lib/seo'
+import { breadcrumbSchema as buildBreadcrumbs, pageMetadata } from '@/lib/seo'
 import { gqlClient } from '@/lib/graphql/client'
 import {
   GET_PROJECT_BY_ID,
@@ -109,28 +109,19 @@ export async function generateMetadata({
 
   const study = getCaseStudy(id, locale)
   if (study) {
-    const title = `${study.title} — ${t('case_title_suffix')}`
-    const description = study.mandate
-    const ogImage = `${SITE_URL}${study.cover}`
-    return {
-      title,
-      description,
-      alternates: {
-        canonical: `${SITE_URL}/${locale}/projets/${id}`,
-        languages: Object.fromEntries(
-          routing.locales.map((l) => [l, `${SITE_URL}/${l}/projets/${id}`]),
-        ),
-      },
-      openGraph: {
-        title,
-        description,
-        type: 'article',
-        url: `${SITE_URL}/${locale}/projets/${id}`,
-        siteName: 'OverBrand',
-        images: [{ url: ogImage, width: 1200, height: 630, alt: study.title }],
-      },
-      twitter: { card: 'summary_large_image', title, description, images: [ogImage] },
-    }
+    // Goes through pageMetadata so the case study gets the same canonical +
+    // hreflang cluster (including x-default) as every other page. The OG card is
+    // generated from the real screenshot, framed at 1200×630 with the title —
+    // the raw file is 1568×710 and would be cropped arbitrarily by each network.
+    return pageMetadata({
+      locale,
+      path: `/projets/${study.slug}`,
+      title: `${study.title} — ${t('case_title_suffix')}`,
+      description: study.mandate,
+      type: 'article',
+      eyebrow: `${t('case_title_suffix')} · ${study.ref}`,
+      ogBackground: study.cover,
+    })
   }
 
   const project = await fetchProject(id)
